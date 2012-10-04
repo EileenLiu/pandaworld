@@ -2,6 +2,7 @@ package student;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.PushbackReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,11 +32,11 @@ public class Tokenizer implements Iterator<String> {
         sct.put('{',"{");
         sct.put('}',"}");
         sct.put(';',";");
-        sct.put('!',"!");
+        sct.put('=',"=");
         singleCharacterTokens = Collections.unmodifiableMap(sct);
     }
 
-    protected BufferedReader br;
+    protected PushbackReader pr;
     protected int lineNo;
     protected StringBuffer buf;
     protected boolean ready;
@@ -47,7 +48,7 @@ public class Tokenizer implements Iterator<String> {
      * @param r
      */
     public Tokenizer(Reader r) {
-        this.br = new BufferedReader(r);
+        this.pr = new PushbackReader(r);
         this.buf = new StringBuffer();
         this.lineNo = 1;
     }
@@ -97,7 +98,7 @@ public class Tokenizer implements Iterator<String> {
      */
     public void close() {
         try {
-            br.close();
+            pr.close();
         } catch (IOException e) {
             System.out.println("IOException:");
             System.out.println(e.getMessage());
@@ -108,7 +109,7 @@ public class Tokenizer implements Iterator<String> {
     private void lexNext() throws IOException, InvalidTokenException {
         int c;
         //eat whitespace
-        while(Character.isWhitespace(c = br.read()) && c != '\n') //turns out newline can be significant, so it's tokenized.
+        while(Character.isWhitespace(c = pr.read()) && c != '\n') //turns out newline can be significant, so it's tokenized.
             if(c < 0) //end of stream
                 return;
         //is this a single character token?
@@ -126,25 +127,28 @@ public class Tokenizer implements Iterator<String> {
             curTok = lexNumber(c);
         } else if(c == '>' || c == '<') {
             curTok = lexAngle(c);
+        } else if(c == '!') {
+            curTok = lexWow();
         } else { 
             curTok = unexpected();
         }
         ready = true;
     }
 
-    private String lexWorm() throws IOException {
-        br.mark(3); //prepare for peek
+    private String lexWorm() throws IOException, InvalidTokenException {
         int d;
-        if((d = br.read()) < 0 || d != '-' || 
-           (d = br.read()) < 0 || d != '>') {
-            br.reset();
+        if((d = pr.read()) < 0 || d != '-') {
+            pr.unread(d);
             return "-";
+        } else if ((d = pr.read()) < 0 || d != '>') {
+            pr.unread(d);
+            return unexpected();
         }
         return "-->";
     }
 
     private String lexTwoSpot() throws IOException, InvalidTokenException {
-        int d = br.read();
+        int d = pr.read();
         if(d < 0 || d != '=') {
             return unexpected();
         }
@@ -156,38 +160,42 @@ public class Tokenizer implements Iterator<String> {
     }
 
     private String lexName(int c) throws IOException {
-        //alpha
+        int d;
         StringBuilder sb = new StringBuilder();
         sb.append((char) c);
-        br.mark(2);
-        while (Character.isJavaIdentifierPart(c = br.read())) {
-            sb.append((char) c);
-            br.mark(2);
+        while (Character.isJavaIdentifierPart(d = pr.read())) {
+            sb.append((char) d);
         }
-        br.reset();
+        pr.unread(d);
         return sb.toString();
     }
 
     private String lexNumber(int c) throws IOException {
-        int val = 0;
+        int val = 0, d;
         val *= 10;
         val += c - '0';
-        br.mark(2);
-        while(Character.isDigit(c = br.read())) {
+        while(Character.isDigit(d = pr.read())) {
             val *= 10;
-            val += c - '0';
-            br.mark(2);
+            val += d - '0';
         }
-        br.reset();
+        pr.unread(d);
         return Integer.toString(val);
     }
 
     private String lexAngle(int c) throws IOException {
-        br.mark(1);
-        if(br.read() == '=')
+        int d;
+        if((d = pr.read()) == '=')
             return c == '>' ? ">=" : "<=";
-        else
-            return c == '>' ? ">" : "<";
+        pr.unread(d);
+        return c == '>' ? ">" : "<";
+    }
+
+    private String lexWow() throws IOException {
+        int d;
+        if((d = pr.read()) == '=')
+            return "!=";
+        pr.unread(d);
+        return "!";
     }
     
     public static class InvalidTokenException extends Exception {
