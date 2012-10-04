@@ -4,7 +4,9 @@ import java.util.InputMismatchException;
 
 /**
  *  A Token represents a legal token (symbol) in the critter language
+ *  @deprecated 'cos I don't like it.
  */
+@Deprecated
 public class Token {
 	//Token types
 	public static final int MEM = 0;

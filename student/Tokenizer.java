@@ -59,7 +59,7 @@ public class Tokenizer implements Iterator<String> {
                 lexNext();
             } catch (NoSuchElementException e) {
                 return false;
-            } catch (InvalidTokenException e) {
+            } catch (InvalidTokenException e) { //TODO: should we throw this up?
                 return false;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -108,7 +108,7 @@ public class Tokenizer implements Iterator<String> {
     private void lexNext() throws IOException, InvalidTokenException {
         int c;
         //eat whitespace
-        while(Character.isWhitespace(c = br.read()) && c != '\n')
+        while(Character.isWhitespace(c = br.read()) && c != '\n') //turns out newline can be significant, so it's tokenized.
             if(c < 0) //end of stream
                 return;
         //is this a single character token?
@@ -163,7 +163,7 @@ public class Tokenizer implements Iterator<String> {
             else
                 curTok = c == '>' ? ">" : "<";
         } else { //donno what it is!
-            throw new InvalidTokenException();
+            throw new InvalidTokenException(); //TODO: should we return null instead?
         }
         ready = true;
     }
