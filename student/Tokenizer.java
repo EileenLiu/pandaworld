@@ -115,57 +115,79 @@ public class Tokenizer implements Iterator<String> {
         if(singleCharacterTokens.containsKey((char)c)) {
             curTok = singleCharacterTokens.get((char)c);
         } else if(c == '-') {
-            br.mark(3); //prepare for peek
-            int d = br.read();
-            if(d < 0 || d != '-') {
-                br.reset();
-                curTok = "" + (char)d;
-            } else if ((d = br.read()) < 0 || d != '>') {
-                br.reset();
-                curTok = "" + (char)d;
-            } else {
-                curTok = "-->";
-            }
+            curTok = lexWorm();
         } else if(c == '\n') {
             curTok = "\n";
         } else if(c == ':') {
-            int d = br.read();
-            if(d < 0 || d != '=') {
-                throw new InvalidTokenException();
-            }
-            curTok = ":=";
-        } else if(Character.isJavaIdentifierStart(c)) { //alpha
-            StringBuilder sb = new StringBuilder();
-            sb.append((char)c);
-            br.mark(2);
-            while(Character.isJavaIdentifierPart(c = br.read())) {
-                sb.append((char)c);
-                br.mark(2);
-            }
-            br.reset();
-            curTok = sb.toString();
+            curTok = lexTwoSpot();
+        } else if(Character.isJavaIdentifierStart(c)) {             
+            curTok = lexName(c);
         } else if(Character.isDigit(c)) {
-            int val = 0;
+            curTok = lexNumber(c);
+        } else if(c == '>' || c == '<') {
+            curTok = lexAngle(c);
+        } else { 
+            curTok = unexpected();
+        }
+        ready = true;
+    }
+
+    private String lexWorm() throws IOException {
+        br.mark(3); //prepare for peek
+        int d;
+        if((d = br.read()) < 0 || d != '-' || 
+           (d = br.read()) < 0 || d != '>') {
+            br.reset();
+            return "-";
+        }
+        return "-->";
+    }
+
+    private String lexTwoSpot() throws IOException, InvalidTokenException {
+        int d = br.read();
+        if(d < 0 || d != '=') {
+            return unexpected();
+        }
+        return ":=";
+    }
+
+    private String unexpected() throws InvalidTokenException {
+        throw new InvalidTokenException();
+    }
+
+    private String lexName(int c) throws IOException {
+        //alpha
+        StringBuilder sb = new StringBuilder();
+        sb.append((char) c);
+        br.mark(2);
+        while (Character.isJavaIdentifierPart(c = br.read())) {
+            sb.append((char) c);
+            br.mark(2);
+        }
+        br.reset();
+        return sb.toString();
+    }
+
+    private String lexNumber(int c) throws IOException {
+        int val = 0;
+        val *= 10;
+        val += c - '0';
+        br.mark(2);
+        while(Character.isDigit(c = br.read())) {
             val *= 10;
             val += c - '0';
             br.mark(2);
-            while(Character.isDigit(c = br.read())) {
-                val *= 10;
-                val += c - '0';
-                br.mark(2);
-            }
-            br.reset();
-            curTok = Integer.toString(val);
-        } else if(c == '>' || c == '<') {
-            br.mark(1);
-            if(br.read() == '=')
-                curTok = c == '>' ? ">=" : "<=";
-            else
-                curTok = c == '>' ? ">" : "<";
-        } else { //donno what it is!
-            throw new InvalidTokenException(); //TODO: should we return null instead?
         }
-        ready = true;
+        br.reset();
+        return Integer.toString(val);
+    }
+
+    private String lexAngle(int c) throws IOException {
+        br.mark(1);
+        if(br.read() == '=')
+            return c == '>' ? ">=" : "<=";
+        else
+            return c == '>' ? ">" : "<";
     }
     
     public static class InvalidTokenException extends Exception {
