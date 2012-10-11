@@ -35,7 +35,7 @@ public class FaultInjector {
 			Node selected;
 			n.value = selected.value;
 			break;
-		case 4: // a newly created node is inserted as the parent of the node, taking its place in the tree. if the newly created node has more than one child, the chldren that are not the original node are copies of randomly chosen nodes of the right kind from the whole rule set
+		case 4: // a newly created node is inserted as the parent of the node, taking its place in the tree. if the newly created node has more than one child, the children that are not the original node are copies of randomly chosen nodes of the right kind from the whole rule set
 			break;
 		}
 		/*		for(int i=0; i<ORIGINAL.length; i++)

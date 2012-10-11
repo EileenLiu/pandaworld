@@ -17,11 +17,12 @@ public abstract class BinaryOp extends Expression { // need not be abstract
 	 * @throws InvalidBinaryOpException 
 	 */
 	public BinaryOp(Expression l, Expression r, char v) throws InvalidBinaryOpException {
+		if(op == null||l ==null||r==null)
+			throw new InvalidBinaryOpException();
 		left = l;
 		right = r;
 		op = BinaryOperators.forSym(v);		
-		if(op == null)
-			throw new InvalidBinaryOpException();
+		eval();
 	}
 	public void eval()
 	{

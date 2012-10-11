@@ -5,7 +5,7 @@ package student;
  *
  */
 public class BinaryCondition implements Condition {
-
+	private Condition left, right;
 	/**
 	 * Create an AST representation of l op r.
 	 * @param l
@@ -13,19 +13,20 @@ public class BinaryCondition implements Condition {
 	 * @param r
 	 */
 	public BinaryCondition(Condition l, BinaryConditionOperator op, Condition r) {
-		//TODO
+		left = l;
+		right = r;
 	}
 
-	@Override
+	/*@Override
 	public boolean eval(State s) {
 		// TODO Auto-generated method stub
 		return false;
-	}
+	}*/
 
 	@Override
 	public int size() {
 		// TODO Auto-generated method stub
-		return 0;
+		return 1 + left.size() + right.size();
 	}
 
 	@Override

@@ -4,7 +4,6 @@ package student;
  * A node in the abstract syntax tree of a program.
  */
 public interface Node {
-
 	/**
 	 * The number of nodes in this AST, including the current node.
      * This can be helpful for implementing mutate() correctly.
