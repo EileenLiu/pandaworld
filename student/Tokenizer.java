@@ -1,17 +1,15 @@
 package student;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PushbackReader;
 import java.io.Reader;
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Set;
 
 /**
  * A Tokenizer turns a Reader into a stream of tokens that can be iterated over
@@ -39,8 +37,8 @@ public class Tokenizer implements Iterator<String> {
     protected PushbackReader pr;
     protected int lineNo;
     protected StringBuffer buf;
-    protected boolean ready;
-    protected String curTok;
+    protected Deque<String> pushback,
+                            markbuf = null;
 
     /**
      * Create a tokenizer for a program to be read by the specified reader.
@@ -48,14 +46,15 @@ public class Tokenizer implements Iterator<String> {
      * @param r
      */
     public Tokenizer(Reader r) {
-        this.pr = new PushbackReader(r);
+        this.pr = new PushbackReader(r,8);
+        this.pushback = new LinkedList<String>();
         this.buf = new StringBuffer();
         this.lineNo = 1;
     }
 
     @Override
     public boolean hasNext() {
-        if (!ready) {
+        if(pushback.isEmpty()) {
             try {
                 lexNext();
             } catch (NoSuchElementException e) {
@@ -72,9 +71,12 @@ public class Tokenizer implements Iterator<String> {
 
     @Override
     public String next() {
-        String tok = peek();
-        ready = false;
-        return tok;
+        if(!hasNext())
+            return null;
+        String res = pushback.pop();
+        if(markbuf != null)
+            markbuf.push(res);
+        return res;
     }
 
     /**
@@ -84,13 +86,32 @@ public class Tokenizer implements Iterator<String> {
      */
     public String peek() {
         if(hasNext())
-            return curTok;
+            return pushback.pop();
         return null;
     }
 
     @Override
     public void remove() {
         throw new UnsupportedOperationException();
+    }
+    
+    public void unread(String c) {
+        pushback.push(c);
+    }
+    
+    public void mark() {
+        unmark();
+        markbuf = new LinkedList<String>();
+    }
+    
+    public void reset() {
+        for(String tok : markbuf)
+            pushback.push(tok);
+        unmark();
+    }
+    
+    public void unmark() {
+        markbuf = null;
     }
 
     /**
@@ -109,30 +130,29 @@ public class Tokenizer implements Iterator<String> {
     private void lexNext() throws IOException, InvalidTokenException {
         int c;
         //eat whitespace
-        while(Character.isWhitespace(c = pr.read()) && c != '\n') //turns out newline can be significant, so it's tokenized.
+        while(Character.isWhitespace(c = pr.read()) /*&& c != '\n'*/)
             if(c < 0) //end of stream
                 return;
         //is this a single character token?
         if(singleCharacterTokens.containsKey((char)c)) {
-            curTok = singleCharacterTokens.get((char)c);
+            pushback.push(singleCharacterTokens.get((char)c));
         } else if(c == '-') {
-            curTok = lexWorm();
-        } else if(c == '\n') {
-            curTok = "\n";
+            pushback.push(lexWorm());
+//        } else if(c == '\n') {
+//            pushback.push("\n");
         } else if(c == ':') {
-            curTok = lexTwoSpot();
+            pushback.push(lexTwoSpot());
         } else if(Character.isJavaIdentifierStart(c)) {             
-            curTok = lexName(c);
+            pushback.push(lexName(c));
         } else if(Character.isDigit(c)) {
-            curTok = lexNumber(c);
+            pushback.push(lexNumber(c));
         } else if(c == '>' || c == '<') {
-            curTok = lexAngle(c);
+            pushback.push(lexAngle(c));
         } else if(c == '!') {
-            curTok = lexWow();
+            pushback.push(lexWow());
         } else { 
-            curTok = unexpected();
+            pushback.push(unexpected());
         }
-        ready = true;
     }
 
     private String lexWorm() throws IOException, InvalidTokenException {
