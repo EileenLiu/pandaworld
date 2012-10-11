@@ -10,5 +10,5 @@ public interface Condition extends Node {
 	 * @param s The state to be evaluated in
 	 * @return The Boolean value of this condition
 	 */
-	boolean eval(State s);
+	//boolean eval(State s);
 }
