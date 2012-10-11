@@ -1,7 +1,7 @@
 package student;
 
 // A critter program expression that has an integer value.
-public abstract class Expression implements Node {
+public abstract class Expression extends Node {
 	protected int value;
 	public Expression() {
 		value=0;

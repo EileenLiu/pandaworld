@@ -3,7 +3,7 @@ package student;
 /**
  * A representation of a critter rule.
  */
-public class Rule implements Node {
+public class Rule extends Node {
 
     private Condition condition;
     // how to represent the command?

@@ -17,6 +17,8 @@ public class FaultInjector {
 		switch(faultType){
 		case 0: //the node is removed. if its parent node needs a replacement node, one of its children of the right kind is used. The child to be used is randomly selected. Thus rule nodes are simply removed, but binary operation nodes would be replaced with either their left or right child
 			n.remove();
+			
+			
 			/*if(n.parent instanceof BinaryOp)
 			{
 				//find selected

@@ -4,7 +4,7 @@ package student;
  * A representation of a critter program.
  *
  */
-public class Program implements Node {
+public class Program extends Node {
 
 	@Override
 	public int size() {
