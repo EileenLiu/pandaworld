@@ -9,4 +9,9 @@ public abstract class Expression implements Node {
 	public Expression(int v) {
 		value = v;
 	}
+	@Override
+	public int size() {
+		return 1;
+	}
+	
 }

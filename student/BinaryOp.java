@@ -27,6 +27,10 @@ public abstract class BinaryOp extends Expression { // need not be abstract
 	{
 		value = op.apply(left.value, right.value);
 	}
+	@Override
+	public int size() {
+		return 1+left.size()+right.size();
+	}
 	private class InvalidBinaryOpException extends Exception
 	{
 		public InvalidBinaryOpException()
