@@ -92,6 +92,10 @@ public class Tokenizer implements Iterator<String> {
     public void remove() {
         throw new UnsupportedOperationException();
     }
+    
+    public int line() {
+        return lineNo;
+    }
 
     /**
      * Close the reader opened by this tokenizer.
@@ -109,16 +113,16 @@ public class Tokenizer implements Iterator<String> {
     private void lexNext() throws IOException, InvalidTokenException {
         int c;
         //eat whitespace
-        while(Character.isWhitespace(c = pr.read()) && c != '\n') //turns out newline can be significant, so it's tokenized.
-            if(c < 0) //end of stream
-                return;
+        while(Character.isWhitespace(c = pr.read()))
+            if(c == '\n')
+                lineNo++;
+        if(c < 0) //end of stream
+            return; 
         //is this a single character token?
         if(singleCharacterTokens.containsKey((char)c)) {
             curTok = singleCharacterTokens.get((char)c);
         } else if(c == '-') {
             curTok = lexWorm();
-        } else if(c == '\n') {
-            curTok = "\n";
         } else if(c == ':') {
             curTok = lexTwoSpot();
         } else if(Character.isJavaIdentifierStart(c)) {             
