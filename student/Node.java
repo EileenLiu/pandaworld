@@ -9,7 +9,6 @@ import java.util.logging.Logger;
 public abstract class Node implements Cloneable {
 
     protected Node parent;
-
     /**
      * The number of nodes in this AST, including the current node. This can be
      * helpful for implementing mutate() correctly.
@@ -36,7 +35,7 @@ public abstract class Node implements Cloneable {
     public void remove() {
         throw new Error("Unimplemented");        
     }
-
+    
     /**
      * Checks if the node has a parent
      *
@@ -45,13 +44,6 @@ public abstract class Node implements Cloneable {
     public boolean hasParent() {
         return parent != null;
     }
-
-    /**
-     * Checks if the node has children
-     *
-     * @return whether the node has children
-     */
-    public abstract boolean hasChildren();
 
     /**
      * Sets the node's parent to the given node
@@ -83,4 +75,14 @@ public abstract class Node implements Cloneable {
     public void set(Node n) {
         throw new Error("Unimplemented");
     }
+    /**
+     * Retrieves the number of children the node has
+     * @return number of children the node has
+     */
+    public abstract int numChildren();
+    /**
+     * Swaps two children of the Node, if there are more than two, the two children are randomly selected
+     * Precondition: Node has at least 2 children
+     */
+    public abstract void swapChildren();
 }

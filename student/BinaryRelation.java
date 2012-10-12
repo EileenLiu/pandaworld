@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class BinaryRelation extends Node {
+public class BinaryRelation extends BinaryNode {
 	private Relation relation;
 	
 	/**

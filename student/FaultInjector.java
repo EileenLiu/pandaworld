@@ -29,7 +29,7 @@ public class FaultInjector {
 				n.parent.children = null;*/
 			break;
 		case 1: //order of two children of the node is switched. for ex. allows swapping of positions of two rules
-			if(n.hasChildren())
+			if(n.numChildren()>=2)
 			{
 			n.swapChildren();
 			}
