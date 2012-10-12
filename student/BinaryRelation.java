@@ -47,11 +47,27 @@ public class BinaryRelation extends BinaryNode {
 
 	}
 	@Override
-	public void remove() {
+	public boolean remove() {
 		// TODO Auto-generated method stub
 		
 	}
-
+    @Override
+    public boolean deleteChild(Node n)
+    {
+    	if(!(n instanceof BinaryOp))
+    		return false;
+    	
+    	if(left.equals(n))
+    	{
+    		left = ((BinaryOp)n).getRight();
+    	}
+    	else if(right.equals(n))
+    	{
+    		
+    	}
+    	else
+    		return false;
+    }
 	@Override
 	public Node copy() {
 		// TODO Auto-generated method stub

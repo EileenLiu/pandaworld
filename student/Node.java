@@ -47,7 +47,13 @@ public abstract class Node implements Cloneable {
 	public void setParent(Node n) {
 		parent = n;
 	}
-
+	/**
+	 * Retrieves the node's parent
+	 * @return the node's parent
+	 */
+	public Node getParent(){
+		return parent;
+	}
 	/**
 	 * Creates a copy of the node and its subtree
 	 *
@@ -97,5 +103,11 @@ public abstract class Node implements Cloneable {
 	/**
 	 * Removes the node
 	 */
-	public abstract void remove();
+	public abstract boolean remove();
+	/**
+	 * Delete the given child node
+	 * Precondition: n must be a child of the node
+	 * @param n the given child node
+	 */
+	public abstract boolean deleteChild(Node n);
 }

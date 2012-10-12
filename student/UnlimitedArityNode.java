@@ -52,4 +52,9 @@ public abstract class NonTerminalNode<SubType extends Node> extends Node {
 		}
 		return list;
 	}
+    @Override
+    public boolean deleteChild(Node n)
+    {
+    	subNodes.remove(n);
+    }
 }

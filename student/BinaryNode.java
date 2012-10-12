@@ -51,6 +51,16 @@ public abstract class BinaryNode extends Node {
 			right.buildArray(list);
 		return list;
 	}
-
+    @Override
+    public boolean deleteChild(Node n)
+    {
+    	if(left.equals(n))
+    		left = null;
+    	else if(right.equals(n))
+    		right = null;
+    	else
+    		return false;
+    	return true;
+    }
 
 }

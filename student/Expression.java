@@ -40,7 +40,7 @@ public abstract class Expression extends Node {
 		return ""+value;
 	}
 	@Override
-	public void remove(){
+	public boolean remove(){
 		parent.numChildren()
 	}
 }
