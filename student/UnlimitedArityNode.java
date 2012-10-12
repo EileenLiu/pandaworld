@@ -8,18 +8,18 @@ package student;
  *
  * @author haro
  */
-public abstract class NonTerminalNode<SubType extends Node> extends Node {
+public abstract class UnlimitedArityNode<SubType extends Node> extends Node {
     protected final java.util.List<SubType> subNodes;
     
-    protected NonTerminalNode() {
+    protected UnlimitedArityNode() {
         subNodes = new java.util.LinkedList<SubType>();
     }
     
-    protected NonTerminalNode(int s) {
+    protected UnlimitedArityNode(int s) {
         subNodes = new java.util.ArrayList<SubType>(s);
     }
     
-    protected NonTerminalNode(java.util.List<SubType> subs) {
+    protected UnlimitedArityNode(java.util.List<SubType> subs) {
         subNodes = subs;
     }
     

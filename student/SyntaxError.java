@@ -16,10 +16,22 @@ public class SyntaxError extends Exception {
             super(line, "unexpected token: expected one of: " + Arrays.toString(exp) + " but found: " + obs);
         }
     }
-
-    public static class EmptyCommand extends SyntaxError {
-        public EmptyCommand(int line) {
-            super(line,"empty command; expected update or action after -->");
+    
+    public static class Empty extends SyntaxError {
+        public Empty(int line, String x) {
+            super(line,"empty "+x+"; expected update or action after -->");
+        }
+        
+        public static class Command extends Empty {
+            public Command(int line) {
+                super(line,"command");
+            }
+        }
+        
+        public static class Condition extends Empty {
+            public Condition(int line) {
+                super(line,"condition");
+            }
         }
     }
 }

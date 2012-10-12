@@ -11,6 +11,8 @@ package student;
 public final class PrettyPrint {
     private PrettyPrint(){}
     
+    public static final int CONDITION_BREAK = 38; //magic number alert
+    
     public static int tabWidth(StringBuffer sb) {
         return sb.length() - sb.lastIndexOf("\n");
     }
@@ -20,5 +22,9 @@ public final class PrettyPrint {
         sb.append("\n");
         while(num --> 0)
             sb.append(" ");
+    }
+    
+    public static boolean shouldBreak(StringBuffer sb, int dist) {
+        return tabWidth(sb) > dist;
     }
 }

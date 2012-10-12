@@ -44,10 +44,43 @@ public class ParserImpl implements Parser {
         else if(upds.size() > 0)
             return new Rule(cond, upds);
         else 
-            throw new SyntaxError.EmptyCommand(t.line());
+            throw new SyntaxError.Empty.Command(t.line());
     }
     
     private static Condition parseCondition(Tokenizer t) throws SyntaxError {
+        Conjunction conj;
+        LinkedList<Conjunction> conjs = new LinkedList<Conjunction>();
+        while((conj = parseConjunction(t)) != null)
+            conjs.add(conj);
+        if(conjs.size() == 0)
+            throw new SyntaxError.Empty.Condition(t.line());
+        else
+            return new Condition(conjs);
+    }
+    
+    private static Conjunction parseConjunction(Tokenizer t) throws SyntaxError {
+        Relation rel;
+        LinkedList<Relation> rels = new LinkedList<Relation>();
+        while((rel = parseRelation(t)) != null)
+            rels.add(rel);
+        if(rels.size() == 0)
+            throw new SyntaxError.Empty.Condition(t.line());
+        else
+            return new Conjunction(rels);
+    }
+    
+    private static Relation parseRelation(Tokenizer t) throws SyntaxError {
+        BinaryCondition bc = parseBinaryCondition(t);
+        if(bc == null) { //not -> expr rel expr
+            expect(t,"(");
+            Condition c = parseCondition(t);
+            expect(t,")");
+            return new Relation(c);
+        } else 
+            return new Relation(bc);
+    }
+    
+    private static BinaryCondition parseBinaryCondition(Tokenizer t) throws SyntaxError {
         throw new Error();
     }
     
