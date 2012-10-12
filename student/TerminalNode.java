@@ -13,4 +13,9 @@ public abstract class TerminalNode extends Node {
     public final int size() {
         return 1;
     }
+    
+    @Override
+    public final boolean hasChildren() {
+        return false;
+    }
 }

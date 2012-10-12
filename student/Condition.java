@@ -5,7 +5,6 @@ package student;
  *
  */
 public abstract class Condition extends Node {
-
     /**
      * Evaluates the Boolean value of this condition.
      *

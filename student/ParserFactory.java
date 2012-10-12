@@ -1,10 +1,39 @@
 package student;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+
 /**
  * A factory that gives access to instances of parser.
  */
 public class ParserFactory {
+	public static void main(String[] args) {
+		if(args[0].equals("--mutate"))
+		{
+			try {
+				Reader inStreamReader = new InputStreamReader(new FileInputStream(new File(args[2])));
+				ParserFactory.getParser().parse(inStreamReader);
+				///mutate???????????
+			} catch (FileNotFoundException e) {
 
+				System.out.println("The given file was not found.");
+			}	
+		}
+		else
+		{
+			try {
+				Reader inStreamReader = new InputStreamReader(new FileInputStream(new File(args[0])));
+				ParserFactory.getParser().parse(inStreamReader);
+				
+			} catch (FileNotFoundException e) {
+
+				System.out.println("The given file was not found.");
+			}
+		}
+	}
 	/**
 	 * Return a parser object for parsing a critter program.
 	 * @return

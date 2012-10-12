@@ -31,4 +31,9 @@ public abstract class NonTerminalNode<SubType extends Node> extends Node {
             s += n.size();
         return s;
     }
+    
+    @Override
+    public final boolean hasChildren() {
+        return subNodes.size() > 0;
+    }
 }

@@ -8,6 +8,6 @@ package student;
  *
  * @author haro
  */
-class Action extends Node {
+abstract class Action extends Node {
     
 }
