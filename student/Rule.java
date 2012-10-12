@@ -26,4 +26,34 @@ public class Rule extends Node {
 
 	}
 
+	@Override
+	public void remove() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Node copy() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void set(Node n) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Object getValue() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setValue(Object o) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

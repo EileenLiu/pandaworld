@@ -51,7 +51,28 @@ public class FaultInjector {
 			break;
 		case 3:// the node is replaced with a randomly chosen node of the same kind( for example, replacing attack with eat, or + with *) but its children remain the same. Literal integer constants are adjusted up or down with the value of java.lang.Integer.MAX_VALUE/r.nextInt(), where legal, and where r is a java.util.random obj
 			Node selected;
-			n.setValue(selected.getValue);
+			if(selected==null)
+			{
+				go = false;
+				break;
+			}
+			if(selected instanceof BinaryCondition)
+				((BinaryCondition)n).setConditionOp(((BinaryCondition) selected).getConditionOp());
+			else if(selected instanceof BinaryOp)
+				((BinaryOp)n).setBinaryOp(((BinaryOp) selected).getBinaryOp());
+			else if(selected instanceof BinaryRelation)
+				((BinaryRelation)n).setRelation(((BinaryRelation) selected).getRelation());
+			/*else if(selected instanceof Condition)
+				????*/
+			else if(selected instanceof Expression)
+				((Expression)n).setValue(((Expression) selected).getValue());
+			/*else if(selected instanceof Program)
+				???
+			else if(selected instanceof Rule)
+				???*/
+			else
+				go = false;
+			//n.setValue(selected.getValue());
 			break;
 		case 4: // a newly created node is inserted as the parent of the node, taking its place in the tree. if the newly created node has more than one child, the children that are not the original node are copies of randomly chosen nodes of the right kind from the whole rule set
 			break;
