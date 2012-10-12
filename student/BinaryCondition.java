@@ -67,4 +67,9 @@ public class BinaryCondition extends Condition {
 		// TODO Auto-generated method stub
 		
 	}
+
+    @Override
+    public boolean eval(State s) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }
