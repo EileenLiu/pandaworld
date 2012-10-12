@@ -35,9 +35,6 @@ public class FaultInjector {
 			}
 			else
 				go = true;
-			/*Node left = n.left;
-			n.left = right;
-			n.right = left;*/
 			break;
 		case 2: //the node and its children are replaced with a copy of another randomly selected node of the right kind, found somewhere in the rule set. the entire AST subtree rooted at the selected node is copied
 			//find selected

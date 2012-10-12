@@ -1,5 +1,7 @@
 package student;
 
+import java.util.LinkedList;
+
 public abstract class BinaryNode extends Node {
 	protected Node right, left, parent;
 	/**
@@ -24,9 +26,9 @@ public abstract class BinaryNode extends Node {
 			return 1+right.size()+left.size();
 	}
 	@Override
-	public boolean hasChildren()
+	public int numChildren()
 	{
-		return (left!=null||right!=null);
+		return ((right!=null)? 1:0) + ((left!=null)? 1:0);
 	}
 	@Override
 	public Node mutate() {
@@ -38,6 +40,16 @@ public abstract class BinaryNode extends Node {
 	public void prettyPrint(StringBuffer sb) {
 		// TODO Auto-generated method stub
 
+	}
+	@Override
+	protected LinkedList<Node> buildArray(LinkedList<Node> list)
+	{
+		list.add(this);
+		if(left!=null)
+			left.buildArray(list);
+		if(right!=null)
+			right.buildArray(list);
+		return list;
 	}
 
 

@@ -4,6 +4,8 @@
  */
 package student;
 
+import java.util.LinkedList;
+
 /**
  *
  * @author haro
@@ -33,7 +35,21 @@ public abstract class NonTerminalNode<SubType extends Node> extends Node {
     }
     
     @Override
-    public final boolean hasChildren() {
-        return subNodes.size() > 0;
+    public final int numChildren() {
+        return subNodes.size();
     }
+    @Override
+	protected LinkedList<Node> buildArray(LinkedList<Node> list)
+	{
+		list.add(this);
+		if(numChildren()>0)
+		{
+			for(SubType s: subNodes)
+			{
+				s.buildArray(list);	
+			}
+			
+		}
+		return list;
+	}
 }

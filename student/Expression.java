@@ -39,4 +39,8 @@ public abstract class Expression extends Node {
 	public String toString(){
 		return ""+value;
 	}
+	@Override
+	public void remove(){
+		parent.numChildren()
+	}
 }
