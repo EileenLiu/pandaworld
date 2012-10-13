@@ -5,9 +5,9 @@ import java.util.Collections;
 import java.util.List;
 
 // Represents +, -, *, /, %
-public abstract class BinaryOp extends Expression { // need not be abstract
-    private Expression left, right;//!!!!!!!!!!
-    private BinaryOperator op; //the operation
+public abstract class BinaryArithmeticOperator extends Expression<Expression<?>> { // need not be abstract
+    //private Expression left, right;
+    private BinaryOp op; //the operation
     
 	/**
 	 * Creates a new BinaryOp with the given left expression, right expression, and value (the operation)
@@ -16,23 +16,23 @@ public abstract class BinaryOp extends Expression { // need not be abstract
 	 * @param v the given value
 	 * @throws InvalidBinaryOpException 
 	 */
-	public BinaryOp(Expression l, Expression r, char v) throws InvalidBinaryOpException {
-		if(op == null||l ==null||r==null)
-			throw new InvalidBinaryOpException();
-		left = l;
-		right = r;
-		left.setParent(this);
-		right.setParent(this);
-		op = BinaryOperator.forSym(v);		
-		eval();
-	}
+    public BinaryArithmeticOperator(Expression<?> l, Expression<?> r, char v) throws InvalidBinaryOpException {
+        super(Arrays.asList(new Expression<?>[] { l, r }));
+        if (op == null || l == null || r == null) {
+            throw new InvalidBinaryOpException();
+        }
+        l.setParent(this);
+        r.setParent(this);
+        op = BinaryOp.forSym(v);
+        eval();
+    }
 	/**
 	 * Retrieves the BinaryOp's left
 	 * @return
 	 */
 	public Expression getLeft()
 	{
-		return left;
+		return subNodes.get(0);
 	}
 	/**
 	 * Retrieves the BinaryOp's right
@@ -40,27 +40,27 @@ public abstract class BinaryOp extends Expression { // need not be abstract
 	 */
 	public Expression getRight()
 	{
-		return right;
+		return subNodes.get(1);
 	}
 	/**
 	 * Evaluates the BinaryOp to update its value
 	 */
 	public void eval()
 	{
-		value = op.apply(((Expression)left).value, ((Expression)right).value);
+		value = op.apply(subNodes.get(0).value, subNodes.get(1).value);
 	}
 	/**
 	 * Retrieves the BinaryOp's BinaryOperator 
 	 * @return BinaryOp's BinaryOperator
 	 */
-	public BinaryOperator getBinaryOp(){
+	public BinaryOp getBinaryOp(){
 		return op;
 	}
 	/**
 	 * Sets the BinaryCondition's operator to the given BinaryConditionOperator
 	 * @param b the given BinaryConditionOperator
 	 */
-	public void setBinaryOp(BinaryOperator b){
+	public void setBinaryOp(BinaryOp b){
 		op=b;
 	}
 	/** An exception thrown when an invalid BinaryOp object is attempted to be created**/
@@ -75,7 +75,7 @@ public abstract class BinaryOp extends Expression { // need not be abstract
 	/**
 	 * An enumeration of all possible binary operators.
 	 */
-	public enum  BinaryOperator{
+	private enum BinaryOp {
 
 		PLUS('+') {
 			public int apply(int l, int r) { return l + r; }
@@ -95,7 +95,7 @@ public abstract class BinaryOp extends Expression { // need not be abstract
 		
 		private char sym;
 
-		private BinaryOperator(char s) {
+		private BinaryOp(char s) {
 			sym = s;
 		}
 
@@ -120,8 +120,8 @@ public abstract class BinaryOp extends Expression { // need not be abstract
 		 * @param s a character representing a binary integer operation
 		 * @return the operation
 		 */
-		public static BinaryOperator forSym(char s) {
-			for(BinaryOperator bo : VALUES)
+		public static BinaryOp forSym(char s) {
+			for(BinaryOp bo : VALUES)
 				if(bo.sym == s)
 					return bo;
 			return null;
@@ -130,7 +130,7 @@ public abstract class BinaryOp extends Expression { // need not be abstract
 		/**
 		 * The list of operators.
 		 */
-		public static final List<BinaryOperator> VALUES =
+		public static final List<BinaryOp> VALUES =
 				Collections.unmodifiableList(Arrays.asList(values()));
 		/**
 		 * The number of operators.

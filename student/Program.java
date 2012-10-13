@@ -8,7 +8,7 @@ import java.util.RandomAccess;
  * A representation of a critter program.
  *
  */
-public class Program extends UnlimitedArityNode<Rule> {
+public class Program extends Node<Rule> {
     
     public Program() {
         super();

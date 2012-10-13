@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * An enumeration of all possible binary condition operators.
  */
-public enum BinaryConditionOperator {
+public enum BinaryBooleanOperator {
 
 	OR,
 	AND;
@@ -15,7 +15,7 @@ public enum BinaryConditionOperator {
 	/**
 	 * The list of operators.
 	 */
-	public static final List<BinaryConditionOperator> VALUES =
+	public static final List<BinaryBooleanOperator> VALUES =
 			Collections.unmodifiableList(Arrays.asList(values()));
 	/**
 	 * The number of operators.
