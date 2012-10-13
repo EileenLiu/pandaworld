@@ -8,6 +8,6 @@ package student;
  *
  * @author haro
  */
-abstract class Update extends Node {
+abstract class Update extends Node<Expression<?>> {
     
 }

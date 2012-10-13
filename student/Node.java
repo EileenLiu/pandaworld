@@ -1,20 +1,45 @@
 package student;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  * A node in the abstract syntax tree of a program.
  */
-public abstract class Node implements Cloneable {
+public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
 
     protected Node parent;
+    protected final List<SubNodeType> subNodes;
+    
+    public Node(Node par, List<SubNodeType> subs) {
+        subNodes = subs;
+        parent = par;
+    }
+    
+    public Node(Node par) {
+        this(par, new LinkedList<SubNodeType>());
+    }
+    
+    public Node(List<SubNodeType> subs) {
+        this(null, subs);
+    }
+    
+    public Node() {
+        this((Node)null);
+    }
 
     /**
      * The number of nodes in this AST, including the current node. This can be
      * helpful for implementing mutate() correctly.
      */
-    public abstract int size();
+    public int size() {
+        int siz = 1;
+        for(SubNodeType n : subNodes)
+            siz += n.size();
+        return siz;
+    }
 
     /**
      * Return a version of the same AST with one random mutation in it. May have
@@ -51,7 +76,9 @@ public abstract class Node implements Cloneable {
      *
      * @return whether the node has children
      */
-    public abstract boolean hasChildren();
+    public boolean hasChildren() {
+        return !subNodes.isEmpty();
+    }
 
     /**
      * Sets the node's parent to the given node

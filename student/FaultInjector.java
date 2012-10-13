@@ -56,10 +56,10 @@ public class FaultInjector {
 				go = false;
 				break;
 			}
-			if(selected instanceof BinaryCondition)
-				((BinaryCondition)n).setConditionOp(((BinaryCondition) selected).getConditionOp());
-			else if(selected instanceof BinaryOp)
-				((BinaryOp)n).setBinaryOp(((BinaryOp) selected).getBinaryOp());
+			if(selected instanceof BinaryBooleanOperator)
+				((BinaryBooleanOperator)n).setConditionOp(((BinaryBooleanOperator) selected).getConditionOp());
+			else if(selected instanceof BinaryArithmeticOperator)
+				((BinaryArithmeticOperator)n).setBinaryOp(((BinaryArithmeticOperator) selected).getBinaryOp());
 			else if(selected instanceof BinaryRelation)
 				((BinaryRelation)n).setRelation(((BinaryRelation) selected).getRelation());
 			/*else if(selected instanceof Condition)
