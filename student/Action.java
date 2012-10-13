@@ -8,6 +8,7 @@ package student;
  *
  * @author haro
  */
-abstract class Action extends Node {
-    
+public interface Action {
+    public boolean execute();
+    public void prettyPrint(StringBuffer sb);
 }

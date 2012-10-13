@@ -2,8 +2,6 @@ package student;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * A node in the abstract syntax tree of a program.
@@ -12,22 +10,14 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
 
     protected Node parent;
     protected final List<SubNodeType> subNodes;
-    
+
     public Node(Node par, List<SubNodeType> subs) {
         subNodes = subs;
         parent = par;
     }
-    
+
     public Node(Node par) {
         this(par, new LinkedList<SubNodeType>());
-    }
-    
-    public Node(List<SubNodeType> subs) {
-        this(null, subs);
-    }
-    
-    public Node() {
-        this((Node)null);
     }
 
     /**
@@ -36,8 +26,9 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
      */
     public int size() {
         int siz = 1;
-        for(SubNodeType n : subNodes)
+        for (SubNodeType n : subNodes) {
             siz += n.size();
+        }
         return siz;
     }
 
@@ -78,7 +69,7 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
      *
      * @param n the given node
      */
-    public void setParent(Node n) {
+    public final void setParent(Node n) {
         parent = n;
     }
 
@@ -113,12 +104,6 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
         list.add(this);
         return list;
     }
-    /*{
-     if(numChildren()>0)
-     {
-			
-     }
-     }*/
 
     /**
      * Sets the current node to the given node(including its subtree)
@@ -126,7 +111,8 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
      * @param n
      */
     public void set(Node n) {
-        throw new Error("Unimplemented");
+        int pos = parent.subNodes.indexOf(this);
+        parent.subNodes.set(pos, n);
     }
 
     /**
@@ -134,23 +120,39 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
      *
      * @return number of children the node has
      */
-    public abstract int numChildren();
+    public int numChildren() {
+        return subNodes.size();
+    }
 
     /**
      * Swaps two children of the Node, if there are more than two, the two
      * children are randomly selected Precondition: Node has at least 2 children
      */
-    public abstract void swapChildren();
-
-    /**
-     * Removes the node
-     */
-    public abstract boolean remove();
+    public boolean swapChildren() {
+        int nc = numChildren();
+        if(nc < 2)
+            return false;
+        int c1, c2;
+        do {
+            c1 = (int)(Math.random()*nc);
+            c2 = (int)(Math.random()*nc);
+        } while(c1 == c2);
+        SubNodeType temp = subNodes.get(c1);
+        subNodes.set(c1, subNodes.get(c2));
+        subNodes.set(c2, temp);
+        return true;
+    }
+    
+    public boolean deleteChild() {
+        return deleteChild(subNodes.get((int)(numChildren()*Math.random())));
+    }
 
     /**
      * Delete the given child node Precondition: n must be a child of the node
      *
      * @param n the given child node
      */
-    public abstract boolean deleteChild(Node n);
+    public boolean deleteChild(SubNodeType n) {
+        return subNodes.remove(n);
+    }
 }

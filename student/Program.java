@@ -10,16 +10,8 @@ import java.util.RandomAccess;
  */
 public class Program extends Node<Rule> {
     
-    public Program() {
-        super();
-    }
-    
     public Program(List<Rule> l) {
-        super(l);
-    }
-    
-    public void addRule(Rule r) {
-        subNodes.add(r);
+        super(null,l);
     }
     
     public List<Rule> rules() {

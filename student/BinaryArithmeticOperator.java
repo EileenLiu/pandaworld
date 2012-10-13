@@ -24,7 +24,7 @@ public abstract class BinaryArithmeticOperator extends Expression<Expression<?>>
         l.setParent(this);
         r.setParent(this);
         op = BinaryOp.forSym(v);
-        eval();
+        //eval();
     }
 	/**
 	 * Retrieves the BinaryOp's left

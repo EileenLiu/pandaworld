@@ -8,7 +8,7 @@ package student;
  *
  * @author haro
  */
-public abstract class TerminalNode extends Node {
+public abstract class TerminalNode extends Node<TerminalNode.Null> {
     @Override
     public final int size() {
         return 1;
@@ -17,5 +17,9 @@ public abstract class TerminalNode extends Node {
     @Override
     public final boolean hasChildren() {
         return false;
+    }
+    
+    public abstract static class Null extends Node<Null> {
+        private Null() {}
     }
 }
