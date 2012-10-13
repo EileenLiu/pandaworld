@@ -6,7 +6,7 @@ import java.util.List;
 
 public class BinaryRelation extends Node<Expression<?>> {
 
-    private Relation relation;
+    private Rel relation;
 
     /**
      * Creates a new BinaryRelation with the given expressions and relation
@@ -15,11 +15,22 @@ public class BinaryRelation extends Node<Expression<?>> {
      * @param r the given expression on the right of the relation
      * @param rltn the given relation
      */
-    public BinaryRelation(Expression<?> l, Expression<?> r, Relation rltn) {
-        super(Arrays.asList(new Expression<?>[]{l, r}));
-        l.setParent(this);
-        r.setParent(this);
+    public BinaryRelation(Condition<?> par, Expression<?> l, Expression<?> r, Rel rltn) {
+        super(par, Arrays.asList(l, r));
         relation = rltn;
+    }
+    
+    public BinaryRelation(Rule par, Expression<?> l, Expression<?> r, Rel rltn) {
+        super(par, Arrays.asList(l, r));
+        relation = rltn;
+    }
+    
+    public BinaryRelation(Condition<?> par, Expression<?> l, Expression<?> r, String rltn) {
+        this(par, l, r, Rel.forSym(rltn));
+    }
+    
+    public BinaryRelation(Rule par, Expression<?> l, Expression<?> r, String rltn) {
+        this(par, l, r, Rel.forSym(rltn));
     }
 
     /**
@@ -27,7 +38,7 @@ public class BinaryRelation extends Node<Expression<?>> {
      *
      * @return the BinaryRelation's relation
      */
-    public Relation getRelation() {
+    public Rel getRelation() {
         return relation;
     }
 
@@ -36,7 +47,7 @@ public class BinaryRelation extends Node<Expression<?>> {
      *
      * @param r the given Relation
      */
-    public void setRelation(Relation r) {
+    public void setRelation(Rel r) {
         relation = r;
     }
 
@@ -52,86 +63,59 @@ public class BinaryRelation extends Node<Expression<?>> {
     }
 
     @Override
-    public boolean remove() {
-        // TODO Auto-generated method stub
-        throw new Error();
-    }
-
-    @Override
-    public boolean deleteChild(Node n) {
-        if (!(n instanceof BinaryRelation)) {
-            return false;
-        }
-
-        if (subNodes.get(0).equals(n)) {
-            subNodes.set(0, subNodes.get(0).subNodes.get(Math.random() > .5 ? 0 : 1));
-        } else if (subNodes.get(1).equals(n)) {
-            subNodes.set(1, subNodes.get(1).subNodes.get(Math.random() > .5 ? 0 : 1));
-        } else {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public Node copy() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public void set(Node n) {
-        // TODO Auto-generated method stub
+    public boolean deleteChild(Expression<?> n) {
+        return false;
     }
 
     @Override
     public int numChildren() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void swapChildren() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return 2;
     }
 
     /**
      * An enumeration of all possible binary operators.
      */
-    public enum Relation {
+    public enum Rel {
 
         LESSTHAN("<") {
+            @Override
             public boolean apply(int l, int r) {
                 return l < r;
             }
         },
         LESSTHANEQUALS("<=") {
+            @Override
             public boolean apply(int l, int r) {
                 return l <= r;
             }
         },
         EQUALS("=") {
+            @Override
             public boolean apply(int l, int r) {
                 return l == r;
             }
         },
         GREATERTHANEQUALS(">=") {
+            @Override
             public boolean apply(int l, int r) {
                 return l >= r;
             }
         },
         GREATERTHAN(">") {
+            @Override
             public boolean apply(int l, int r) {
                 return l > r;
             }
         },
         NOTEQUALS("!=") {
+            @Override
             public boolean apply(int l, int r) {
                 return l != r;
             }
         };
         private String sym;
 
-        private Relation(String s) {
+        private Rel(String s) {
             sym = s;
         }
 
@@ -159,22 +143,13 @@ public class BinaryRelation extends Node<Expression<?>> {
          * @param s a string representing a binary relation
          * @return the operation
          */
-        public static Relation forSym(String s) {
-            for (Relation r : VALUES) {
-                if (r.sym == s) {
+        public static Rel forSym(String s) {
+            for (Rel r : values()) {
+                if (r.sym.equals(s)) {
                     return r;
                 }
             }
             return null;
         }
-        /**
-         * The list of relations.
-         */
-        public static final List<Relation> VALUES =
-                Collections.unmodifiableList(Arrays.asList(values()));
-        /**
-         * The number of relations.
-         */
-        public static final int NUM_OPS = VALUES.size();
     }
 }

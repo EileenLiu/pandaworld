@@ -69,7 +69,7 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
      *
      * @param n the given node
      */
-    public void setParent(Node n) {
+    public final void setParent(Node n) {
         parent = n;
     }
 
@@ -111,7 +111,8 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
      * @param n
      */
     public void set(Node n) {
-        throw new Error("Unimplemented");
+        int pos = parent.subNodes.indexOf(this);
+        parent.subNodes.set(pos, n);
     }
 
     /**
