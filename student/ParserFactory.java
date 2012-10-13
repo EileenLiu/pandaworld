@@ -22,6 +22,10 @@ public class ParserFactory {
 				System.out.println("The given file was not found.");
 			}	
 		}
+		else if(args[0].equals("--extend"))
+		{
+			////////
+		}
 		else
 		{
 			try {
