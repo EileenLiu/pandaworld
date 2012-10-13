@@ -11,7 +11,7 @@ import java.util.RandomAccess;
 public class Program extends Node<Rule> {
     
     public Program(List<Rule> l) {
-        super(null,l);
+        super(l);
     }
     
     public List<Rule> rules() {

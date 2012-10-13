@@ -1,5 +1,6 @@
 package student;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -8,18 +9,20 @@ import java.util.List;
  */
 public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
 
-    protected Node parent;
+    protected Node parent = null;
     protected final List<SubNodeType> subNodes;
-
-    public Node(Node par, List<SubNodeType> subs) {
+    
+    @SuppressWarnings("LeakingThisInConstructor")
+    public Node(List<SubNodeType> subs) {
         subNodes = subs;
-        parent = par;
+        for(SubNodeType sn : subs)
+            sn.parent = this;
     }
-
-    public Node(Node par) {
-        this(par, new LinkedList<SubNodeType>());
+    
+    public Node(SubNodeType... subs) {
+        subNodes = Arrays.asList(subs);
     }
-
+    
     /**
      * The number of nodes in this AST, including the current node. This can be
      * helpful for implementing mutate() correctly.

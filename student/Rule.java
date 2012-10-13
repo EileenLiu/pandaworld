@@ -12,14 +12,14 @@ public class Rule extends Node<Update> {
     private Condition condition;
     private Action action;
 
-    public Rule(Program p, Condition c, List<Update> u, Action a) {
-        super(p,u);
+    public Rule(Condition c, List<Update> u, Action a) {
+        super(u);
         condition = c;
         action = a;
     }
 
-    public Rule(Program p, Condition c, List<Update> u) {
-        this(p, c, u, null);
+    public Rule(Condition c, List<Update> u) {
+        this(c, u, null);
     }
 
     @Override
