@@ -7,15 +7,14 @@ import static student.PrettyPrint.*;
 /**
  * A representation of a critter rule.
  */
-public class Rule extends Node {
+public class Rule extends Node<Update> {
 
     private Condition condition;
-    private List<Update> updates;
     private Action action;
 
     public Rule(Condition c, List<Update> u, Action a) {
+        super(u);
         condition = c;
-        updates = u;
         action = a;
     }
 
@@ -25,9 +24,7 @@ public class Rule extends Node {
 
     @Override
     public int size() {
-        return 2
-                + (action == null ? 0 : 1)
-                + updates.size();
+        return super.size() + 2; //2 extra for the condition and action
     }
 
     @Override
@@ -40,7 +37,7 @@ public class Rule extends Node {
     public void prettyPrint(StringBuffer sb) {
         condition.prettyPrint(sb);
         sb.append(" --> ");
-        Iterator<Update> i = updates.iterator();
+        Iterator<Update> i = subNodes.iterator();
         i.next().prettyPrint(sb);
         while (i.hasNext()) {
             tab(sb);

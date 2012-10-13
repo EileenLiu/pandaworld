@@ -1,7 +1,10 @@
 package student;
 
 // A critter program expression that has an integer value.
-public abstract class Expression extends Node {
+
+import java.util.List;
+
+public abstract class Expression<SubNodeType extends Expression<?>> extends Node<SubNodeType> {
 	protected int value;
 	/**
 	 * Creates a new Expression of random value between 0 and 999
@@ -16,6 +19,10 @@ public abstract class Expression extends Node {
 	public Expression(int v) {
 		value = v;
 	}
+        
+        public Expression(List<SubNodeType> subs) {
+            super(subs);
+        }
 
 	/**
 	 * Retrieves the Expression's value

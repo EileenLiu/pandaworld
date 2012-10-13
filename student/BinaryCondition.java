@@ -1,12 +1,14 @@
 package student;
 
+import java.util.Arrays;
+
 /**
  * A representation of a binary Boolean condition: 'and' or 'or'
  *
  */
-public class BinaryCondition extends Node {
+public class BinaryCondition extends Node<Condition<?>> {
 
-    private BinaryConditionOperator operator;
+    private BinaryBooleanOperator operator;
 
     /**
      * Create an AST representation of l op r.
@@ -15,9 +17,8 @@ public class BinaryCondition extends Node {
      * @param op
      * @param r
      */
-    public BinaryCondition(Condition l, BinaryConditionOperator op, Condition r) {
-        left = l;
-        right = r;
+    public BinaryCondition(Condition<?> l, BinaryBooleanOperator op, Condition<?> r) {
+        super(Arrays.asList(new Condition<?>[] { l, r }));
         //set left and right's parent to this??
         operator = op;
     }
@@ -27,7 +28,7 @@ public class BinaryCondition extends Node {
      *
      * @return BinaryCondition's operator
      */
-    public BinaryConditionOperator getConditionOp() {
+    public BinaryBooleanOperator getConditionOp() {
         return operator;
     }
 
@@ -36,7 +37,7 @@ public class BinaryCondition extends Node {
      *
      * @param b the given BinaryConditionOperator
      */
-    public void setConditionOp(BinaryConditionOperator b) {
+    public void setConditionOp(BinaryBooleanOperator b) {
         operator = b;
     }
 

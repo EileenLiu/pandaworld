@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 // Represents +, -, *, /, %
-public abstract class BinaryOp extends Expression { // need not be abstract
+public abstract class BinaryArithmeticOperator extends Expression<Expression<?>> { // need not be abstract
     //private Expression left, right;
     private BinaryOperator op; //the operation
     
@@ -16,22 +16,22 @@ public abstract class BinaryOp extends Expression { // need not be abstract
 	 * @param v the given value
 	 * @throws InvalidBinaryOpException 
 	 */
-	public BinaryOp(Expression l, Expression r, char v) throws InvalidBinaryOpException {
-		if(op == null||l ==null||r==null)
-			throw new InvalidBinaryOpException();
-		left = l;
-		right = r;
-		left.setParent(this);
-		right.setParent(this);
-		op = BinaryOperator.forSym(v);		
-		eval();
-	}
+    public BinaryArithmeticOperator(Expression<?> l, Expression<?> r, char v) throws InvalidBinaryOpException {
+        super(Arrays.asList(new Expression<?>[] { l, r }));
+        if (op == null || l == null || r == null) {
+            throw new InvalidBinaryOpException();
+        }
+        l.setParent(this);
+        r.setParent(this);
+        op = BinaryOperator.forSym(v);
+        eval();
+    }
 	/**
 	 * Evaluates the BinaryOp to update its value
 	 */
 	public void eval()
 	{
-		value = op.apply(((Expression)left).value, ((Expression)right).value);
+		value = op.apply(subNodes.get(0).value, subNodes.get(1).value);
 	}
 	/**
 	 * Retrieves the BinaryOp's BinaryOperator 
