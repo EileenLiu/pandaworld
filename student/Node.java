@@ -112,12 +112,6 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
         list.add(this);
         return list;
     }
-    /*{
-     if(numChildren()>0)
-     {
-			
-     }
-     }*/
 
     /**
      * Sets the current node to the given node(including its subtree)
@@ -141,17 +135,31 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
      * Swaps two children of the Node, if there are more than two, the two
      * children are randomly selected Precondition: Node has at least 2 children
      */
-    public abstract void swapChildren();
-
-    /**
-     * Removes the node
-     */
-    public abstract boolean remove();
+    public boolean swapChildren() {
+        int nc = numChildren();
+        if(nc < 2)
+            return false;
+        int c1, c2;
+        do {
+            c1 = (int)(Math.random()*nc);
+            c2 = (int)(Math.random()*nc);
+        } while(c1 == c2);
+        SubNodeType temp = subNodes.get(c1);
+        subNodes.set(c1, subNodes.get(c2));
+        subNodes.set(c2, temp);
+        return true;
+    }
+    
+    public boolean deleteChild() {
+        return deleteChild(subNodes.get((int)(numChildren()*Math.random())));
+    }
 
     /**
      * Delete the given child node Precondition: n must be a child of the node
      *
      * @param n the given child node
      */
-    public abstract boolean deleteChild(Node n);
+    public boolean deleteChild(SubNodeType n) {
+        return subNodes.remove(n);
+    }
 }
