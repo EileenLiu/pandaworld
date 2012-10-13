@@ -2,8 +2,6 @@ package student;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * A node in the abstract syntax tree of a program.
@@ -12,22 +10,22 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
 
     protected Node parent;
     protected final List<SubNodeType> subNodes;
-    
+
     public Node(Node par, List<SubNodeType> subs) {
         subNodes = subs;
         parent = par;
     }
-    
+
     public Node(Node par) {
         this(par, new LinkedList<SubNodeType>());
     }
-    
+
     public Node(List<SubNodeType> subs) {
         this(null, subs);
     }
-    
+
     public Node() {
-        this((Node)null);
+        this((Node) null);
     }
 
     /**
@@ -36,8 +34,9 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
      */
     public int size() {
         int siz = 1;
-        for(SubNodeType n : subNodes)
+        for (SubNodeType n : subNodes) {
             siz += n.size();
+        }
         return siz;
     }
 
@@ -134,7 +133,9 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
      *
      * @return number of children the node has
      */
-    public abstract int numChildren();
+    public int numChildren() {
+        return subNodes.size();
+    }
 
     /**
      * Swaps two children of the Node, if there are more than two, the two

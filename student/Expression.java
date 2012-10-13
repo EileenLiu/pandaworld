@@ -47,7 +47,7 @@ public abstract class Expression<SubNodeType extends Expression<?>> extends Node
 		return ""+value;
 	}
 	@Override
-	public boolean remove(){
-		parent.numChildren()
+	public boolean remove() {
+		throw new Error();
 	}
 }
