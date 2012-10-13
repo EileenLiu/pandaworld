@@ -12,7 +12,6 @@ public final class PrettyPrint {
     private PrettyPrint(){}
     
     public static final int CONDITION_BREAK = 38; //magic number alert
-    
     public static int tabWidth(StringBuffer sb) {
         return sb.length() - sb.lastIndexOf("\n");
     }

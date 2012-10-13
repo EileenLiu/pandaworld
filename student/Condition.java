@@ -8,6 +8,7 @@ import static student.PrettyPrint.*;
  * An interface representing a Boolean condition in a critter program.
  *
  */
+<<<<<<< HEAD
 public class Condition extends UnlimitedArityNode<Conjunction> {
     
     public Condition() {
@@ -51,4 +52,14 @@ public class Condition extends UnlimitedArityNode<Conjunction> {
         if(parenp)
             sb.append(')');
     }
+=======
+public abstract class Condition extends Node {
+    /**
+     * Evaluates the Boolean value of this condition.
+     *
+     * @param s The state to be evaluated in
+     * @return The Boolean value of this condition
+     */
+    public abstract boolean eval(State s);
+>>>>>>> FaultInjection
 }

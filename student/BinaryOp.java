@@ -6,7 +6,7 @@ import java.util.List;
 
 // Represents +, -, *, /, %
 public abstract class BinaryOp extends Expression { // need not be abstract
-    //private Expression left, right;
+    private Expression left, right;//!!!!!!!!!!
     private BinaryOperator op; //the operation
     
 	/**
@@ -25,6 +25,22 @@ public abstract class BinaryOp extends Expression { // need not be abstract
 		right.setParent(this);
 		op = BinaryOperator.forSym(v);		
 		eval();
+	}
+	/**
+	 * Retrieves the BinaryOp's left
+	 * @return
+	 */
+	public Expression getLeft()
+	{
+		return left;
+	}
+	/**
+	 * Retrieves the BinaryOp's right
+	 * @return
+	 */
+	public Expression getRight()
+	{
+		return right;
 	}
 	/**
 	 * Evaluates the BinaryOp to update its value

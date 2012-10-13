@@ -29,6 +29,7 @@ public class ParserImpl implements Parser {
         while(t.hasNext())
             p.addRule(parseRule(t));
         return p;
+<<<<<<< HEAD
     }
     
     private static Rule parseRule(Tokenizer t) throws SyntaxError {
@@ -81,6 +82,27 @@ public class ParserImpl implements Parser {
     }
     
     private static BinaryCondition parseBinaryCondition(Tokenizer t) throws SyntaxError {
+=======
+    }
+    
+    private static Rule parseRule(Tokenizer t) throws SyntaxError {
+        Condition cond = parseCondition(t);
+        expect(t,"-->");
+        LinkedList<Update> upds = new LinkedList<Update>();
+        Update upd;
+        while((upd = parseUpdate(t)) != null)
+            upds.add(upd);
+        Action act = parseAction(t);
+        if(act != null) 
+            return new Rule(cond, upds, act);
+        else if(upds.size() > 0)
+            return new Rule(cond, upds);
+        else 
+            throw new SyntaxError.EmptyCommand(t.line());
+    }
+    
+    private static Condition parseCondition(Tokenizer t) throws SyntaxError {
+>>>>>>> FaultInjection
         throw new Error();
     }
     

@@ -3,6 +3,9 @@
  */
 package student;
 
+import java.util.LinkedList;
+import java.util.Random;
+
 public class FaultInjector {
 	public Node injectFault(Node n)
 	{
@@ -16,7 +19,8 @@ public class FaultInjector {
 			go = false;
 		switch(faultType){
 		case 0: //the node is removed. if its parent node needs a replacement node, one of its children of the right kind is used. The child to be used is randomly selected. Thus rule nodes are simply removed, but binary operation nodes would be replaced with either their left or right child
-			n.remove();
+			if(!n.remove()) //attempts to remove node, if the node cannot be removed...
+				go = true;
 			
 			
 			/*if(n.parent instanceof BinaryOp)
@@ -29,19 +33,21 @@ public class FaultInjector {
 				n.parent.children = null;*/
 			break;
 		case 1: //order of two children of the node is switched. for ex. allows swapping of positions of two rules
-			if(n.hasChildren())
+			if(n.numChildren()>=2)
 			{
 			n.swapChildren();
 			}
 			else
 				go = true;
-			/*Node left = n.left;
-			n.left = right;
-			n.right = left;*/
 			break;
 		case 2: //the node and its children are replaced with a copy of another randomly selected node of the right kind, found somewhere in the rule set. the entire AST subtree rooted at the selected node is copied
+			Node pointer = n;
+			while(pointer.getParent().getParent()!=null) //finds the topmost node in the AST
+			{
+			pointer = pointer.getParent();
+			}
 			//find selected
-			Node selected;
+			Node selected = randomNode(pointer, n.getClass());
 			if(selected!=null)
 			{
 			n.set(selected.copy());
@@ -83,6 +89,23 @@ public class FaultInjector {
 
 		}*/
 		return null;
+	}
+	public Node randomNode(Node start, Class<? extends Node> c)
+	{
+		Node[] arr = start.toArray();
+		LinkedList<Node> sameType = new LinkedList<Node>();
+		for(Node nd: arr)
+		{
+			if(nd.getClass().equals(c))
+			sameType.add(nd);
+		}
+		if(sameType.size()>0)
+		{
+			Random r = new Random();
+			return sameType.get((r.nextInt(sameType.size())));
+		}
+		else
+			return null;
 	}
 	//mem[0] length of critter's memory (immutable, always at least 9)
 	//mem[1] defense ability (immutible, >= 1 )

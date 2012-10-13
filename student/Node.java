@@ -1,5 +1,6 @@
 package student;
 
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,13 +32,6 @@ public abstract class Node implements Cloneable {
     public abstract void prettyPrint(StringBuffer sb);
 
     /**
-     * Removes the node
-     */
-    public void remove() {
-        throw new Error("Unimplemented");        
-    }
-
-    /**
      * Checks if the node has a parent
      *
      * @return whether the node has a parent
@@ -45,13 +39,6 @@ public abstract class Node implements Cloneable {
     public boolean hasParent() {
         return parent != null;
     }
-
-    /**
-     * Checks if the node has children
-     *
-     * @return whether the node has children
-     */
-    public abstract boolean hasChildren();
 
     /**
      * Sets the node's parent to the given node
@@ -63,17 +50,42 @@ public abstract class Node implements Cloneable {
     }
 
     /**
+     * Retrieves the node's parent
+     *
+     * @return the node's parent
+     */
+    public Node getParent() {
+        return parent;
+    }
+
+    /**
      * Creates a copy of the node and its subtree
      *
      * @return
      */
     public Node copy() {
         try {
-            return (Node)this.clone();
+            return (Node) this.clone();
         } catch (CloneNotSupportedException ex) {
             throw new Error("Yes, we *do* support .clone()");
         }
     }
+
+    public Node[] toArray() {
+        Node[] arr = (Node[]) buildArray(new LinkedList<Node>()).toArray();
+        return arr;
+    }
+
+    protected LinkedList<Node> buildArray(LinkedList<Node> list) {
+        list.add(this);
+        return list;
+    }
+    /*{
+     if(numChildren()>0)
+     {
+			
+     }
+     }*/
 
     /**
      * Sets the current node to the given node(including its subtree)
@@ -83,4 +95,29 @@ public abstract class Node implements Cloneable {
     public void set(Node n) {
         throw new Error("Unimplemented");
     }
+
+    /**
+     * Retrieves the number of children the node has
+     *
+     * @return number of children the node has
+     */
+    public abstract int numChildren();
+
+    /**
+     * Swaps two children of the Node, if there are more than two, the two
+     * children are randomly selected Precondition: Node has at least 2 children
+     */
+    public abstract void swapChildren();
+
+    /**
+     * Removes the node
+     */
+    public abstract boolean remove();
+
+    /**
+     * Delete the given child node Precondition: n must be a child of the node
+     *
+     * @param n the given child node
+     */
+    public abstract boolean deleteChild(Node n);
 }
