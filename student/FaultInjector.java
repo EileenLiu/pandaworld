@@ -60,9 +60,9 @@ public class FaultInjector {
 				((BinaryBooleanOperator)n).setConditionOp(((BinaryBooleanOperator) selected).getConditionOp());
 			else if(selected instanceof BinaryArithmeticOperator)
 				((BinaryArithmeticOperator)n).setBinaryOp(((BinaryArithmeticOperator) selected).getBinaryOp());
-			else if(selected instanceof BinaryRelation)
+			/*else if(selected instanceof BinaryRelation)
 				((BinaryRelation)n).setRelation(((BinaryRelation) selected).getRelation());
-			/*else if(selected instanceof Condition)
+			  else if(selected instanceof Condition)
 				????*/
 			else if(selected instanceof Expression)
 				((Expression)n).setValue(((Expression) selected).getValue());
