@@ -85,7 +85,7 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
     /**
      * Creates a copy of the node and its subtree
      *
-     * @return
+     * @return copy of node and its subtree
      */
     public Node copy() {
         try {
