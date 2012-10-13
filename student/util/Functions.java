@@ -2,13 +2,14 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package student;
+package student.util;
+
+import java.util.Arrays;
 
 /**
  *
  * @author haro
  */
-public interface Action {
-    public boolean execute();
-    public void prettyPrint(StringBuffer sb);
+public class Functions {
+    private Functions() {}
 }

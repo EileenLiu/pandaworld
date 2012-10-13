@@ -20,14 +20,6 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
         this(par, new LinkedList<SubNodeType>());
     }
 
-    public Node(List<SubNodeType> subs) {
-        this(null, subs);
-    }
-
-    public Node() {
-        this((Node) null);
-    }
-
     /**
      * The number of nodes in this AST, including the current node. This can be
      * helpful for implementing mutate() correctly.

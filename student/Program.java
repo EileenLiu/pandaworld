@@ -11,7 +11,7 @@ import java.util.RandomAccess;
 public class Program extends Node<Rule> {
     
     public Program(List<Rule> l) {
-        super(l);
+        super(null,l);
     }
     
     public List<Rule> rules() {
@@ -30,20 +30,5 @@ public class Program extends Node<Rule> {
             r.prettyPrint(sb);
             sb.append("\n\n");
         }
-    }
-
-    @Override
-    public void swapChildren() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public boolean remove() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public boolean deleteChild(Node n) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

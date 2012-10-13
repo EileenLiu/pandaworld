@@ -4,10 +4,30 @@
  */
 package student;
 
+import java.util.Arrays;
+
 /**
  *
  * @author haro
  */
 abstract class Update extends Node<Expression<?>> {
+    public Update(Rule par, Expression<?> ind, Expression<?> val) {
+        super(par, Arrays.asList(ind, val));
+    }
     
-}
+    public Expression<?> index() {
+        return subNodes.get(0);
+    }
+    
+    public Expression<?> newValue() {
+        return subNodes.get(1);
+    }
+    
+    public int oldValue() {
+        throw new Error("No state yet");
+    }
+    
+    public void apply() {
+        throw new Error("No state yet");
+    }
+}   

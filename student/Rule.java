@@ -2,7 +2,7 @@ package student;
 
 import java.util.Iterator;
 import java.util.List;
-import static student.PrettyPrint.*;
+import static student.util.PrettyPrint.*;
 
 /**
  * A representation of a critter rule.
@@ -12,14 +12,14 @@ public class Rule extends Node<Update> {
     private Condition condition;
     private Action action;
 
-    public Rule(Condition c, List<Update> u, Action a) {
-        super(u);
+    public Rule(Program p, Condition c, List<Update> u, Action a) {
+        super(p,u);
         condition = c;
         action = a;
     }
 
-    public Rule(Condition c, List<Update> u) {
-        this(c, u, null);
+    public Rule(Program p, Condition c, List<Update> u) {
+        this(p, c, u, null);
     }
 
     @Override
