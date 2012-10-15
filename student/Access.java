@@ -30,7 +30,27 @@ public class Access extends Expression {
     }
 
     private static enum Sen {
-        MEM,RANDOM,AHEAD,NEARBY;
+        MEM {
+            @Override public int val(int par) {
+                throw new Error("Can't do that yet...");
+            }
+        },
+        RANDOM {
+            @Override public int val(int par) {
+                return (int)(par*Math.random());
+            }            
+        },
+        AHEAD {
+            @Override public int val(int par) {
+                throw new Error("Can't do that yet...");
+            }            
+        },
+        NEARBY {
+            @Override public int val(int par) {
+                throw new Error("Can't do that yet...");
+            }            
+        };
+        
         
         public static Sen forName(String st) {
             for(Sen s : values())
@@ -38,5 +58,7 @@ public class Access extends Expression {
                     return s;
             return null;
         }
+        
+        public abstract int val(int par);
     }
 }
