@@ -44,4 +44,8 @@ public final class Functions {
                 return i;
         return null;
     }
+    
+    public static <E extends Enum<E>> String en2s(E e) {
+        return e.name().toLowerCase();
+    }
 }
