@@ -17,8 +17,10 @@ public class Access extends Expression {
     
     public static Access parse(LinkedList<HistObj> hist) throws SyntaxError {
         HistObj self = hist.pop();
-        Sen type = Sen.forName(hist.pop().token);
+        Sen type = Sen.forName(self.token);
+        hist.pop().expect("[");
         Expression ind = Expression.parse(hist);
+        hist.pop().expect("]");
         return new Access(type, ind);
     }
 
@@ -33,13 +35,35 @@ public class Access extends Expression {
     	return true;
     }
     private static enum Sen {
-        MEM,RANDOM,AHEAD,NEARBY;
+        MEM {
+            @Override public int val(int par) {
+                throw new Error("Can't do that yet...");
+            }
+        },
+        RANDOM {
+            @Override public int val(int par) {
+                return (int)(par*Math.random());
+            }            
+        },
+        AHEAD {
+            @Override public int val(int par) {
+                throw new Error("Can't do that yet...");
+            }            
+        },
+        NEARBY {
+            @Override public int val(int par) {
+                throw new Error("Can't do that yet...");
+            }            
+        };
+        
         
         public static Sen forName(String st) {
             for(Sen s : values())
-                if(s.name().equals(st))
+                if(s.name().toLowerCase().equals(st))
                     return s;
             return null;
         }
+        
+        public abstract int val(int par);
     }
 }

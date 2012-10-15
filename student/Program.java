@@ -19,9 +19,14 @@ public class Program extends Node<Rule> {
         //Rule is: Program => Rule Program
         while(hist.size() > 0) {
             Rule r = Rule.parse(hist);
-            p.subNodes.add(r);
+            p.children.add(r);
+            hist.pop();
         }
         return p;
+    }
+    
+    private Program() {
+        super(new LinkedList<Rule>());
     }
     
     public List<Rule> rules() {

@@ -25,7 +25,7 @@ public class Rule extends Node<Update> {
     }
     
     protected Rule() {
-        super();
+        super(new LinkedList<Update>());
     }
     
     public static Rule parse(LinkedList<HistObj> hist) throws SyntaxError {
@@ -34,10 +34,15 @@ public class Rule extends Node<Update> {
         //Rule => Condition --> Command ;
         r.condition =  Condition.parse(hist);
         hist.pop().expect("-->");
-        while(hist.peek().rule.equals("Update"))
-            r.subNodes.add(Update.parse(hist));
-        if(hist.peek().rule.equals("Action"))
-            r.action = Action.parse(hist);
+        while(hist.peek().rule.startsWith("Command") && hist.pop().production.length > 0) {
+            if(hist.peek().rule.equals("Update"))
+                r.children.add(Update.parse(hist));
+            else if(hist.peek().rule.equals("Action")) {
+                r.action = Action.parse(hist);
+                break;
+            }
+        }
+        hist.pop().expect(";");
         return r;
     }
 

@@ -128,7 +128,7 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
      *
      * @param n
      */
-    public void set(Node<? extends SubNodeType> n) {
+    public void set(Node n) {
         int pos = parent.children.indexOf(this);
         parent.children.set(pos, n);
     }

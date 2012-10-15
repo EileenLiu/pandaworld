@@ -36,6 +36,7 @@ public class ParserImpl /*implements Parser*/ {
                     hist.add(HistObj.tok(top));
                 }
             }
+            System.out.println(hist);
             return Program.parse(hist);
         } catch (SyntaxError e) {
             throw e;
@@ -294,7 +295,7 @@ public class ParserImpl /*implements Parser*/ {
 
         public void expect(String string) throws SyntaxError {
             if(token == null || !token.equals(string))
-                throw new SyntaxError.ExpectationFailure(token,string);
+                throw new SyntaxError.ExpectationFailure(string,token);
         }
 
         @Override

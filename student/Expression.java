@@ -45,6 +45,7 @@ public class Expression<SubNodeType extends Expression<?>> extends Node<SubNodeT
                 return sub;
             } else if(nump(self.production[0])) {
                 int i = num(self.production[0]);
+                hist.pop(); //take care of the token;
                 return new Expression(i);
             } else {
                 return Access.parse(hist);
