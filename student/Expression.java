@@ -59,7 +59,7 @@ public class Expression<SubNodeType extends Expression<?>> extends Node<SubNodeT
      * Creates a new Expression of random value between 0 and 999
      */
     public Expression() {
-        value = (int) (Math.random() * 999);
+        randomize();
     }
 
     /**
@@ -74,7 +74,12 @@ public class Expression<SubNodeType extends Expression<?>> extends Node<SubNodeT
     public Expression(List<SubNodeType> subs) {
         super(subs);
     }
-
+    @Override
+    public boolean randomize()
+    {
+    	value = (int) (Math.random() * 999);
+    	return true;
+    }
     /**
      * Retrieves the Expression's value
      *

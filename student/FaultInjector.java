@@ -12,14 +12,16 @@ public class FaultInjector {
 		//int index = (int)(Math.random()*ORIGINAL.length);
 		//Node[] arr = n.toArray();
 		//int i = (int)(Math.random()*arr.length);
-		int faultType = (int)(Math.random()*5);
+		int faultType;
 		boolean go = true;
+		
 		while(go)
 		{
+			faultType = (int)(Math.random()*5);
 			go = false;
 		switch(faultType){
 		case 0: //the node is removed. if its parent node needs a replacement node, one of its children of the right kind is used. The child to be used is randomly selected. Thus rule nodes are simply removed, but binary operation nodes would be replaced with either their left or right child
-			if(!n.remove()) //attempts to remove node, if the node cannot be removed...
+			if(!n.getParent().deleteChild(n)) //attempts to remove node, if the node cannot be removed...
 				go = true;
 			
 			/*if(n.parent instanceof BinaryOp)
@@ -54,32 +56,41 @@ public class FaultInjector {
 			else
 				go = true;
 			break;
+			
 		case 3:// the node is replaced with a randomly chosen node of the same kind( for example, replacing attack with eat, or + with *) but its children remain the same. Literal integer constants are adjusted up or down with the value of java.lang.Integer.MAX_VALUE/r.nextInt(), where legal, and where r is a java.util.random obj
-			Node selected;
+			// TODO CASE THREE
+			//update, condition, node, program, rule
+			/*Node selected;
 			if(selected==null)
 			{
 				go = false;
 				break;
-			}
-			if(selected instanceof BinaryBooleanOperator)
+			}*/
+			if(!n.randomize())
+				go = true;
+/*			if(selected instanceof BinaryBooleanOperator)
 				((BinaryBooleanOperator)n).setConditionOp(((BinaryBooleanOperator) selected).getConditionOp());
 			else if(selected instanceof BinaryArithmeticOperator)
 				((BinaryArithmeticOperator)n).setBinaryOp(((BinaryArithmeticOperator) selected).getBinaryOp());
-			/*else if(selected instanceof BinaryRelation)
+			else if(selected instanceof BinaryRelation)
 				((BinaryRelation)n).setRelation(((BinaryRelation) selected).getRelation());
-			  else if(selected instanceof Condition)
+			  /*else if(selected instanceof Condition)
 				????*/
-			else if(selected instanceof Expression)
+/*			else if(selected instanceof Expression)
 				((Expression)n).setValue(((Expression) selected).getValue());
 			/*else if(selected instanceof Program)
 				???
 			else if(selected instanceof Rule)
 				???*/
-			else
+/*			else
 				go = false;
+
 			//n.setValue(selected.getValue());
+*/
 			break;
 		case 4: // a newly created node is inserted as the parent of the node, taking its place in the tree. if the newly created node has more than one child, the children that are not the original node are copies of randomly chosen nodes of the right kind from the whole rule set
+			// TODO CASE 4
+			
 			break;
 		}
 		}
