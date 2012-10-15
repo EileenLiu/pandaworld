@@ -11,8 +11,8 @@ import java.util.Arrays;
  * @author haro
  */
 abstract class Update extends Node<Expression<?>> {
-    public Update(Rule par, Expression<?> ind, Expression<?> val) {
-        super(par, Arrays.asList(ind, val));
+    public Update(Expression<?> ind, Expression<?> val) {
+        super(ind, val);
     }
     
     public Expression<?> index() {

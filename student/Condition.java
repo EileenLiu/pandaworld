@@ -11,12 +11,8 @@ import static student.util.PrettyPrint.*;
  */
 public abstract class Condition<SubNodeType extends Condition<?>> extends Node<SubNodeType> {
     
-    public Condition(Condition<?> par, List<SubNodeType> subs) {
-        super(par,subs);
-    }
-    
-    public Condition(Rule par, List<SubNodeType> subs) {
-        super(par,subs);
+    public Condition(List<SubNodeType> subs) {
+        super(subs);
     }
     
     public abstract boolean eval();
