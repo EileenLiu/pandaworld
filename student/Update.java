@@ -29,11 +29,11 @@ public class Update extends Node<Expression<?>> {
     }
     
     public Expression<?> index() {
-        return subNodes.get(0);
+        return children.get(0);
     }
     
     public Expression<?> newValue() {
-        return subNodes.get(1);
+        return children.get(1);
     }
     
     public int oldValue() {

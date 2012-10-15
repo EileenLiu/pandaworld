@@ -53,13 +53,15 @@ public abstract class Condition<SubNodeType extends Node<?>> extends Node<SubNod
                 return sub;
             } else if(self.production[0].equals("Expression")) {
                 Expression l = Expression.parse(hist);
+                hist.pop(); //Rel
                 String rel = hist.pop().token;
                 assert(rel != null);
                 Expression r = Expression.parse(hist);
                 return new BinaryRelation(l, r, rel);
             }
         }
-        throw new Error("unreachable");
+        if(false) throw new Error("unreachable"+self.rule);
+        return null;
     }
     
     public Condition(List<SubNodeType> subs) {

@@ -13,11 +13,11 @@ public class BinaryBooleanOperator extends Condition<Condition<?>> {
     }
 
     public Condition<?> left() {
-        return subNodes.get(0);
+        return children.get(0);
     }
     
     public Condition<?> right() {
-        return subNodes.get(1);
+        return children.get(1);
     }
     
     @Override

@@ -47,9 +47,12 @@ public class Tokenizer implements Iterator<String> {
      * @param r
      */
     public Tokenizer(Reader r) {
+        this();
         this.pr = new PushbackReader(r);
         this.lineNo = 1;
     }
+    
+    private Tokenizer() {}
 
     @Override
     public boolean hasNext() {

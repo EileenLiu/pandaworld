@@ -19,13 +19,18 @@ public class Program extends Node<Rule> {
         //Rule is: Program => Rule Program
         while(hist.size() > 0) {
             Rule r = Rule.parse(hist);
-            p.subNodes.add(r);
+            p.children.add(r);
+            hist.pop();
         }
         return p;
     }
     
+    private Program() {
+        super(new LinkedList<Rule>());
+    }
+    
     public List<Rule> rules() {
-        return Collections.unmodifiableList(subNodes);
+        return Collections.unmodifiableList(children);
     }
 
     @Override
@@ -36,7 +41,7 @@ public class Program extends Node<Rule> {
 
     @Override
     public void prettyPrint(StringBuffer sb) {
-        for(Rule r : subNodes) {
+        for(Rule r : children) {
             r.prettyPrint(sb);
             sb.append("\n\n");
         }

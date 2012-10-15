@@ -1,12 +1,12 @@
 mem[5]=1 --> mem[6] := mem[4]
 	     mem[5] := 2;
 
-food < 6 --> mem[5]:=1
+mem[6] < 6 --> mem[5]:=1
              eat;
 
-food mod 6 <= 3 --> right;
+mem[7] mod 6 <= 3 --> right;
 
-food mod 6 >= 3 --> left;
+mem[8] mod 6 >= 3 --> left;
 
 ahead[1] = 0 --> forward;
 
