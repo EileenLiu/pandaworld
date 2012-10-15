@@ -22,7 +22,6 @@ public class FaultInjector {
 			if(!n.remove()) //attempts to remove node, if the node cannot be removed...
 				go = true;
 			
-			
 			/*if(n.parent instanceof BinaryOp)
 			{
 				//find selected

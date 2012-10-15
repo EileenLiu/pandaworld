@@ -18,11 +18,11 @@ public class BinaryBooleanOperator extends Condition<Condition<?>> {
     }
 
     public Condition<?> left() {
-        return subNodes.get(0);
+        return children.get(0);
     }
     
     public Condition<?> right() {
-        return subNodes.get(1);
+        return children.get(1);
     }
     
     @Override
@@ -40,6 +40,22 @@ public class BinaryBooleanOperator extends Condition<Condition<?>> {
         left().prettyPrint(sb);
         sb.append(" " + op.sym() + " ");
         right().prettyPrint(sb);
+    }
+	@Override
+	public boolean deleteChild(Condition<?> n) {
+		if(!(n instanceof BinaryBooleanOperator))
+			return false;
+		if(children.get(0).equals(n))//left
+		{
+			children.set(0, ((Condition<?>)(n.randomChild())));
+		}
+		else if(children.get(1).equals(n))//right
+		{
+			children.set(1, ((Condition<?>)(n.randomChild())));
+		}
+		else
+			return false;
+		return true;
     }
 
     /**

@@ -37,7 +37,7 @@ public class Rule extends Node<Update> {
     public void prettyPrint(StringBuffer sb) {
         condition.prettyPrint(sb);
         sb.append(" --> ");
-        Iterator<Update> i = subNodes.iterator();
+        Iterator<Update> i = children.iterator();
         i.next().prettyPrint(sb);
         while (i.hasNext()) {
             tab(sb);

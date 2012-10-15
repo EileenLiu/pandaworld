@@ -6,14 +6,18 @@ import java.util.List;
 import static student.util.PrettyPrint.*;
 
 /**
- * An interface representing a Boolean condition in a critter program.
- *
+ * An abstract class representing a Boolean condition in a critter program.
  */
-public abstract class Condition<SubNodeType extends Condition<?>> extends Node<SubNodeType> {
+public abstract class Condition<SubNodeType extends Node<?>> extends Node<SubNodeType> {
     
     public Condition(List<SubNodeType> subs) {
         super(subs);
     }
     
+    /**
+     * Evaluates the Condition
+     * @return the boolean evaluation of the condition
+     */
     public abstract boolean eval();
+
 }

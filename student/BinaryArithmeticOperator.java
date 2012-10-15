@@ -32,7 +32,7 @@ public abstract class BinaryArithmeticOperator extends Expression<Expression<?>>
 	 */
 	public Expression getLeft()
 	{
-		return subNodes.get(0);
+		return children.get(0);
 	}
 	/**
 	 * Retrieves the BinaryOp's right
@@ -40,14 +40,14 @@ public abstract class BinaryArithmeticOperator extends Expression<Expression<?>>
 	 */
 	public Expression getRight()
 	{
-		return subNodes.get(1);
+		return children.get(1);
 	}
 	/**
 	 * Evaluates the BinaryOp to update its value
 	 */
 	public void eval()
 	{
-		value = op.apply(subNodes.get(0).value, subNodes.get(1).value);
+		value = op.apply(children.get(0).value, children.get(1).value);
 	}
 	/**
 	 * Retrieves the BinaryOp's BinaryOperator 
@@ -63,6 +63,22 @@ public abstract class BinaryArithmeticOperator extends Expression<Expression<?>>
 	public void setBinaryOp(BinaryOp b){
 		op=b;
 	}
+	@Override
+	public boolean deleteChild(Expression<?> n) {
+		if(!(n instanceof BinaryArithmeticOperator))
+			return false;
+		if(children.get(0).equals(n))//left
+		{
+			children.set(0, ((Expression<?>)(n.randomChild())));
+		}
+		else if(children.get(1).equals(n))//right
+		{
+			children.set(1, ((Expression<?>)(n.randomChild())));
+		}
+		else
+			return false;
+		return true;
+    }
 	/** An exception thrown when an invalid BinaryOp object is attempted to be created**/
 	private class InvalidBinaryOpException extends Exception
 	{
