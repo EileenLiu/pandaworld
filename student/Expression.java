@@ -53,56 +53,25 @@ public class Expression<SubNodeType extends Expression<?>> extends Node<SubNodeT
         }
         throw new Error(self.rule);
     }
-    
-    protected int value;
 
+    
     /**
      * Creates a new Expression of random value between 0 and 999
      */
-    public Expression() {
-        value = (int) (Math.random() * 999);
+    protected Expression() {
+        super();
     }
 
-    /**
-     * Creates a new Expression with the given value
-     *
-     * @param v the given value
-     */
-    public Expression(int v) {
-        value = v;
-    }
-
-    public Expression(List<SubNodeType> subs) {
+    protected Expression(List<SubNodeType> subs) {
         super(subs);
-    }
-
-    /**
-     * Retrieves the Expression's value
-     *
-     * @return the expression's value
-     */
-    public int getValue() {
-        return value;
-    }
-
-    /**
-     * Sets the Expression's value to the given integer
-     *
-     * @param v the given integer
-     */
-    public void setValue(int v) {
-        value = v;
-    }
-
-    @Override
-    public int size() {
-        return 1;
     }
 
     @Override
     public String toString() {
-        return "" + value;
+        return "" + eval();
     }
+    
+    public abstract int eval();
 
     @Override
     public Node mutate() {

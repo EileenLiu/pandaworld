@@ -48,8 +48,9 @@ public class BinaryArithmeticOperator extends Expression<Expression<?>> { // nee
     /**
      * Evaluates the BinaryOp to update its value
      */
-    public void eval() {
-        value = op.apply(children.get(0).value, children.get(1).value);
+    @Override
+    public int eval() {
+        return op.apply(children.get(0).eval(), children.get(1).eval());
     }
 
     /**

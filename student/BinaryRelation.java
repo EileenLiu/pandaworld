@@ -39,7 +39,7 @@ public class BinaryRelation extends Condition<Expression<?>> {
     }
     @Override
     public boolean eval() {
-            return relation.apply(children.get(0).getValue(), children.get(1).getValue());
+            return relation.apply(children.get(0).eval(), children.get(1).eval());
     }
     @Override
     public Node<?> mutate() {

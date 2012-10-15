@@ -69,8 +69,8 @@ public class FaultInjector {
 				((BinaryRelation)n).setRelation(((BinaryRelation) selected).getRelation());
 			  else if(selected instanceof Condition)
 				????*/
-			else if(selected instanceof Expression)
-				((Expression)n).setValue(((Expression) selected).getValue());
+			/*else if(selected instanceof Expression)
+				((Expression)n).setValue(((Expression) selected).eval());*/
 			/*else if(selected instanceof Program)
 				???
 			else if(selected instanceof Rule)
