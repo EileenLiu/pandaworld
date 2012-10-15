@@ -4,14 +4,27 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class BinaryBooleanOperator extends Condition<Condition<?>> {
+import student.BinaryArithmeticOperator.BinaryOp;
+import student.util.Functions;
+
+public class BinaryBooleanOperator extends Condition<Condition<?>> implements Binary {
     private Op op;
     
     public BinaryBooleanOperator(Condition<?> l, String op, Condition<?> r) {
         super(l, r);
         this.op = Op.forSym(op);
     }
-
+    public BinaryBooleanOperator(Condition<?> l, String op, Condition<?> r) {
+        //super(l, r);
+        int k = (int)(Math.random()*3);
+        switch(k){
+        case 0: 
+        {
+        	
+        }
+        }
+    	this.op = Functions.randEnum(BinaryOp.class);
+    }
     public Condition<?> left() {
         return children.get(0);
     }

@@ -1,6 +1,6 @@
 package student;
 
-public class BinaryRelation extends Condition<Expression<?>> {
+public class BinaryRelation extends Condition<Expression<?>> implements Binary {
 
     private Rel relation;
     
@@ -74,6 +74,15 @@ public class BinaryRelation extends Condition<Expression<?>> {
         return 2;
     }
 
+	@Override
+	public Expression<?> left() {
+		return children.get(0);
+	}
+
+	@Override
+	public Expression<?> right() {
+		return children.get(1);
+	}
     /**
      * An enumeration of all possible binary operators.
      */
