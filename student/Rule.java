@@ -1,7 +1,9 @@
 package student;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import student.ParserImpl.HistObj;
 import static student.util.PrettyPrint.*;
 
 /**
@@ -10,7 +12,7 @@ import static student.util.PrettyPrint.*;
 public class Rule extends Node<Update> {
 
     private Condition condition;
-    private Action action;
+    private Action action = null;
 
     public Rule(Condition c, List<Update> u, Action a) {
         super(u);
@@ -20,6 +22,23 @@ public class Rule extends Node<Update> {
 
     public Rule(Condition c, List<Update> u) {
         this(c, u, null);
+    }
+    
+    protected Rule() {
+        super();
+    }
+    
+    public static Rule parse(LinkedList<HistObj> hist) throws SyntaxError {
+        Rule r = new Rule();
+        HistObj self = hist.pop();
+        //Rule => Condition --> Command ;
+        r.condition =  Condition.parse(hist);
+        hist.pop().expect("-->");
+        while(hist.peek().rule.equals("Update"))
+            r.subNodes.add(Update.parse(hist));
+        if(hist.peek().rule.equals("Action"))
+            r.action = Action.parse(hist);
+        return r;
     }
 
     @Override

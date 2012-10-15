@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 // Represents +, -, *, /, %
-public abstract class BinaryArithmeticOperator extends Expression<Expression<?>> { // need not be abstract
+public class BinaryArithmeticOperator extends Expression<Expression<?>> { // need not be abstract
     //private Expression left, right;
     private BinaryOp op; //the operation
     
@@ -16,11 +16,8 @@ public abstract class BinaryArithmeticOperator extends Expression<Expression<?>>
 	 * @param v the given value
 	 * @throws InvalidBinaryOpException 
 	 */
-    public BinaryArithmeticOperator(Expression<?> l, Expression<?> r, char v) throws InvalidBinaryOpException {
+    public BinaryArithmeticOperator(Expression<?> l, Expression<?> r, char v) {
         super(Arrays.asList(new Expression<?>[] { l, r }));
-        if (op == null || l == null || r == null) {
-            throw new InvalidBinaryOpException();
-        }
         l.setParent(this);
         r.setParent(this);
         op = BinaryOp.forSym(v);
@@ -63,15 +60,16 @@ public abstract class BinaryArithmeticOperator extends Expression<Expression<?>>
 	public void setBinaryOp(BinaryOp b){
 		op=b;
 	}
-	/** An exception thrown when an invalid BinaryOp object is attempted to be created**/
-	private class InvalidBinaryOpException extends Exception
-	{
-		private static final long serialVersionUID = 1L;
-		public InvalidBinaryOpException()
-		{
-			super("Invalid Binary Operation.");
-		}
-	}
+
+    @Override
+    public Node mutate() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void prettyPrint(StringBuffer sb) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 	/**
 	 * An enumeration of all possible binary operators.
 	 */

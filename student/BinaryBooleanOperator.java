@@ -7,12 +7,7 @@ import java.util.List;
 public class BinaryBooleanOperator extends Condition<Condition<?>> {
     private Op op;
     
-    public BinaryBooleanOperator(Condition<?> par, Condition<?> l, String op, Condition<?> r) {
-        super(l, r);
-        this.op = Op.forSym(op);
-    }
-    
-    public BinaryBooleanOperator(Rule par, Condition<?> l, String op, Condition<?> r) {
+    public BinaryBooleanOperator(Condition<?> l, String op, Condition<?> r) {
         super(l, r);
         this.op = Op.forSym(op);
     }

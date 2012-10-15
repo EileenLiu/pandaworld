@@ -1,10 +1,6 @@
 package student;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-public class BinaryRelation extends Node<Expression<?>> {
+public class BinaryRelation extends Condition<Expression<?>> {
 
     private Rel relation;
 
@@ -20,7 +16,7 @@ public class BinaryRelation extends Node<Expression<?>> {
         relation = rltn;
     }
     
-    public BinaryRelation(Condition<?> par, Expression<?> l, Expression<?> r, String rltn) {
+    public BinaryRelation(Expression<?> l, Expression<?> r, String rltn) {
         this(l, r, Rel.forSym(rltn));
     }
 
@@ -61,6 +57,11 @@ public class BinaryRelation extends Node<Expression<?>> {
     @Override
     public int numChildren() {
         return 2;
+    }
+
+    @Override
+    public boolean eval() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     /**

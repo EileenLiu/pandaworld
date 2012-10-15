@@ -6,7 +6,11 @@ import java.util.Collections;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.TreeMap;
+import student.SyntaxError.ExpectationFailure;
 
 public class ParserImpl /*implements Parser*/ {
 
@@ -14,7 +18,7 @@ public class ParserImpl /*implements Parser*/ {
         
     }
 
-    public void parse(Reader r) throws SyntaxError {
+    public Program parse(Reader r) throws SyntaxError {
         try {
             Deque<String> stack = new LinkedList<String>();
             LinkedList<HistObj> hist = new LinkedList<HistObj>();
@@ -32,7 +36,7 @@ public class ParserImpl /*implements Parser*/ {
                     hist.add(HistObj.tok(top));
                 }
             }
-            System.out.println(hist);
+            return Program.parse(hist);
         } catch (SyntaxError e) {
             throw e;
         }
@@ -180,14 +184,25 @@ public class ParserImpl /*implements Parser*/ {
         throw new Error("unreachable");
     }
     
-    private static boolean nump(String s) {
+    public static boolean nump(String s) {
+        if(nums.containsKey(s))
+            return true;
         try {
             int i = Integer.parseInt(s);
+            nums.put(s, i);
             return true;
         } catch (NumberFormatException nfe) {
             return false;
         }
     }
+    
+    public static int num(String s) throws SyntaxError {
+        if(nump(s))
+            return nums.get(s);
+        throw new SyntaxError(-1,"NotANumber");
+    }
+    
+    private static final Map<String, Integer> nums = new TreeMap<String,Integer>();
     
     private static final Set<String> fiAction, fiExpr, fiRel, fiAop, fiSensor, fiMop;
     
@@ -275,6 +290,33 @@ public class ParserImpl /*implements Parser*/ {
                 return "(T "+token+")";
             else
                 return "(P "+rule+" "+Arrays.toString(production)+")";
+        }
+
+        public void expect(String string) throws SyntaxError {
+            if(token == null || !token.equals(string))
+                throw new SyntaxError.ExpectationFailure(token,string);
+        }
+
+        @Override
+        public int hashCode() {
+            if(token != null)
+                return 3*token.hashCode();
+            else
+                return 5*Arrays.hashCode(production) + 7*rule.hashCode();
+        }
+        
+        @Override
+        public boolean equals(Object o) {
+            if(o instanceof HistObj) {
+                HistObj ho = (HistObj)o;
+                if(ho.token != null) {
+                    return ho.token.equals(this.token);
+                } else {
+                    return Arrays.equals(ho.production, this.production)
+                        && ho.rule.equals(this.rule);
+                }
+            } else
+                return false;
         }
     }
 }

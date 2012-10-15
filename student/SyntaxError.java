@@ -34,4 +34,10 @@ public class SyntaxError extends Exception {
             }
         }
     }
+
+    static class ExpectationFailure extends SyntaxError {
+        public ExpectationFailure(String token, String string) {
+            super(-1,"expected: "+token+", got: "+string);
+        }
+    }
 }
