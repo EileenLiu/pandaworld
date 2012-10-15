@@ -46,8 +46,4 @@ public abstract class Expression<SubNodeType extends Expression<?>> extends Node
 	public String toString(){
 		return ""+value;
 	}
-	@Override
-	public boolean remove() {
-		throw new Error();
-	}
 }

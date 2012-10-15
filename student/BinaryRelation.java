@@ -15,22 +15,13 @@ public class BinaryRelation extends Node<Expression<?>> {
      * @param r the given expression on the right of the relation
      * @param rltn the given relation
      */
-    public BinaryRelation(Condition<?> par, Expression<?> l, Expression<?> r, Rel rltn) {
-        super(par, Arrays.asList(l, r));
-        relation = rltn;
-    }
-    
-    public BinaryRelation(Rule par, Expression<?> l, Expression<?> r, Rel rltn) {
-        super(par, Arrays.asList(l, r));
+    public BinaryRelation(Expression<?> l, Expression<?> r, Rel rltn) {
+        super(l, r);
         relation = rltn;
     }
     
     public BinaryRelation(Condition<?> par, Expression<?> l, Expression<?> r, String rltn) {
-        this(par, l, r, Rel.forSym(rltn));
-    }
-    
-    public BinaryRelation(Rule par, Expression<?> l, Expression<?> r, String rltn) {
-        this(par, l, r, Rel.forSym(rltn));
+        this(l, r, Rel.forSym(rltn));
     }
 
     /**

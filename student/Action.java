@@ -8,7 +8,16 @@ package student;
  *
  * @author haro
  */
-public interface Action {
-    public boolean execute();
-    public void prettyPrint(StringBuffer sb);
+public abstract class Action extends Node {
+    public abstract boolean execute();
+
+    @Override
+    public Node mutate() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void prettyPrint(StringBuffer sb) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

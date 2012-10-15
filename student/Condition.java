@@ -1,5 +1,6 @@
 package student;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,6 +14,10 @@ public abstract class Condition<SubNodeType extends Condition<?>> extends Node<S
     
     public Condition(List<SubNodeType> subs) {
         super(subs);
+    }
+    
+    public Condition(SubNodeType...subs) {
+        this(Arrays.asList(subs));
     }
     
     public abstract boolean eval();

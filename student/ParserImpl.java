@@ -2,15 +2,11 @@ package student;
 
 import java.io.Reader;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
-import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class ParserImpl /*implements Parser*/ {
 
@@ -21,6 +17,7 @@ public class ParserImpl /*implements Parser*/ {
     public void parse(Reader r) throws SyntaxError {
         try {
             Deque<String> stack = new LinkedList<String>();
+            LinkedList<HistObj> hist = new LinkedList<HistObj>();
             Tokenizer t = new Tokenizer(r);
             stack.push("Program");
             while (stack.size() > 0) {
@@ -29,42 +26,52 @@ public class ParserImpl /*implements Parser*/ {
                 String top = stack.pop();
                 int p = top.charAt(0) - 'A';
                 if (p >= 0 && p < 26) {
-                    parseClass(top, t, stack);
+                    hist.add(parseClass(top, t, stack));
                 } else {
-                    expect(t, top);
+                    expect(t,top);
+                    hist.add(HistObj.tok(top));
                 }
             }
+            System.out.println(hist);
         } catch (SyntaxError e) {
             throw e;
         }
     }
     
-    private void parseClass(String top, Tokenizer t, Deque<String> stack) throws SyntaxError {
+    private HistObj parseClass(String top, Tokenizer t, Deque<String> stack) throws SyntaxError {
         String fst = t.peek();
         if("Program".equals(top)) {
             if(fst == null)
-                return;
+                return null;
             stack.push("Program");
             stack.push("Rule");
+            return new HistObj("Program","Program","Rule");
         } else if("Rule".equals(top)) {
             stack.push(";");
             stack.push("Command");
             stack.push("-->");
             stack.push("Condition");
+            return new HistObj("Rule","Condition","-->","Command",";");
         } else if("Command".equals(top)) {
             if("mem".equals(fst)) { //Upd Cmd1
                 stack.push("Command1");
                 stack.push("Update");
-            } else if(fiAction.contains(fst))
+                return new HistObj("Command","Update","Command1");
+            } else if(fiAction.contains(fst)) {
                 stack.push("Action");
+                return new HistObj("Command","Action");
+            }
             else throw new SyntaxError(t.line(), "Command parse failure");
         } else if("Command1".equals(top)) {
             if("mem".equals(fst)) { //Upd Cmd1
                 stack.push("Command1");
                 stack.push("Update");
-            } else if(fiAction.contains(fst)) //Act
+                return new HistObj("Command1","Update","Command1");
+            } else if(fiAction.contains(fst)) { //Act
                 stack.push("Action");
-            //ep
+                return new HistObj("Command1","Action");
+            }
+            return new HistObj("Command1");
         } else if("Update".equals(top)) {
             stack.push("Expression");
             stack.push(":=");
@@ -72,91 +79,105 @@ public class ParserImpl /*implements Parser*/ {
             stack.push("Expression");
             stack.push("[");
             stack.push("mem");
+            return new HistObj("Update","mem","[","Expression","]",":=","Expression");
         } else if("Action".equals(top)) {
             if("tag".equals(fst)) {
                 stack.push("]");
                 stack.push("Expression");
                 stack.push("[");
                 stack.push("tag");
+                return new HistObj("Action","tag","[","Expression","]");
             } else if(fiAction.contains(fst)) {
                 stack.push(fst);
+                return new HistObj("Action",fst);
             } else throw new SyntaxError(t.line(),"Action parse failure");
         } else if("Condition".equals(top)) {
             stack.push("Condition1");
             stack.push("Conjunction");
+            return new HistObj("Condition","Conjunction","Condition1");
         } else if("Condition1".equals(top)) {
             if("or".equals(fst)) { //"or" Cnj Con'
                 stack.push("Condition1");
                 stack.push("Conjunction");
                 stack.push("or");
+                return new HistObj("Condition1","or","Conjunction","Condition1");
             } 
-            //ep
+            return new HistObj("Condition1");
         } else if("Conjunction".equals(top)) {
             stack.push("Conjunction1");
             stack.push("Relation");
+            return new HistObj("Conjunction","Relation","Conjunction1");
         } else if("Conjunction1".equals(top)) {
             if("and".equals(fst)) { //"and" Rel Cnj'
                 stack.push("Conjunction1");
                 stack.push("Relation");
                 stack.push("and");
+                return new HistObj("Conjunction1","and","Relation","Conjunction1");
             }
-            //ep
+            return new HistObj("Conjunction1");
         } else if("Relation".equals(top)) {
             if("{".equals(fst)) { //"{" Con "}"
                 stack.push("}");
                 stack.push("Condition");
                 stack.push("{");
+                return new HistObj("Relation","{","Condition","}");
             } else if(fiExpr.contains(fst)) { //Exp Rsy Exp
                 stack.push("Expression");
                 stack.push("Rel");
                 stack.push("Expression");
+                return new HistObj("Relation","Expression","Rel","Expression");
             } else
                 throw new SyntaxError(t.line(),"Relation parse failure");
         } else if("Rel".equals(top)) {
-            if(fiRel.contains(fst))  //Rsy
+            if(fiRel.contains(fst)) { //Rsy
                 stack.push(fst);
+                return new HistObj("Rel",fst);
+            }
             else
                 throw new SyntaxError(t.line(),"Rel parse failure");
         } else if("Expression".equals(top)) {
             stack.push("Expression1");
             stack.push("Factor");
+            return new HistObj("Expression","Factor","Expression1");
         } else if("Expression1".equals(top)) {
             if(fiAop.contains(fst)) {
                 stack.push("Expression1");
                 stack.push("Factor");
                 stack.push(fst);
+                return new HistObj("Expression1",fst,"Factor","Expression1");
             } 
-            //ep
+            return new HistObj("Expression1");
         } else if("Factor".equals(top)) {
             stack.push("Factor1");
             stack.push("Atom");
+            return new HistObj("Factor","Atom","Factor1");
         } else if("Factor1".equals(top)) {
             if(fiMop.contains(fst)) {
                 stack.push("Factor1");
                 stack.push("Atom");
                 stack.push(fst);
+                return new HistObj("Factor1",fst,"Atom","Factor1");
             } 
-            //ep
+            return new HistObj("Factor1");
         } else if("Atom".equals(top)) {
             if(nump(fst)) {
                 stack.push(fst);
-            } else if("mem".equals(fst)) {
-                stack.push("]");
-                stack.push("Expression");
-                stack.push("[");
-                stack.push("mem");
+                return new HistObj("Atom",fst);
             } else if("(".equals(fst)) {
                 stack.push(")");
                 stack.push("Expression");
                 stack.push("(");
+                return new HistObj("Atom","(","Expression",")");
             } else if(fiSensor.contains(fst)) {
                 stack.push("]");
                 stack.push("Expression");
                 stack.push("[");
                 stack.push(fst);
+                return new HistObj("Atom",fst,"[","Expression","]");
             }
         } else
             throw new SyntaxError(t.line(),"Unknown token");
+        throw new Error("unreachable");
     }
     
     private static boolean nump(String s) {
@@ -189,10 +210,10 @@ public class ParserImpl /*implements Parser*/ {
         sen.add("nearby");
         sen.add("ahead");
         sen.add("random");
+        sen.add("mem");
         fiSensor = Collections.unmodifiableSet(sen);
         
         Set<String> exp = new HashSet<String>(5,1);
-        exp.add("mem");
         exp.add("(");
         exp.addAll(fiSensor);
         fiExpr = Collections.unmodifiableSet(exp);
@@ -226,5 +247,34 @@ public class ParserImpl /*implements Parser*/ {
             if(s.equalsIgnoreCase(tok)) 
                 return;
         throw new SyntaxError.UnexpectedToken(t.line(), tok, ss);
+    }
+    
+    public static class HistObj {
+        public final String token;
+        
+        public final String rule;
+        public final String[] production;
+        
+        public HistObj(String t, String...p) {
+            rule = t;
+            production = p;
+            token = null;
+        }
+        
+        private HistObj(String t, Void v) {
+            token = t;
+            rule = null; production = null;
+        }
+        
+        public static HistObj tok(String t) {
+            return new HistObj(t,(Void)null);
+        }
+        
+        @Override public String toString() {
+            if(token != null)
+                return "(T "+token+")";
+            else
+                return "(P "+rule+" "+Arrays.toString(production)+")";
+        }
     }
 }
