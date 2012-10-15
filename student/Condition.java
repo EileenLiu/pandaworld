@@ -8,11 +8,9 @@ import student.ParserImpl.HistObj;
 import static student.util.PrettyPrint.*;
 
 /**
- * An interface representing a Boolean condition in a critter program.
- *
+ * An abstract class representing a Boolean condition in a critter program.
  */
 public abstract class Condition<SubNodeType extends Node<?>> extends Node<SubNodeType> {
-
     public static Condition parse(LinkedList<HistObj> hist) throws SyntaxError {
         HistObj self = hist.pop();
         if(self.rule.equals("Condition")) {
@@ -72,5 +70,10 @@ public abstract class Condition<SubNodeType extends Node<?>> extends Node<SubNod
         this(Arrays.asList(subs));
     }
     
+    /**
+     * Evaluates the Condition
+     * @return the boolean evaluation of the condition
+     */
     public abstract boolean eval();
+
 }

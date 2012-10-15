@@ -36,6 +36,22 @@ public class BinaryBooleanOperator extends Condition<Condition<?>> {
         sb.append(" " + op.sym() + " ");
         right().prettyPrint(sb);
     }
+	@Override
+	public boolean deleteChild(Condition<?> n) {
+		if(!(n instanceof BinaryBooleanOperator))
+			return false;
+		if(children.get(0).equals(n))//left
+		{
+			children.set(0, ((Condition<?>)(n.randomChild())));
+		}
+		else if(children.get(1).equals(n))//right
+		{
+			children.set(1, ((Condition<?>)(n.randomChild())));
+		}
+		else
+			return false;
+		return true;
+    }
 
     /**
      * An enumeration of all possible binary condition operators.

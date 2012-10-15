@@ -71,6 +71,23 @@ public class BinaryArithmeticOperator extends Expression<Expression<?>> { // nee
     }
 
     @Override
+    public boolean deleteChild(Expression<?> n) {
+        if (!(n instanceof BinaryArithmeticOperator)) {
+            return false;
+        }
+        if (children.get(0).equals(n))//left
+        {
+            children.set(0, ((Expression<?>) (n.randomChild())));
+        } else if (children.get(1).equals(n))//right
+        {
+            children.set(1, ((Expression<?>) (n.randomChild())));
+        } else {
+            return false;
+        }
+        return true;
+    }
+    
+    @Override
     public Node mutate() {
         throw new UnsupportedOperationException("Not supported yet.");
     }

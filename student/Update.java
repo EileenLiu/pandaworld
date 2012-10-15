@@ -45,6 +45,11 @@ public class Update extends Node<Expression<?>> {
     }
 
     @Override
+    public boolean deleteChild(Expression<?> n) {
+            return false;
+    }
+
+    @Override
     public Node mutate() {
         throw new UnsupportedOperationException("Not supported yet.");
     }

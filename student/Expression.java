@@ -7,7 +7,6 @@ import student.ParserImpl.*;
 import static student.ParserImpl.*;
 
 public class Expression<SubNodeType extends Expression<?>> extends Node<SubNodeType> {
-
     public static Expression parse(LinkedList<HistObj> hist) throws SyntaxError {
         HistObj self = hist.pop();
         if(self.rule.equals("Expression")) {

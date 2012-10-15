@@ -39,7 +39,7 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
      * Return a version of the same AST with one random mutation in it. May have
      * side effects on the original AST.
      */
-    public abstract Node mutate();
+    public abstract Node<?> mutate();
 
     /**
      * Appends the program represented by this node prettily to the given
@@ -72,7 +72,7 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
      *
      * @param n the given node
      */
-    public final void setParent(Node n) {
+    public final void setParent(Node<?> n) {
         parent = n;
     }
 
@@ -81,29 +81,36 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
      *
      * @return the node's parent
      */
-    public Node getParent() {
+    public Node<?> getParent() {
         return parent;
     }
 
     /**
      * Creates a copy of the node and its subtree
      *
-     * @return
+     * @return copy of node and its subtree
      */
-    public Node copy() {
+    public Node<?> copy() {
         try {
-            return (Node) this.clone();
+            return (Node<?>) this.clone();
         } catch (CloneNotSupportedException ex) {
             throw new Error("Yes, we *do* support .clone()");
         }
     }
 
-    public Node[] toArray() {
-        Node[] arr = (Node[]) buildArray(new LinkedList<Node>()).toArray();
+    /**
+     * Flattens the subtree starting from the current node
+     * @return the subtree starting from the current node as a Node array
+     */
+    public Node<?>[] toArray() {
+        Node<?>[] arr = (Node[]) buildList(new LinkedList<Node<?>>()).toArray();
         return arr;
     }
-
-    protected LinkedList<Node> buildArray(LinkedList<Node> list) {
+    
+    /**
+     * Recursive helper method for toArray, creates a list of Nodes of the subtree starting from the current node
+     */
+    protected LinkedList<Node<?>> buildList(LinkedList<Node<?>> list) {
         list.add(this);
         return list;
     }
@@ -157,5 +164,9 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
      */
     public boolean deleteChild(SubNodeType n) {
         return children.remove(n);
+    }
+    public Node<?> randomChild()
+    {
+    	return children.get((int)(Math.random()*children.size()));
     }
 }
