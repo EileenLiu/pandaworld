@@ -6,7 +6,7 @@ import java.util.List;
 import student.ParserImpl.*;
 import static student.ParserImpl.*;
 
-public class Expression<SubNodeType extends Expression<?>> extends Node<SubNodeType> {
+public abstract class Expression<SubNodeType extends Expression<?>> extends Node<SubNodeType> {
     public static Expression parse(LinkedList<HistObj> hist) throws SyntaxError {
         HistObj self = hist.pop();
         if(self.rule.equals("Expression")) {
@@ -46,7 +46,7 @@ public class Expression<SubNodeType extends Expression<?>> extends Node<SubNodeT
             } else if(nump(self.production[0])) {
                 int i = num(self.production[0]);
                 hist.pop(); //take care of the token;
-                return new Expression(i);
+                return new Constant(i);
             } else {
                 return Access.parse(hist);
             }

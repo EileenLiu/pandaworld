@@ -1,9 +1,5 @@
 package student;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 public class BinaryBooleanOperator extends Condition<Condition<?>> {
     private Op op;
     
