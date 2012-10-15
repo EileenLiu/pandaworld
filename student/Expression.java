@@ -3,8 +3,8 @@ package student;
 // A critter program expression that has an integer value.
 import java.util.LinkedList;
 import java.util.List;
-import student.ParserImpl.*;
 import static student.ParserImpl.*;
+import student.ParserImpl.HistObj;
 
 public abstract class Expression<SubNodeType extends Expression<?>> extends Node<SubNodeType> {
     public static Expression parse(LinkedList<HistObj> hist) throws SyntaxError {
@@ -58,53 +58,17 @@ public abstract class Expression<SubNodeType extends Expression<?>> extends Node
     /**
      * Creates a new Expression of random value between 0 and 999
      */
-<<<<<<< HEAD
     protected Expression() {
         super();
-=======
-    public Expression() {
-        randomize();
->>>>>>> FaultInjection
     }
 
     protected Expression(List<SubNodeType> subs) {
         super(subs);
     }
-<<<<<<< HEAD
-=======
-    @Override
-    public boolean randomize()
-    {
-    	value = (int) (Math.random() * 999);
-    	return true;
-    }
-    /**
-     * Retrieves the Expression's value
-     *
-     * @return the expression's value
-     */
-    public int getValue() {
-        return value;
-    }
-
-    /**
-     * Sets the Expression's value to the given integer
-     *
-     * @param v the given integer
-     */
-    public void setValue(int v) {
-        value = v;
-    }
-
-    @Override
-    public int size() {
-        return 1;
-    }
->>>>>>> FaultInjection
 
     @Override
     public String toString() {
-        return "" + eval();
+        return "(E " + eval() + ")";
     }
     
     public abstract int eval();

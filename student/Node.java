@@ -9,19 +9,18 @@ import java.util.List;
  */
 public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
 
-    protected Node<Node<? extends SubNodeType>> parent;
+    protected Node<Node<SubNodeType>> parent;
     protected final List<SubNodeType> children;
-    public Node()
-    {
-    	this(null);
-    }
-    public Node(Node<Node<? extends SubNodeType>> par, List<SubNodeType> childNodes) {
+    public Node(List<SubNodeType> childNodes) {
         children = childNodes;
-        parent = par;
     }
 
-    public Node (Node<Node<? extends SubNodeType>> par) {
-        this(par, new LinkedList<SubNodeType>());
+    public Node(SubNodeType...subs) {
+        this(Arrays.asList(subs));
+    }
+    
+    public Node () {
+        this(new LinkedList<SubNodeType>());
     }
     /**
      * Randomizes the Node without changing its children
@@ -80,7 +79,7 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
      *
      * @param n the given node
      */
-    public final void setParent(Node<Node<? extends SubNodeType>> n) {
+    public final void setParent(Node<Node<SubNodeType>> n) {
         parent = n;
     }
 

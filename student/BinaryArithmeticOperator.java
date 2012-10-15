@@ -21,8 +21,8 @@ public class BinaryArithmeticOperator extends Expression<Expression<?>> { // nee
      */
     public BinaryArithmeticOperator(Expression<?> l, Expression<?> r, char v) {
         super(Arrays.asList(new Expression<?>[]{l, r}));
-        l.setParent(this);
-        r.setParent(this);
+        l.setParent((Node)this); //*I* know it's fine.
+        r.setParent((Node)this);
         op = BinaryOp.forSym(v);
         //eval();
     }

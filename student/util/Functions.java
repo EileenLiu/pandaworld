@@ -16,7 +16,7 @@ public final class Functions {
      * @param type The enumeration type to be randomly selected from.
      * @return A random enumeration constant from that {@code type}
      */
-    public static <E extends Enum<E>> Enum<E> randEnum(Class<? extends Enum<E>> type) {
+    public static <E extends Enum<E>> E randEnum(Class<? extends Enum<E>> type) {
         try {
             Enum<E> vals[] = (E[]) type.getMethod("values").invoke(null);
             int i = (int)(Math.random() * vals.length);

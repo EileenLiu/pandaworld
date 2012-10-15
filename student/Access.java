@@ -34,6 +34,12 @@ public class Access extends Expression {
     	//TODO fill out
     	return true;
     }
+
+    @Override
+    public int eval() {
+        return sen.val(ind.eval());
+    }
+    
     private static enum Sen {
         MEM {
             @Override public int val(int par) {

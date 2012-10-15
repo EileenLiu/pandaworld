@@ -47,7 +47,7 @@ public class Tokenizer implements Iterator<String> {
      * @param r
      */
     public Tokenizer(Reader r) {
-        this();
+        super();
         this.pr = new PushbackReader(r);
         this.lineNo = 1;
     }
