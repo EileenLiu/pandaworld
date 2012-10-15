@@ -38,7 +38,6 @@ public class Tokenizer implements Iterator<String> {
 
     protected PushbackReader pr;
     protected int lineNo;
-    protected StringBuffer buf;
     protected boolean ready;
     protected String curTok;
 
@@ -49,7 +48,6 @@ public class Tokenizer implements Iterator<String> {
      */
     public Tokenizer(Reader r) {
         this.pr = new PushbackReader(r);
-        this.buf = new StringBuffer();
         this.lineNo = 1;
     }
 
@@ -74,6 +72,7 @@ public class Tokenizer implements Iterator<String> {
     public String next() {
         String tok = peek();
         ready = false;
+        curTok = null;
         return tok;
     }
 

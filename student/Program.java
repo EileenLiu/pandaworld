@@ -1,8 +1,10 @@
 package student;
 
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.RandomAccess;
+import student.ParserImpl.HistObj;
 
 /**
  * A representation of a critter program.
@@ -10,8 +12,16 @@ import java.util.RandomAccess;
  */
 public class Program extends Node<Rule> {
     
-    public Program(List<Rule> l) {
-        super(l);
+    public static Program parse(LinkedList<HistObj> hist) throws SyntaxError {
+        Program p = new Program();
+        HistObj self = hist.pop();
+        assert(self.rule.equals("Program"));
+        //Rule is: Program => Rule Program
+        while(hist.size() > 0) {
+            Rule r = Rule.parse(hist);
+            p.subNodes.add(r);
+        }
+        return p;
     }
     
     public List<Rule> rules() {

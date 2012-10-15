@@ -1,9 +1,5 @@
 package student;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 public class BinaryRelation extends Condition<Expression<?>> {
 
     private Rel relation;
@@ -15,22 +11,13 @@ public class BinaryRelation extends Condition<Expression<?>> {
      * @param r the given expression on the right of the relation
      * @param rltn the given relation
      */
-    public BinaryRelation(Condition<?> par, Expression<?> l, Expression<?> r, Rel rltn) {
-        super(par, Arrays.asList(l, r));
+    public BinaryRelation(Expression<?> l, Expression<?> r, Rel rltn) {
+        super(l, r);
         relation = rltn;
     }
     
-    public BinaryRelation(Rule par, Expression<?> l, Expression<?> r, Rel rltn) {
-        super(par, Arrays.asList(l, r));
-        relation = rltn;
-    }
-    
-    public BinaryRelation(Condition<?> par, Expression<?> l, Expression<?> r, String rltn) {
-        this(par, l, r, Rel.forSym(rltn));
-    }
-    
-    public BinaryRelation(Rule par, Expression<?> l, Expression<?> r, String rltn) {
-        this(par, l, r, Rel.forSym(rltn));
+    public BinaryRelation(Expression<?> l, Expression<?> r, String rltn) {
+        this(l, r, Rel.forSym(rltn));
     }
 
     /**
@@ -50,10 +37,10 @@ public class BinaryRelation extends Condition<Expression<?>> {
     public void setRelation(Rel r) {
         relation = r;
     }
-	@Override
-	public boolean eval() {
-		return relation.apply(children.get(0).getValue(), children.get(1).getValue());
-	}
+    @Override
+    public boolean eval() {
+            return relation.apply(children.get(0).getValue(), children.get(1).getValue());
+    }
     @Override
     public Node<?> mutate() {
         // TODO Auto-generated method stub
