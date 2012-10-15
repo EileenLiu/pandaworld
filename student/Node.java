@@ -1,5 +1,6 @@
 package student;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -19,7 +20,7 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
     public Node (Node<?> par) {
         this(par, new LinkedList<SubNodeType>());
     }
-
+    
     /**
      * The number of nodes in this AST, including the current node. This can be
      * helpful for implementing mutate() correctly.

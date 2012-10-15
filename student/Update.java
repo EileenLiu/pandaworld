@@ -5,14 +5,27 @@
 package student;
 
 import java.util.Arrays;
+import java.util.LinkedList;
+import student.ParserImpl.HistObj;
 
 /**
  *
  * @author haro
  */
-abstract class Update extends Node<Expression<?>> {
-    public Update(Rule par, Expression<?> ind, Expression<?> val) {
-        super(par, Arrays.asList(ind, val));
+public class Update extends Node<Expression<?>> {
+
+    public static Update parse(LinkedList<HistObj> hist) throws SyntaxError {
+        HistObj self = hist.pop();
+        hist.pop().expect("mem");
+        hist.pop().expect("[");
+        Expression ind = Expression.parse(hist);
+        hist.pop().expect("]");
+        hist.pop().expect(":=");
+        Expression val = Expression.parse(hist);
+        return new Update(ind, val);
+    }
+    public Update(Expression<?> ind, Expression<?> val) {
+        super(ind, val);
     }
     
     public Expression<?> index() {
@@ -30,8 +43,19 @@ abstract class Update extends Node<Expression<?>> {
     public void apply() {
         throw new Error("No state yet");
     }
-	@Override
-	public boolean deleteChild(Expression<?> n) {
-		return false;
-	}
+
+    @Override
+    public boolean deleteChild(Expression<?> n) {
+            return false;
+    }
+
+    @Override
+    public Node mutate() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void prettyPrint(StringBuffer sb) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }   
