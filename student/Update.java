@@ -16,11 +16,11 @@ abstract class Update extends Node<Expression<?>> {
     }
     
     public Expression<?> index() {
-        return subNodes.get(0);
+        return children.get(0);
     }
     
     public Expression<?> newValue() {
-        return subNodes.get(1);
+        return children.get(1);
     }
     
     public int oldValue() {
@@ -30,4 +30,8 @@ abstract class Update extends Node<Expression<?>> {
     public void apply() {
         throw new Error("No state yet");
     }
+	@Override
+	public boolean deleteChild(Expression<?> n) {
+		return false;
+	}
 }   

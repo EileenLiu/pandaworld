@@ -19,10 +19,10 @@ public abstract class Expression<SubNodeType extends Expression<?>> extends Node
 	public Expression(int v) {
 		value = v;
 	}
-        
-        public Expression(List<SubNodeType> subs) {
-            super(subs);
-        }
+
+	public Expression(List<SubNodeType> subs) {
+		super(subs);
+	}
 
 	/**
 	 * Retrieves the Expression's value
@@ -46,8 +46,12 @@ public abstract class Expression<SubNodeType extends Expression<?>> extends Node
 	public String toString(){
 		return ""+value;
 	}
-	@Override
-	public boolean remove() {
+	//	@Override
+	/*public boolean remove() {
 		throw new Error();
+	}*/
+	@Override
+	public boolean deleteChild(SubNodeType n) {
+		return false;
 	}
 }

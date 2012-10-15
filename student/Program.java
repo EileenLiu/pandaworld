@@ -15,7 +15,7 @@ public class Program extends Node<Rule> {
     }
     
     public List<Rule> rules() {
-        return Collections.unmodifiableList(subNodes);
+        return Collections.unmodifiableList(children);
     }
 
     @Override
@@ -26,7 +26,7 @@ public class Program extends Node<Rule> {
 
     @Override
     public void prettyPrint(StringBuffer sb) {
-        for(Rule r : subNodes) {
+        for(Rule r : children) {
             r.prettyPrint(sb);
             sb.append("\n\n");
         }

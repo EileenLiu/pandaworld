@@ -8,15 +8,15 @@ import java.util.List;
  */
 public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
 
-    protected Node parent;
-    protected final List<SubNodeType> subNodes;
+    protected Node<?> parent;
+    protected final List<SubNodeType> children;
 
-    public Node(Node par, List<SubNodeType> subs) {
-        subNodes = subs;
+    public Node(Node<?> par, List<SubNodeType> childNodes) {
+        children = childNodes;
         parent = par;
     }
 
-    public Node(Node par) {
+    public Node (Node<?> par) {
         this(par, new LinkedList<SubNodeType>());
     }
 
@@ -26,7 +26,7 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
      */
     public int size() {
         int siz = 1;
-        for (SubNodeType n : subNodes) {
+        for (SubNodeType n : children) {
             siz += n.size();
         }
         return siz;
@@ -36,7 +36,7 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
      * Return a version of the same AST with one random mutation in it. May have
      * side effects on the original AST.
      */
-    public abstract Node mutate();
+    public abstract Node<?> mutate();
 
     /**
      * Appends the program represented by this node prettily to the given
@@ -61,7 +61,7 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
      * @return whether the node has children
      */
     public boolean hasChildren() {
-        return !subNodes.isEmpty();
+        return !children.isEmpty();
     }
 
     /**
@@ -69,7 +69,7 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
      *
      * @param n the given node
      */
-    public final void setParent(Node n) {
+    public final void setParent(Node<?> n) {
         parent = n;
     }
 
@@ -78,7 +78,7 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
      *
      * @return the node's parent
      */
-    public Node getParent() {
+    public Node<?> getParent() {
         return parent;
     }
 
@@ -87,20 +87,27 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
      *
      * @return copy of node and its subtree
      */
-    public Node copy() {
+    public Node<?> copy() {
         try {
-            return (Node) this.clone();
+            return (Node<?>) this.clone();
         } catch (CloneNotSupportedException ex) {
             throw new Error("Yes, we *do* support .clone()");
         }
     }
 
-    public Node[] toArray() {
-        Node[] arr = (Node[]) buildArray(new LinkedList<Node>()).toArray();
+    /**
+     * Flattens the subtree starting from the current node
+     * @return the subtree starting from the current node as a Node array
+     */
+    public Node<?>[] toArray() {
+        Node<?>[] arr = (Node[]) buildList(new LinkedList<Node<?>>()).toArray();
         return arr;
     }
-
-    protected LinkedList<Node> buildArray(LinkedList<Node> list) {
+    
+    /**
+     * Recursive helper method for toArray, creates a list of Nodes of the subtree starting from the current node
+     */
+    protected LinkedList<Node<?>> buildList(LinkedList<Node<?>> list) {
         list.add(this);
         return list;
     }
@@ -110,9 +117,9 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
      *
      * @param n
      */
-    public void set(Node n) {
-        int pos = parent.subNodes.indexOf(this);
-        parent.subNodes.set(pos, n);
+    public void set(Node<?> n) {
+        int pos = parent.children.indexOf(this);
+        parent.children.set(pos, n);
     }
 
     /**
@@ -121,7 +128,7 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
      * @return number of children the node has
      */
     public int numChildren() {
-        return subNodes.size();
+        return children.size();
     }
 
     /**
@@ -137,14 +144,14 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
             c1 = (int)(Math.random()*nc);
             c2 = (int)(Math.random()*nc);
         } while(c1 == c2);
-        SubNodeType temp = subNodes.get(c1);
-        subNodes.set(c1, subNodes.get(c2));
-        subNodes.set(c2, temp);
+        SubNodeType temp = children.get(c1);
+        children.set(c1, children.get(c2));
+        children.set(c2, temp);
         return true;
     }
     
     public boolean deleteChild() {
-        return deleteChild(subNodes.get((int)(numChildren()*Math.random())));
+        return deleteChild(children.get((int)(numChildren()*Math.random())));
     }
 
     /**
@@ -153,6 +160,10 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
      * @param n the given child node
      */
     public boolean deleteChild(SubNodeType n) {
-        return subNodes.remove(n);
+        return children.remove(n);
+    }
+    public Node<?> randomChild()
+    {
+    	return children.get((int)(Math.random()*children.size()));
     }
 }
