@@ -1,16 +1,20 @@
 package student;
 
+import student.util.Functions;
 import static student.util.Functions.*;
 
 public class BinaryBooleanOperator extends Condition<Condition<?>> {
-
+    
     private Op op;
 
     public BinaryBooleanOperator(Condition<?> l, String op, Condition<?> r) {
         super(l, r);
         this.op = forName(Op.class, op);
     }
-
+    public BinaryBooleanOperator(Condition<?> l, Condition<?> r) {
+        super(l, r);
+    	this.op = Functions.randEnum(Op.class);
+    }
     public Condition<?> left() {
         return children.get(0);
     }

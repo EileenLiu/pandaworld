@@ -3,7 +3,7 @@ package student;
 public class BinaryRelation extends Condition<Expression<?>> {
 
     private Rel relation;
-    
+
     /**
      * Creates a new BinaryRelation with the given expressions and relation
      *
@@ -15,7 +15,7 @@ public class BinaryRelation extends Condition<Expression<?>> {
         super(l, r);
         relation = rltn;
     }
-    
+
     public BinaryRelation(Expression<?> l, Expression<?> r, String rltn) {
         this(l, r, Rel.forSym(rltn));
     }
@@ -37,10 +37,12 @@ public class BinaryRelation extends Condition<Expression<?>> {
     public void setRelation(Rel r) {
         relation = r;
     }
+
     @Override
     public boolean eval() {
-            return relation.apply(children.get(0).eval(), children.get(1).eval());
+        return relation.apply(children.get(0).eval(), children.get(1).eval());
     }
+
     @Override
     public Node<?> mutate() {
         // TODO Auto-generated method stub
@@ -52,26 +54,34 @@ public class BinaryRelation extends Condition<Expression<?>> {
         // TODO Auto-generated method stub
     }
 
-	@Override
-	public boolean deleteChild(Expression<?> n) {
-		if(!(n instanceof BinaryArithmeticOperator))
-			return false;
-		if(children.get(0).equals(n))//left
-		{
-			children.set(0, ((Expression<?>)(n.randomChild())));
-		}
-		else if(children.get(1).equals(n))//right
-		{
-			children.set(1, ((Expression<?>)(n.randomChild())));
-		}
-		else
-			return false;
-		return true;
+    @Override
+    public boolean deleteChild(Expression<?> n) {
+        if (!(n instanceof BinaryArithmeticOperator)) {
+            return false;
+        }
+        if (children.get(0).equals(n))//left
+        {
+            children.set(0, ((Expression<?>) (n.randomChild())));
+        } else if (children.get(1).equals(n))//right
+        {
+            children.set(1, ((Expression<?>) (n.randomChild())));
+        } else {
+            return false;
+        }
+        return true;
     }
 
     @Override
     public int numChildren() {
         return 2;
+    }
+
+    public Expression<?> left() {
+        return children.get(0);
+    }
+
+    public Expression<?> right() {
+        return children.get(1);
     }
 
     /**

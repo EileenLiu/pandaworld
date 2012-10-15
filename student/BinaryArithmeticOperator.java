@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import student.util.Functions;
+
 // Represents +, -, *, /, %
 public class BinaryArithmeticOperator extends Expression<Expression<?>> { // need not be abstract
     //private Expression left, right;
