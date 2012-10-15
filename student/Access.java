@@ -28,7 +28,12 @@ public class Access extends Expression {
         this.sen = sen;
         this.ind = ind;
     }
-
+    @Override
+    public boolean randomize()
+    {
+    	//TODO fill out
+    	return true;
+    }
     private static enum Sen {
         MEM {
             @Override public int val(int par) {

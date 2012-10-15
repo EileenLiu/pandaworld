@@ -32,7 +32,7 @@ public class Action extends Node {
         this.type = type;
     }
     
-    protected Action() {
+    public Action() {
         super();
     }
     

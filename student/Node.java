@@ -9,20 +9,28 @@ import java.util.List;
  */
 public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
 
-    protected Node parent = null;
+    protected Node<Node<? extends SubNodeType>> parent;
     protected final List<SubNodeType> children;
-    
-    @SuppressWarnings("LeakingThisInConstructor")
-    public Node(List<SubNodeType> subs) {
-        children = subs;
-        for(SubNodeType sn : subs)
-            sn.parent = this;
+    public Node()
+    {
+    	this(null);
     }
-    
-    public Node(SubNodeType... subs) {
-        children = Arrays.asList(subs);
+    public Node(Node<Node<? extends SubNodeType>> par, List<SubNodeType> childNodes) {
+        children = childNodes;
+        parent = par;
     }
-    
+
+    public Node (Node<Node<? extends SubNodeType>> par) {
+        this(par, new LinkedList<SubNodeType>());
+    }
+    /**
+     * Randomizes the Node without changing its children
+     * @return true if the operation is supported for this type of Node, false otherwise
+     */
+    public boolean randomize()
+    {
+    	return false;
+    }
     /**
      * The number of nodes in this AST, including the current node. This can be
      * helpful for implementing mutate() correctly.
@@ -72,7 +80,7 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
      *
      * @param n the given node
      */
-    public final void setParent(Node<?> n) {
+    public final void setParent(Node<Node<? extends SubNodeType>> n) {
         parent = n;
     }
 

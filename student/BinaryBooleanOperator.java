@@ -86,4 +86,12 @@ public class BinaryBooleanOperator extends Condition<Condition<?>> {
             return null;
         }
     }
+
+	public Op getConditionOp() {
+		return op;
+	}
+
+	public void setConditionOp(Op conditionOp) {
+		op= conditionOp;	
+	}
 }
