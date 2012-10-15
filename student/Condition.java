@@ -58,8 +58,7 @@ public abstract class Condition<SubNodeType extends Node<?>> extends Node<SubNod
                 return new BinaryRelation(l, r, rel);
             }
         }
-        if(false) throw new Error("unreachable"+self.rule);
-        return null;
+        throw new Error("unreachable"+self.rule);
     }
     
     public Condition(List<SubNodeType> subs) {

@@ -32,7 +32,9 @@ public class BinaryBooleanOperator extends Condition<Condition<?>> {
     @Override
     public void prettyPrint(StringBuffer sb) {
         left().prettyPrint(sb);
-        sb.append(" " + en2s(op) + " ");
+        sb.append(" ");
+        sb.append(en2s(op));
+        sb.append(" ");
         right().prettyPrint(sb);
     }
 

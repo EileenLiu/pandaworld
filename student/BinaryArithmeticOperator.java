@@ -104,26 +104,31 @@ public class BinaryArithmeticOperator extends Expression<Expression<?>> { // nee
     private enum BinaryOp {
 
         PLUS('+') {
+            @Override
             public int apply(int l, int r) {
                 return l + r;
             }
         },
         MINUS('-') {
+            @Override
             public int apply(int l, int r) {
                 return l - r;
             }
         },
         TIMES('*') {
+            @Override
             public int apply(int l, int r) {
                 return l * r;
             }
         },
         DIVIDE('/') {
+            @Override
             public int apply(int l, int r) {
                 return l / r;
             }
         },
         MOD('%') {
+            @Override
             public int apply(int l, int r) {
                 return l % r;
             }

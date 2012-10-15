@@ -32,7 +32,9 @@ public class ParserImpl /*implements Parser*/ {
                 if (p >= 0 && p < 26) {
                     hist.add(parseClass(top, t, stack));
                 } else {
-                    expect(t,top);
+                    String n = t.next();
+                    if(!n.equals(top))
+                        throw new SyntaxError.UnexpectedToken(t.line(), n, top);
                     hist.add(HistObj.tok(top));
                 }
             }
@@ -253,16 +255,6 @@ public class ParserImpl /*implements Parser*/ {
         mop.add("/");
         mop.add("mod");
         fiMop = Collections.unmodifiableSet(mop);
-    }
-
-    
-    /** Consumes a token of the expected type. Throws a SyntaxError if the wrong kind of token is encountered. */
-    public static void expect(Tokenizer t, String... ss) throws SyntaxError {
-        String tok = t.next();
-        for(String s : ss) 
-            if(s.equalsIgnoreCase(tok)) 
-                return;
-        throw new SyntaxError.UnexpectedToken(t.line(), tok, ss);
     }
     
     public static class HistObj {

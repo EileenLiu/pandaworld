@@ -12,7 +12,7 @@ public class SyntaxError extends Exception {
     }
     
     public static class UnexpectedToken extends SyntaxError {
-        public UnexpectedToken(int line, String obs, String exp[]) {
+        public UnexpectedToken(int line, String obs, String...exp) {
             super(line, "unexpected token: expected one of: " + Arrays.toString(exp) + " but found: " + obs);
         }
     }

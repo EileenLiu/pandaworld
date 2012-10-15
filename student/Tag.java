@@ -9,11 +9,16 @@ package student;
  * @author haro
  */
 class Tag extends Action {
-    private Expression ind;
-
     public Tag(Expression ind) {
-        super();
-        this.ind = ind;
+        super(ind);
     }
     
+    public Expression ind() {
+        return children.get(0);
+    }
+
+    @Override
+    public void execute() {
+        throw new Error("Can't execute yet!");
+    }
 }

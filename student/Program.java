@@ -3,7 +3,6 @@ package student;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.RandomAccess;
 import student.ParserImpl.HistObj;
 
 /**

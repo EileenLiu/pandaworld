@@ -4,6 +4,7 @@
  */
 package student;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import student.ParserImpl.HistObj;
 import static student.util.Functions.forName;
@@ -12,7 +13,7 @@ import static student.util.Functions.forName;
  *
  * @author haro
  */
-public class Action extends Node {
+public class Action extends Node<Expression<?>> {
     Act act;
     
     public static Action parse(LinkedList<HistObj> hist) throws SyntaxError {
@@ -28,12 +29,16 @@ public class Action extends Node {
     }
 
     private Action(String type) {
-        super();
+        super(Collections.EMPTY_LIST);
         this.act = forName(Act.class,type);
     }
     
     public Action() {
-        super();
+        super(Collections.EMPTY_LIST);
+    }
+    
+    protected Action(Expression...e) {
+        super(e);
     }
     
     public void execute() {
