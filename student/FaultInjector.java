@@ -84,7 +84,6 @@ public class FaultInjector {
 				???*/
 /*			else
 				go = false;
-
 			//n.setValue(selected.getValue());
 */
 			break;
