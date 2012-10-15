@@ -6,6 +6,7 @@ package student;
 
 import java.util.LinkedList;
 import student.ParserImpl.HistObj;
+import static student.util.Functions.forName;
 
 /**
  *
@@ -17,7 +18,7 @@ public class Access extends Expression {
     
     public static Access parse(LinkedList<HistObj> hist) throws SyntaxError {
         HistObj self = hist.pop();
-        Sen type = Sen.forName(self.token);
+        Sen type = forName(Sen.class,self.token);
         hist.pop().expect("[");
         Expression ind = Expression.parse(hist);
         hist.pop().expect("]");
@@ -61,14 +62,6 @@ public class Access extends Expression {
                 throw new Error("Can't do that yet...");
             }            
         };
-        
-        
-        public static Sen forName(String st) {
-            for(Sen s : values())
-                if(s.name().toLowerCase().equals(st))
-                    return s;
-            return null;
-        }
         
         public abstract int val(int par);
     }

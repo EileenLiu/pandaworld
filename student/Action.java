@@ -6,14 +6,14 @@ package student;
 
 import java.util.LinkedList;
 import student.ParserImpl.HistObj;
+import static student.util.Functions.forName;
 
 /**
  *
  * @author haro
  */
 public class Action extends Node {
-    
-    String type; //REMOVE
+    Act act;
     
     public static Action parse(LinkedList<HistObj> hist) throws SyntaxError {
         HistObj self = hist.pop();
@@ -29,15 +29,15 @@ public class Action extends Node {
 
     private Action(String type) {
         super();
-        this.type = type;
+        this.act = forName(Act.class,type);
     }
     
     public Action() {
         super();
     }
     
-    public boolean execute() {
-        return false;
+    public void execute() {
+        act.exec();
     }
 
     @Override
@@ -48,5 +48,51 @@ public class Action extends Node {
     @Override
     public void prettyPrint(StringBuffer sb) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    private static enum Act {
+        WAIT {
+            @Override public void exec() {
+                throw new Error("Can't do that yet!");
+            }
+        }, FORWARD {
+            @Override public void exec() {
+                throw new Error("Can't do that yet!");
+            }
+        }, BACKWARD {
+            @Override public void exec() {
+                throw new Error("Can't do that yet!");
+            }
+        }, LEFT {
+            @Override public void exec() {
+                throw new Error("Can't do that yet!");
+            }
+        }, RIGHT {
+            @Override public void exec() {
+                throw new Error("Can't do that yet!");
+            }
+        }, EAT {
+            @Override public void exec() {
+                throw new Error("Can't do that yet!");
+            }
+        }, ATTACK {
+            @Override public void exec() {
+                throw new Error("Can't do that yet!");
+            }
+        }, GROW {
+            @Override public void exec() {
+                throw new Error("Can't do that yet!");
+            }
+        }, BUD {
+            @Override public void exec() {
+                throw new Error("Can't do that yet!");
+            }
+        }, MATE {
+            @Override public void exec() {
+                throw new Error("Can't do that yet!");
+            }
+        };
+        
+        public abstract void exec();
     }
 }
