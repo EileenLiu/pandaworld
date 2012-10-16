@@ -6,6 +6,7 @@ package student;
 
 import java.util.LinkedList;
 import student.ParserImpl.HistObj;
+import student.util.Functions;
 import static student.util.Functions.forName;
 
 /**
@@ -32,7 +33,7 @@ public class Access extends Expression {
     @Override
     public boolean randomize()
     {
-    	//TODO fill out
+    	sen = Functions.randEnum(Sen.class);
     	return true;
     }
 
