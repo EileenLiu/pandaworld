@@ -15,9 +15,8 @@ public class FaultInjector {
         LinkedList<Integer> faultType = new LinkedList();
         faultType.addAll(Arrays.asList(1,2,3,4,5));
         int i;      
-        while (!faultType.isEmpty()){//go) {
+        while (!faultType.isEmpty()){
             i = (int)(Math.random()*faultType.size());
-            //go = false;
             switch (faultType.get(i)) {
                 case 1: //the node is removed. if its parent node needs a replacement node, one of its children of the right kind is used. The child to be used is randomly selected. Thus rule nodes are simply removed, but binary operation nodes would be replaced with either their left or right child
                     if(n.getParent().deleteChild(n))
@@ -71,11 +70,7 @@ public class FaultInjector {
                     else if (parent instanceof Tag) {
                         BinaryArithmeticOperator bao = new BinaryArithmeticOperator((Expression)n, (Expression)(randomNode(root, Expression.class)));
                         //replace
-                    } 
-                    /*else {
-                        go = true;
-                    }*/
-                    //n.getParent().class
+                    }
                     break;
             }
             faultType.remove(i);
