@@ -113,7 +113,12 @@ public class BinaryArithmeticOperator extends Expression<Expression<?>> { // nee
     public void prettyPrint(StringBuffer sb) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
+    @Override
+        public boolean randomize()
+    {
+    	op = Functions.randEnum(BinaryOp.class);
+    	return true;
+    }
     /**
      * An enumeration of all possible binary operators.
      */
