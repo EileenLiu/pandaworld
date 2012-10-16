@@ -56,7 +56,10 @@ public class Update extends Node<Expression<?>> {
     }
 
     @Override
-    public void prettyPrint(StringBuffer sb) {
-        test("Update",sb);
+    public StringBuffer toString(StringBuffer sb) {
+        sb.append("mem[");
+        index().prettyPrint(sb);
+        sb.append("] := ");
+        return newValue().toString(sb);
     }
 }   

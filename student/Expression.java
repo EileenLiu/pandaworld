@@ -61,11 +61,6 @@ public abstract class Expression<SubNodeType extends Expression<?>> extends Node
     protected Expression(List<SubNodeType> subs) {
         super(subs);
     }
-
-    @Override
-    public String toString() {
-        return "(E " + eval() + ")";
-    }
     
     public abstract int eval();
 
@@ -75,7 +70,7 @@ public abstract class Expression<SubNodeType extends Expression<?>> extends Node
     }
 
     @Override
-    public void prettyPrint(StringBuffer sb) {
-        test("Expression", sb);
+    public StringBuffer toString(StringBuffer sb) {
+        return test("Expression", sb);
     }
 }

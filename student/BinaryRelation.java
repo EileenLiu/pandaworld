@@ -82,12 +82,13 @@ public class BinaryRelation extends Condition<Expression<?>> {
     }
 
     @Override
-    public void prettyPrint(StringBuffer sb) {
-        left().prettyPrint(sb);
+    public StringBuffer toString(StringBuffer sb) {
+        left().toString(sb);
         sb.append(' ');
         sb.append(relation.getSym());
         sb.append(' ');
-        right().prettyPrint(sb);
+        right().toString(sb);
+        return sb;
     }
     
     @Override

@@ -33,6 +33,7 @@ public class Tokenizer implements Iterator<String> {
         sct.put('}',"}");
         sct.put(';',";");
         sct.put('=',"=");
+        sct.put('%',"%");
         singleCharacterTokens = Collections.unmodifiableMap(sct);
     }
 

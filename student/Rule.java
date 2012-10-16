@@ -58,24 +58,17 @@ public class Rule extends Node<Update> {
     }
 
     @Override
-    public void prettyPrint(StringBuffer sb) {
-        condition.prettyPrint(sb);
+    public StringBuffer toString(StringBuffer sb) {
+        condition.toString(sb);
         sb.append(" --> ");
-        int ts = tabWidth(sb);
-        boolean first = true; //TODO: FIX THIS TERRIBLE KLUDGE
-        for(Update u : children) {
-            if(!first) 
-                tab(sb, ts);
-            else
-                first = false;
-            u.prettyPrint(sb);
-        }
-        if (action != null) {
-            if(!children.isEmpty())
-                tab(sb,ts);
-            action.prettyPrint(sb);
-        }
+        for(Update u : children) 
+            u.toString(sb).append(' ');
+        if (action != null) 
+            sb = action.toString(sb);
+        else
+            sb.deleteCharAt(sb.length()-1);
         sb.append(';');
+        return sb;
     }
 
     @Override

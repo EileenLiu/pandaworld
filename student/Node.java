@@ -74,7 +74,16 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
      *
      * @param sb The StringBuffer to be appended
      */
-    public abstract void prettyPrint(StringBuffer sb);
+    public void prettyPrint(StringBuffer sb) {
+        toString(sb);
+    }
+    
+    protected abstract StringBuffer toString(StringBuffer sb);
+    
+    @Override
+    public final String toString() {
+        return toString(new StringBuffer()).toString();
+    }
 
     /**
      * Checks if the node has a parent

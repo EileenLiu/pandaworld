@@ -84,25 +84,21 @@ public class BinaryBooleanOperator extends Condition<Condition<?>> {
     }
 
     @Override
-    public void prettyPrint(StringBuffer sb) {
-        StringBuffer t = new StringBuffer();
-        int a = tabWidth(sb) - lastTo(sb, "{");
-        if(a > 15)
-            tab(sb, a);
-        ppsn(t,left());
-        t.append(' ');
-        t.append(en2s(op));
-        t.append(' ');
-        ppsn(t,right());
-        sb.append(t);
+    public StringBuffer toString(StringBuffer sb) {
+        ppsn(sb,left());
+        sb.append(' ');
+        sb.append(en2s(op));
+        sb.append(' ');
+        ppsn(sb,right());
+        return sb;
     }
     
     private void ppsn(StringBuffer sb, Node n) { //TODO (if time): take precedence into account
         if(n instanceof BinaryBooleanOperator) {
-            sb.append("{ ");
-            n.prettyPrint(sb);
-            sb.append(" }");
+            sb.append('{');
+            n.toString(sb);
+            sb.append('}');
         } else
-            n.prettyPrint(sb);
+            n.toString(sb);
     }
 }

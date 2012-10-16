@@ -47,6 +47,12 @@ public class Constant extends Expression<Constant> {
     public int eval() {
         return value;
     }
+    
+    @Override
+    public StringBuffer toString(StringBuffer sb) {
+        sb.append(value);
+        return sb;
+    }
 
     public Constant(int val) {
         super();

@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import student.ParserImpl.HistObj;
 import student.util.Functions;
 import static student.util.Functions.forName;
+import student.util.PrettyPrint;
 
 /**
  *
@@ -37,8 +38,17 @@ public class Access extends Expression {
     public int eval() {
         return sen.val(ind.eval());
     }
+
+    @Override
+    public StringBuffer toString(StringBuffer sb) {
+        sb.append(Functions.en2s(sen));
+        sb.append('[');
+        ind.toString(sb);
+        sb.append(']');
+        return sb;
+    }
     
-    private static enum Sen {
+    public static enum Sen {
         MEM {
             @Override public int val(int par) {
                 throw new Error("Can't do that yet...");
