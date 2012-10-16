@@ -1,5 +1,7 @@
 package student;
 
+import student.util.Functions;
+
 public class BinaryRelation extends Condition<Expression<?>> {
 
     private Rel relation;
@@ -83,7 +85,12 @@ public class BinaryRelation extends Condition<Expression<?>> {
     public Expression<?> right() {
         return children.get(1);
     }
-
+    @Override
+        public boolean randomize()
+    {
+    	relation = Functions.randEnum(Rel.class);
+    	return true;
+    }
     /**
      * An enumeration of all possible binary operators.
      */
