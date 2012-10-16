@@ -6,7 +6,7 @@ package student;
 
 
 public class Constant extends Expression<Constant> {
-    private final int value;
+    private int value;
 
     @Override
     public int size() {
@@ -51,6 +51,12 @@ public class Constant extends Expression<Constant> {
     public Constant(int val) {
         super();
         value = val;
+    }
+    @Override
+        public boolean randomize()
+    {
+    	value = (int) (Math.random() * 999);
+    	return true;
     }
     
 }
