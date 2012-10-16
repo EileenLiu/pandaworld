@@ -9,7 +9,7 @@ import java.util.List;
  */
 public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
 
-    private static final String mutationTypes[][] = new String [][] {
+    private static final String mutationDescriptions[][] = new String [][] {
         new String[]{"The node ", " was removed. If its parent node needed a replacement node, "
             + "one of its randomly selected children of the right kind was used."},
         new String[]{"The order of two children of the node "," was switched."},
@@ -78,7 +78,12 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
     public void setMutationType(int i) {
         mutationType = i;
     }
-
+    public String mutationDescription(){
+        if(mutationType!=0)
+            return (mutationDescriptions[mutationType][0] + "Node["+toString()+"]"+ mutationDescriptions[mutationType][1]);
+        else
+            return "";
+    }
     /**
      * Appends the program represented by this node prettily to the given
      * StringBuffer.

@@ -23,7 +23,9 @@ public class ParserFactory {
                                     System.out.println("Integer ");
                                 }                        
                                 Node selected = FaultInjector.randomNode(program, null);
-                                
+                                selected.mutate();
+                                System.out.println(selected.mutationDescription);
+                                System.out.println(program.prettyPrint());
                                 ///mutate???????????
                                 //pretty print
 			} catch (FileNotFoundException e) {
@@ -39,7 +41,8 @@ public class ParserFactory {
 		{
 			try {
 				Reader inStreamReader = new InputStreamReader(new FileInputStream(new File(args[0])));
-				ParserFactory.getParser().parse(inStreamReader);
+				Program program = ParserFactory.getParser().parse(inStreamReader);
+                                System.out.println(program.prettyPrint());
 				
 			} catch (FileNotFoundException e) {
 
