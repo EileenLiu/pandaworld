@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import student.ParserImpl.HistObj;
 import static student.util.Functions.forName;
+import static student.util.PrettyPrint.*;
 
 /**
  *
@@ -52,10 +53,10 @@ public class Action extends Node<Expression<?>> {
 
     @Override
     public void prettyPrint(StringBuffer sb) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        test("Action",sb);
     }
     
-    private static enum Act {
+    public static enum Act {
         WAIT {
             @Override public void exec() {
                 throw new Error("Can't do that yet!");

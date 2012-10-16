@@ -47,11 +47,6 @@ public class BinaryRelation extends Condition<Expression<?>> {
         return null;
     }
 
-    @Override
-    public void prettyPrint(StringBuffer sb) {
-        // TODO Auto-generated method stub
-    }
-
 	@Override
 	public boolean deleteChild(Expression<?> n) {
 		if(!(n instanceof BinaryArithmeticOperator))
@@ -72,6 +67,23 @@ public class BinaryRelation extends Condition<Expression<?>> {
     @Override
     public int numChildren() {
         return 2;
+    }
+    
+    public Expression left() {
+        return children.get(0);
+    }
+    
+    public Expression right() {
+        return children.get(1);
+    }
+
+    @Override
+    public void prettyPrint(StringBuffer sb) {
+        left().prettyPrint(sb);
+        sb.append(' ');
+        sb.append(relation.getSym());
+        sb.append(' ');
+        right().prettyPrint(sb);
     }
 
     /**

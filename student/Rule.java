@@ -61,14 +61,18 @@ public class Rule extends Node<Update> {
     public void prettyPrint(StringBuffer sb) {
         condition.prettyPrint(sb);
         sb.append(" --> ");
-        Iterator<Update> i = children.iterator();
-        i.next().prettyPrint(sb);
-        while (i.hasNext()) {
-            tab(sb);
-            i.next().prettyPrint(sb);
+        int ts = tabWidth(sb);
+        boolean first = true; //TODO: FIX THIS TERRIBLE KLUDGE
+        for(Update u : children) {
+            if(!first) 
+                tab(sb, ts);
+            else
+                first = false;
+            u.prettyPrint(sb);
         }
         if (action != null) {
-            tab(sb);
+            if(!children.isEmpty())
+                tab(sb,ts);
             action.prettyPrint(sb);
         }
         sb.append(';');

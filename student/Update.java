@@ -7,6 +7,7 @@ package student;
 import java.util.Arrays;
 import java.util.LinkedList;
 import student.ParserImpl.HistObj;
+import static student.util.PrettyPrint.*;
 
 /**
  *
@@ -56,6 +57,6 @@ public class Update extends Node<Expression<?>> {
 
     @Override
     public void prettyPrint(StringBuffer sb) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        test("Update",sb);
     }
 }   

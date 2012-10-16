@@ -8,7 +8,7 @@ import java.util.List;
 public class BinaryArithmeticOperator extends Expression<Expression<?>> { // need not be abstract
     //private Expression left, right;
 
-    private BinaryOp op; //the operation
+    private Op op; //the operation
 
     /**
      * Creates a new BinaryOp with the given left expression, right expression,
@@ -23,7 +23,7 @@ public class BinaryArithmeticOperator extends Expression<Expression<?>> { // nee
         super(Arrays.asList(new Expression<?>[]{l, r}));
         l.setParent((Node)this); //*I* know it's fine.
         r.setParent((Node)this);
-        op = BinaryOp.forSym(v);
+        op = Op.forSym(v);
         //eval();
     }
 
@@ -58,7 +58,7 @@ public class BinaryArithmeticOperator extends Expression<Expression<?>> { // nee
      *
      * @return BinaryOp's BinaryOperator
      */
-    public BinaryOp getBinaryOp() {
+    public Op getBinaryOp() {
         return op;
     }
 
@@ -67,7 +67,7 @@ public class BinaryArithmeticOperator extends Expression<Expression<?>> { // nee
      *
      * @param b the given BinaryConditionOperator
      */
-    public void setBinaryOp(BinaryOp b) {
+    public void setBinaryOp(Op b) {
         op = b;
     }
 
@@ -93,15 +93,10 @@ public class BinaryArithmeticOperator extends Expression<Expression<?>> { // nee
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    @Override
-    public void prettyPrint(StringBuffer sb) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
     /**
      * An enumeration of all possible binary operators.
      */
-    private enum BinaryOp {
+    public enum Op {
 
         PLUS('+') {
             @Override
@@ -135,7 +130,7 @@ public class BinaryArithmeticOperator extends Expression<Expression<?>> { // nee
         };
         private char sym;
 
-        private BinaryOp(char s) {
+        private Op(char s) {
             sym = s;
         }
 
@@ -163,8 +158,8 @@ public class BinaryArithmeticOperator extends Expression<Expression<?>> { // nee
          * @param s a character representing a binary integer operation
          * @return the operation
          */
-        public static BinaryOp forSym(char s) {
-            for (BinaryOp bo : VALUES) {
+        public static Op forSym(char s) {
+            for (Op bo : VALUES) {
                 if (bo.sym == s) {
                     return bo;
                 }
@@ -174,7 +169,7 @@ public class BinaryArithmeticOperator extends Expression<Expression<?>> { // nee
         /**
          * The list of operators.
          */
-        public static final List<BinaryOp> VALUES =
+        public static final List<Op> VALUES =
                 Collections.unmodifiableList(Arrays.asList(values()));
         /**
          * The number of operators.

@@ -13,17 +13,26 @@ public final class PrettyPrint {
     
     public static final int CONDITION_BREAK = 38; //magic number alert
     public static int tabWidth(StringBuffer sb) {
-        return sb.length() - sb.lastIndexOf("\n");
+        return lastTo(sb, "\n");
     }
     
-    public static void tab(StringBuffer sb) {
-        int num = tabWidth(sb);
+    public static int lastTo(StringBuffer sb, String c) {
+        return sb.length() - sb.lastIndexOf(c);
+    }
+    
+    public static void tab(StringBuffer sb, int ts) {
         sb.append("\n");
-        while(num --> 0)
+        while(ts --> 1)
             sb.append(" ");
     }
     
     public static boolean shouldBreak(StringBuffer sb, int dist) {
         return tabWidth(sb) > dist;
+    }
+    
+    public static void test(String n, StringBuffer sb) {
+        sb.append(n);
+        for(int i = (int)(Math.random()*16); i > 0; i--)
+            sb.append('.');
     }
 }

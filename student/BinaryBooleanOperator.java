@@ -1,6 +1,7 @@
 package student;
 
 import static student.util.Functions.*;
+import static student.util.PrettyPrint.*;
 
 public class BinaryBooleanOperator extends Condition<Condition<?>> {
 
@@ -27,15 +28,6 @@ public class BinaryBooleanOperator extends Condition<Condition<?>> {
     @Override
     public Node mutate() {
         throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void prettyPrint(StringBuffer sb) {
-        left().prettyPrint(sb);
-        sb.append(" ");
-        sb.append(en2s(op));
-        sb.append(" ");
-        right().prettyPrint(sb);
     }
 
     @Override
@@ -83,4 +75,27 @@ public class BinaryBooleanOperator extends Condition<Condition<?>> {
     public void setConditionOp(Op conditionOp) {
         op = conditionOp;
     }
-}
+
+    @Override
+    public void prettyPrint(StringBuffer sb) {
+        StringBuffer t = new StringBuffer();
+        int a = tabWidth(sb) - lastTo(sb, "{");
+        if(a > 15)
+            tab(sb, a);
+        ppsn(t,left());
+        t.append(' ');
+        t.append(en2s(op));
+        t.append(' ');
+        ppsn(t,right());
+        sb.append(t);
+    }
+    
+    private void ppsn(StringBuffer sb, Node n) { //TODO (if time): take precedence into account
+        if(n instanceof BinaryBooleanOperator) {
+            sb.append("{ ");
+            n.prettyPrint(sb);
+            sb.append(" }");
+        } else
+            n.prettyPrint(sb);
+    }
+} 

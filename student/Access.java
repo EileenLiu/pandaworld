@@ -41,7 +41,7 @@ public class Access extends Expression {
         return sen.val(ind.eval());
     }
     
-    private static enum Sen {
+    public static enum Sen {
         MEM {
             @Override public int val(int par) {
                 throw new Error("Can't do that yet...");
