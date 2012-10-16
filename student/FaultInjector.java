@@ -7,7 +7,12 @@ import java.util.Arrays;
 import java.util.LinkedList;
 
 public class FaultInjector {
-
+    /**
+     * Injects a fault for the given node in the given program
+     * @param n the given node
+     * @param root the given program
+     * @return 
+     */
     public Node injectFault(Node n, Program root) {
         //int index = (int)(Math.random()*ORIGINAL.length);
         //Node[] arr = n.toArray();
@@ -54,11 +59,14 @@ public class FaultInjector {
                     if (parent instanceof Access) {
                     } 
                     else if (parent instanceof BinaryArithmeticOperator) {
+                        BinaryArithmeticOperator bao = new BinaryArithmeticOperator((Expression)n, (Expression)(randomNode(root, Expression.class).copy()));
+                        parent.replaceChild(n, bao);
                     } 
                     else if (parent instanceof BinaryBooleanOperator) {
                     } 
                     else if (parent instanceof BinaryRelation) {
-                        BinaryArithmeticOperator bao = new BinaryArithmeticOperator((Expression)n, (Expression)(randomNode(root, Expression.class)));
+                        BinaryArithmeticOperator bao = new BinaryArithmeticOperator((Expression)n, (Expression)(randomNode(root, Expression.class).copy()));
+                        parent.replaceChild(n, bao);
                         //replace
                     } 
                     else if (parent instanceof Condition) {
@@ -68,7 +76,8 @@ public class FaultInjector {
                     else if (parent instanceof Rule) {
                     } 
                     else if (parent instanceof Tag) {
-                        BinaryArithmeticOperator bao = new BinaryArithmeticOperator((Expression)n, (Expression)(randomNode(root, Expression.class)));
+                        BinaryArithmeticOperator bao = new BinaryArithmeticOperator((Expression)n, (Expression)(randomNode(root, Expression.class).copy()));
+                        parent.replaceChild(n, bao);
                         //replace
                     }
                     break;
@@ -79,11 +88,16 @@ public class FaultInjector {
     }
 
     
-
+    /**
+     * Retrieves a random node of the given type from the subtree of the given start node
+     * @param start the given start node
+     * @param c the given type of node
+     * @return 
+     */
     public Node randomNode(Node start, Class<? extends Node> c) {
         Node[] arr = start.toArray();
         if (c != null) {
-            LinkedList<Node> sameType = new LinkedList<Node>();
+            LinkedList<Node> sameType = new LinkedList();
             for (Node nd : arr) {
                 if (nd.getClass().isAssignableFrom(c)) {
                     sameType.add(nd);
