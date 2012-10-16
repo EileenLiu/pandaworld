@@ -89,24 +89,35 @@ public class FaultInjector {
                     // TODO CASE 4
                     Node parent = n.getParent();
                     if (parent instanceof Access) {
-                    } else if (parent instanceof BinaryArithmeticOperator) {
-                    } else if (parent instanceof BinaryBooleanOperator) {
-                    } else if (parent instanceof BinaryRelation) {
-                        BinaryArithmeticOperation bao = new BinaryArithmeticOperation(n, randomNode(root, Expression.class));
+                    } 
+                    else if (parent instanceof BinaryArithmeticOperator) {
+                    } 
+                    else if (parent instanceof BinaryBooleanOperator) {
+                    } 
+                    else if (parent instanceof BinaryRelation) {
+                        BinaryArithmeticOperator bao = new BinaryArithmeticOperator((Expression)n, (Expression)(randomNode(root, Expression.class)));
                         //replace
-                    } else if (parent instanceof Condition) {
-                    } else if (parent instanceof Program) {
-                    } else if (parent instanceof Rule) {
-                    } else if (parent instanceof Tag) {
-                        BinaryArithmeticOperation bao = new BinaryArithmeticOperation(n, randomNode(root, Expression.class));
+                    } 
+                    else if (parent instanceof Condition) {
+                    } 
+                    else if (parent instanceof Program) {
+                    } 
+                    else if (parent instanceof Rule) {
+                    } 
+                    else if (parent instanceof Tag) {
+                        BinaryArithmeticOperator bao = new BinaryArithmeticOperator((Expression)n, (Expression)(randomNode(root, Expression.class)));
                         //replace
-                    } else {
+                    } 
+                    else {
                         go = false;
                     }
                     //n.getParent().class
                     break;
-                    return null;
+                //return null;
             }
+        }
+    }
+
     
 
     public Node randomNode(Node start, Class<? extends Node> c) {
