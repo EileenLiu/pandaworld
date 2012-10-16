@@ -8,6 +8,13 @@ import java.util.List;
  * A node in the abstract syntax tree of a program.
  */
 public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
+	
+	private final String mutation1 = "The node was removed. If its parent node needed a replacement node, " +
+			"one of its randomly selectedchildren of the right kind was used. The child to be used was randomly selected.";
+	private final String mutation2 = "The order of two children of the node was switched.";
+	private final String mutation3 = "";
+	private final String mutation4 = "";
+	private final String mutation5 = "";
 
     protected Node<Node<SubNodeType>> parent;
     protected final List<SubNodeType> children;

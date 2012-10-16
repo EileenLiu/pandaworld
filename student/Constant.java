@@ -20,7 +20,7 @@ public class Constant extends Expression<Constant> {
 
     @Override
     public Node<?> copy() {
-        return this;
+        return new Constant(value);
     }
 
     @Override

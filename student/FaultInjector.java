@@ -24,7 +24,6 @@ public class FaultInjector {
                     {
                         go = true;
                     }
-
                     /*if(n.parent instanceof BinaryOp)
                      {
                      //find selected
@@ -55,7 +54,6 @@ public class FaultInjector {
                         go = true;
                     }
                     break;
-
                 case 3:// the node is replaced with a randomly chosen node of the same kind( for example, replacing attack with eat, or + with *) but its children remain the same. Literal integer constants are adjusted up or down with the value of java.lang.Integer.MAX_VALUE/r.nextInt(), where legal, and where r is a java.util.random obj
                     // TODO CASE THREE
                     //update, condition, node, program, rule
