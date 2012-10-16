@@ -58,7 +58,12 @@ public class BinaryBooleanOperator extends Condition<Condition<?>> {
         }
         return true;
     }
-
+    @Override
+        public boolean randomize()
+    {
+    	op = Functions.randEnum(Op.class);
+    	return true;
+    }
     /**
      * An enumeration of all possible binary condition operators.
      */
