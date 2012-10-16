@@ -126,32 +126,4 @@ public class FaultInjector {
             return arr[(int) (Math.random() * (arr.length))];
         }
     }
-    //mem[0] length of critter's memory (immutable, always at least 9)
-    //mem[1] defense ability (immutible, >= 1 )
-    //mem[2] offense ability (immutible, >= 1 )
-    //mem[3] size, variable but cannot be assigned directly >=1
-    //mem[4] energy (variable, but cannot be assigned directly, always positive
-    //mem[5] rule counter, explaination below, variable but cannot be assigned directly
-    //mem[6] event log (variable, but cannot be assigned directly
-    //mem[7] tag (variable, but cannot be assigned directly. always between 0 and 999
-    //mem[8] posture (assignable but only to values between 0 and 999
-
-    public Program injectFault(Program p) {
-        //int index = (int)(Math.random()*ORIGINAL.length);
-        int faultType = (int) (Math.random() * 5);
-        switch (faultType) {
-            case 0:
-                break;
-            case 1:
-                break;
-            case 2:
-                break;
-            case 3:
-                break;
-            case 4:
-                break;
-        }
-        return null;
-
-    }
 }

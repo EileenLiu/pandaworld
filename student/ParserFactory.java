@@ -15,8 +15,17 @@ public class ParserFactory {
 		{
 			try {
 				Reader inStreamReader = new InputStreamReader(new FileInputStream(new File(args[2])));
-				ParserFactory.getParser().parse(inStreamReader);
-				///mutate???????????
+				Program program = ParserFactory.getParser().parse(inStreamReader);
+                                try {
+                                Integer.parseInt(args[1]);
+                                }
+                                catch (NumberFormatException e){
+                                    System.out.println("Integer ");
+                                }                        
+                                Node selected = FaultInjector.randomNode(program, null);
+                                
+                                ///mutate???????????
+                                //pretty print
 			} catch (FileNotFoundException e) {
 
 				System.out.println("The given file was not found.");
@@ -43,7 +52,6 @@ public class ParserFactory {
 	 * @return
 	 */
 	public static Parser getParser() {
-		//TODO
-		return null;
+		return (Parser) new ParserImpl();
 	}
 }

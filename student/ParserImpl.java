@@ -12,13 +12,14 @@ import java.util.Set;
 import java.util.TreeMap;
 import student.SyntaxError.ExpectationFailure;
 
-public class ParserImpl /*implements Parser*/ {
+public class ParserImpl implements Parser {
 
     public ParserImpl() {
         
     }
 
-    public Program parse(Reader r) throws SyntaxError {
+    @Override
+    public Program parse(Reader r) {
         try {
             Deque<String> stack = new LinkedList<String>();
             LinkedList<HistObj> hist = new LinkedList<HistObj>();
@@ -41,7 +42,7 @@ public class ParserImpl /*implements Parser*/ {
             System.out.println(hist);
             return Program.parse(hist);
         } catch (SyntaxError e) {
-            throw e;
+            return null;
         }
     }
     

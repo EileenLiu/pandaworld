@@ -9,18 +9,19 @@ import java.util.List;
  */
 public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
 
-    private final String mutation1 = "The node was removed. If its parent node needed a replacement node, "
-            + "one of its randomly selected children of the right kind was used.";
-    private final String mutation2 = "The order of two children of the node was switched.";
-    private final String mutation3 = "The node and its children were replaced with a copy of another "
+    private static final String mutationTypes[][] = new String [][] {
+        new String[]{"The node ", " was removed. If its parent node needed a replacement node, "
+            + "one of its randomly selected children of the right kind was used."},
+        new String[]{"The order of two children of the node "," was switched."},
+        new String[]{"The node "," and its children were replaced with a copy of another "
             + "randomly selected node of the right kind, found somewhere in the rule set. The entire "
-            + "AST subtree rooted at the selected node was copied.";
-    private final String mutation4 = "The node was replaced with a randomly chosen node of the same"
-            + " kind but its children remained the same.";
-    private final String mutation5 = "A newly created node was inserted as the parent of the node, taking"
+            + "AST subtree rooted at the selected node was copied."},
+        new String[]{"The node ","was replaced with a randomly chosen node of the same"
+            + " kind but its children remained the same."},
+        new String[]{"A newly created node was inserted as the parent of the node ",", taking"
             + " its place in the tree. If the newly created node needed more than one child, the children "
             + "that are not the original node were copies of randomly chosen nodes of the right kind from "
-            + "the whole rule set.";
+            + "the whole rule set." }};
     protected Node<Node<SubNodeType>> parent;
     protected final List<SubNodeType> children;
     private int mutationType = 0;
@@ -217,17 +218,12 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
 
     /**
      * Replaces one child with another
+     * Precondition: the node actually has the given node as a child
      *
      * @param old the old child to replace
      * @param neww the new child to replace with
      */
     public void replaceChild(SubNodeType old, SubNodeType neww) {
         children.set(children.indexOf(old), neww);
-    }
-    @Override
-    public String toString()
-    {
-        //TODO fill out
-        return "";
     }
 }
