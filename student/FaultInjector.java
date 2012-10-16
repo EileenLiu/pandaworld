@@ -3,8 +3,8 @@
  */
 package student;
 
+import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.Random;
 
 public class FaultInjector {
 
@@ -12,80 +12,44 @@ public class FaultInjector {
         //int index = (int)(Math.random()*ORIGINAL.length);
         //Node[] arr = n.toArray();
         //int i = (int)(Math.random()*arr.length);
-        int faultType;
-        boolean go = true;
-
-        while (go) {
-            faultType = (int) (Math.random() * 5);
-            go = false;
-            switch (faultType) {
-                case 0: //the node is removed. if its parent node needs a replacement node, one of its children of the right kind is used. The child to be used is randomly selected. Thus rule nodes are simply removed, but binary operation nodes would be replaced with either their left or right child
-                    if (!n.getParent().deleteChild(n)) //attempts to remove node, if the node cannot be removed...
-                    {
-                        go = true;
-                    }
-                    /*if(n.parent instanceof BinaryOp)
-                     {
-                     //find selected
-                     Node selected;
-                     p.value = selected.value;
-                     }
-                     else
-                     n.parent.children = null;*/
+        LinkedList<Integer> faultType = new LinkedList();
+        faultType.addAll(Arrays.asList(1,2,3,4,5));
+        int i;      
+        while (!faultType.isEmpty()){//go) {
+            i = (int)(Math.random()*faultType.size());
+            //go = false;
+            switch (faultType.get(i)) {
+                case 1: //the node is removed. if its parent node needs a replacement node, one of its children of the right kind is used. The child to be used is randomly selected. Thus rule nodes are simply removed, but binary operation nodes would be replaced with either their left or right child
+                    if(n.getParent().deleteChild(n))
+                        return root;
                     break;
-                case 1: //order of two children of the node is switched. for ex. allows swapping of positions of two rules
+                case 2: //order of two children of the node is switched. for ex. allows swapping of positions of two rules
                     if (n.numChildren() >= 2) {
                         n.swapChildren();
-                    } else {
-                        go = true;
+                        return root;
                     }
                     break;
-                case 2: //the node and its children are replaced with a copy of another randomly selected node of the right kind, found somewhere in the rule set. the entire AST subtree rooted at the selected node is copied
-                    Node pointer = n;
+                case 3: //the node and its children are replaced with a copy of another randomly selected node of the right kind, found somewhere in the rule set. the entire AST subtree rooted at the selected node is copied
+                    /*Node pointer = n;
                     while (pointer.getParent().getParent() != null) //finds the topmost node in the AST
                     {
                         pointer = pointer.getParent();
-                    }
+                    }*/
                     //find selected
-                    Node selected = randomNode(pointer, n.getClass());
+                    //Node selected = randomNode(pointer, n.getClass());
+                    Node selected = randomNode(root, n.getClass());
                     if (selected != null) {
                         n.set(selected.copy());
-                    } else {
-                        go = true;
+                        return root;
                     }
                     break;
-                case 3:// the node is replaced with a randomly chosen node of the same kind( for example, replacing attack with eat, or + with *) but its children remain the same. Literal integer constants are adjusted up or down with the value of java.lang.Integer.MAX_VALUE/r.nextInt(), where legal, and where r is a java.util.random obj
-                    // TODO CASE THREE
-                    //update, condition, node, program, rule
-				/*Node selected;
-                     if(selected==null)
-                     {
-                     go = false;
-                     break;
-                     }*/
-                    if (!n.randomize()) {
-                        go = true;
+                case 4:// the node is replaced with a randomly chosen node of the same kind( for example, replacing attack with eat, or + with *) but its children remain the same. Literal integer constants are adjusted up or down with the value of java.lang.Integer.MAX_VALUE/r.nextInt(), where legal, and where r is a java.util.random obj
+                    //cannot: update, condition, node, program, rule				
+                    if (n.randomize()) {
+                        return root;
                     }
-                    /*			if(selected instanceof BinaryBooleanOperator)
-                     ((BinaryBooleanOperator)n).setConditionOp(((BinaryBooleanOperator) selected).getConditionOp());
-                     else if(selected instanceof BinaryArithmeticOperator)
-                     ((BinaryArithmeticOperator)n).setBinaryOp(((BinaryArithmeticOperator) selected).getBinaryOp());
-                     else if(selected instanceof BinaryRelation)
-                     ((BinaryRelation)n).setRelation(((BinaryRelation) selected).getRelation());
-                     /*else if(selected instanceof Condition)
-                     ????*/
-                    /*			else if(selected instanceof Expression)
-                     ((Expression)n).setValue(((Expression) selected).getValue());
-                     /*else if(selected instanceof Program)
-                     ???
-                     else if(selected instanceof Rule)
-                     ???*/
-                    /*			else
-                     go = false;
-                     //n.setValue(selected.getValue());
-                     */
                     break;
-                case 4: // a newly created node is inserted as the parent of the node, taking its place in the tree. if the newly created node has more than one child, the children that are not the original node are copies of randomly chosen nodes of the right kind from the whole rule set
+                case 5: // a newly created node is inserted as the parent of the node, taking its place in the tree. if the newly created node has more than one child, the children that are not the original node are copies of randomly chosen nodes of the right kind from the whole rule set
                     // TODO CASE 4
                     Node parent = n.getParent();
                     if (parent instanceof Access) {
@@ -108,14 +72,15 @@ public class FaultInjector {
                         BinaryArithmeticOperator bao = new BinaryArithmeticOperator((Expression)n, (Expression)(randomNode(root, Expression.class)));
                         //replace
                     } 
-                    else {
-                        go = false;
-                    }
+                    /*else {
+                        go = true;
+                    }*/
                     //n.getParent().class
                     break;
-                //return null;
             }
+            faultType.remove(i);
         }
+        return null;
     }
 
     
