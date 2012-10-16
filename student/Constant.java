@@ -4,6 +4,8 @@
  */
 package student;
 
+import java.util.Random;
+
 
 public class Constant extends Expression<Constant> {
     private int value;
@@ -52,10 +54,16 @@ public class Constant extends Expression<Constant> {
         super();
         value = val;
     }
+    public Constant() {
+        super();
+        Random r = new Random();
+        value = Integer.MAX_VALUE/r.nextInt();
+    }
     @Override
         public boolean randomize()
     {
-    	value = (int) (Math.random() * 999);
+        Random r = new Random();
+    	value = Integer.MAX_VALUE/r.nextInt();
     	return true;
     }
     
