@@ -1,5 +1,6 @@
 package student;
 
+import student.util.Functions;
 import static student.util.Functions.*;
 import static student.util.PrettyPrint.*;
 
@@ -75,6 +76,12 @@ public class BinaryBooleanOperator extends Condition<Condition<?>> {
     public void setConditionOp(Op conditionOp) {
         op = conditionOp;
     }
+    
+    @Override
+    public boolean randomize() {
+        op = Functions.randEnum(Op.class);
+        return true;
+    }
 
     @Override
     public void prettyPrint(StringBuffer sb) {
@@ -98,4 +105,4 @@ public class BinaryBooleanOperator extends Condition<Condition<?>> {
         } else
             n.prettyPrint(sb);
     }
-} 
+}

@@ -4,8 +4,6 @@
  */
 package student.util;
 
-import student.Action;
-
 /**
  *
  * @author haro
@@ -47,5 +45,30 @@ public final class Functions {
     
     public static <E extends Enum<E>> String en2s(E e) {
         return e.name().toLowerCase();
+    }
+    
+    /**  
+     * Creates an instance of the passed Node class. Generally called with the other method of the same name.
+     * @param nc (some node type).class
+     * @return a new such node.
+     */
+    public static <N> N tcln(Class<? extends N> nc) {
+    	try {
+    		return (N)nc.getConstructor().newInstance();
+    	} catch (NullPointerException npe) {
+    		throw new RuntimeException("Functions.tcln",npe);
+    	} catch (ReflectiveOperationException roe) {
+    		throw new RuntimeException("Functions.tcln",roe);
+    	}
+    }
+    
+    /**
+     * Klones the type of n.
+     * @param n A node, whose type has a default constructor.
+     * @return A node superficially similar to {@code n}
+     */
+    @SuppressWarnings("unchecked")
+    public static <N> N tcln(N n) {
+    	return (N) tcln(n.getClass());
     }
 }

@@ -4,11 +4,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import student.util.Functions;
+
 // Represents +, -, *, /, %
 public class BinaryArithmeticOperator extends Expression<Expression<?>> { // need not be abstract
     //private Expression left, right;
 
-    private Op op; //the operation
+    private BinaryOp op; //the operation
 
     /**
      * Creates a new BinaryOp with the given left expression, right expression,
@@ -21,10 +23,24 @@ public class BinaryArithmeticOperator extends Expression<Expression<?>> { // nee
      */
     public BinaryArithmeticOperator(Expression<?> l, Expression<?> r, char v) {
         super(Arrays.asList(new Expression<?>[]{l, r}));
-        l.setParent((Node)this); //*I* know it's fine.
-        r.setParent((Node)this);
-        op = Op.forSym(v);
+        l.setParent((Node) this); //*I* know it's fine.
+        r.setParent((Node) this);
+        op = BinaryOp.forSym(v);
         //eval();
+    }
+
+    /**
+     * Creates a new BinaryArithmeticOperator with the given left and right
+     * expressions and a randomly generated BinaryOp
+     *
+     * @param l the given left
+     * @param r the given right
+     */
+    public BinaryArithmeticOperator(Expression<?> l, Expression<?> r) {
+        super(Arrays.asList(new Expression<?>[]{l, r}));
+        l.setParent((Node)this);
+        r.setParent((Node)this);
+        op = Functions.randEnum(BinaryOp.class);
     }
 
     /**
@@ -58,7 +74,7 @@ public class BinaryArithmeticOperator extends Expression<Expression<?>> { // nee
      *
      * @return BinaryOp's BinaryOperator
      */
-    public Op getBinaryOp() {
+    public BinaryOp getBinaryOp() {
         return op;
     }
 
@@ -67,7 +83,7 @@ public class BinaryArithmeticOperator extends Expression<Expression<?>> { // nee
      *
      * @param b the given BinaryConditionOperator
      */
-    public void setBinaryOp(Op b) {
+    public void setBinaryOp(BinaryOp b) {
         op = b;
     }
 
@@ -87,16 +103,22 @@ public class BinaryArithmeticOperator extends Expression<Expression<?>> { // nee
         }
         return true;
     }
-    
+
     @Override
     public Node mutate() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
+    
+    @Override
+        public boolean randomize()
+    {
+    	op = Functions.randEnum(BinaryOp.class);
+    	return true;
+    }
     /**
      * An enumeration of all possible binary operators.
      */
-    public enum Op {
+    private enum BinaryOp {
 
         PLUS('+') {
             @Override
@@ -130,7 +152,7 @@ public class BinaryArithmeticOperator extends Expression<Expression<?>> { // nee
         };
         private char sym;
 
-        private Op(char s) {
+        private BinaryOp(char s) {
             sym = s;
         }
 
@@ -158,8 +180,8 @@ public class BinaryArithmeticOperator extends Expression<Expression<?>> { // nee
          * @param s a character representing a binary integer operation
          * @return the operation
          */
-        public static Op forSym(char s) {
-            for (Op bo : VALUES) {
+        public static BinaryOp forSym(char s) {
+            for (BinaryOp bo : VALUES) {
                 if (bo.sym == s) {
                     return bo;
                 }
@@ -169,7 +191,7 @@ public class BinaryArithmeticOperator extends Expression<Expression<?>> { // nee
         /**
          * The list of operators.
          */
-        public static final List<Op> VALUES =
+        public static final List<BinaryOp> VALUES =
                 Collections.unmodifiableList(Arrays.asList(values()));
         /**
          * The number of operators.

@@ -8,9 +8,18 @@ import java.util.List;
  * A node in the abstract syntax tree of a program.
  */
 public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
+	
+	private final String mutation1 = "The node was removed. If its parent node needed a replacement node, " +
+			"one of its randomly selectedchildren of the right kind was used. The child to be used was randomly selected.";
+	private final String mutation2 = "The order of two children of the node was switched.";
+	private final String mutation3 = "";
+	private final String mutation4 = "";
+	private final String mutation5 = "";
 
     protected Node<Node<SubNodeType>> parent;
     protected final List<SubNodeType> children;
+    private int mutationType = 0;
+
     public Node(List<SubNodeType> childNodes) {
         children = childNodes;
     }
@@ -46,8 +55,19 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
      * Return a version of the same AST with one random mutation in it. May have
      * side effects on the original AST.
      */
-    public abstract Node<?> mutate();
-
+    public Node<?> mutate(){
+    	FaultInjector mutator = new FaultInjector();
+    	Node mutated = mutator.injectFault(this, null); //TODO Fix ref
+        return mutated;
+    }
+    /**
+     * Stores the type of mutation that was last applied
+     * @param i the type of mutation
+     */
+    public void setMutationType(int i)
+    {
+    	mutationType = i;
+    }
     /**
      * Appends the program represented by this node prettily to the given
      * StringBuffer.

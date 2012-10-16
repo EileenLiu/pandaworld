@@ -1,14 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package student;
 
 import java.util.Collections;
 import java.util.LinkedList;
 import student.ParserImpl.HistObj;
+import student.util.Functions;
 import static student.util.Functions.forName;
-import static student.util.PrettyPrint.*;
 
 /**
  *
@@ -53,10 +49,15 @@ public class Action extends Node<Expression<?>> {
 
     @Override
     public void prettyPrint(StringBuffer sb) {
-        test("Action",sb);
+        throw new UnsupportedOperationException("Not supported yet.");
     }
-    
-    public static enum Act {
+    @Override
+        public boolean randomize()
+    {
+    	act = Functions.randEnum(Act.class);
+    	return true;
+    }
+    private static enum Act {
         WAIT {
             @Override public void exec() {
                 throw new Error("Can't do that yet!");

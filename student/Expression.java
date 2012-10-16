@@ -54,11 +54,6 @@ public abstract class Expression<SubNodeType extends Expression<?>> extends Node
         }
         throw new Error(self.rule);
     }
-
-    
-    /**
-     * Creates a new Expression of random value between 0 and 999
-     */
     protected Expression() {
         super();
     }

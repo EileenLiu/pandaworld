@@ -1,11 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package student;
 
 import java.util.LinkedList;
 import student.ParserImpl.HistObj;
+import student.util.Functions;
 import static student.util.Functions.forName;
 
 /**
@@ -32,7 +29,7 @@ public class Access extends Expression {
     @Override
     public boolean randomize()
     {
-    	//TODO fill out
+    	sen = Functions.randEnum(Sen.class);
     	return true;
     }
 
@@ -41,7 +38,7 @@ public class Access extends Expression {
         return sen.val(ind.eval());
     }
     
-    public static enum Sen {
+    private static enum Sen {
         MEM {
             @Override public int val(int par) {
                 throw new Error("Can't do that yet...");

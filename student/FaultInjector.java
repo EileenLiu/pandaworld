@@ -8,7 +8,7 @@ import java.util.Random;
 
 public class FaultInjector {
 
-    public Node injectFault(Node n) {
+    public Node injectFault(Node n, Program root) {
         //int index = (int)(Math.random()*ORIGINAL.length);
         //Node[] arr = n.toArray();
         //int i = (int)(Math.random()*arr.length);
@@ -24,7 +24,6 @@ public class FaultInjector {
                     {
                         go = true;
                     }
-
                     /*if(n.parent instanceof BinaryOp)
                      {
                      //find selected
@@ -55,11 +54,10 @@ public class FaultInjector {
                         go = true;
                     }
                     break;
-
                 case 3:// the node is replaced with a randomly chosen node of the same kind( for example, replacing attack with eat, or + with *) but its children remain the same. Literal integer constants are adjusted up or down with the value of java.lang.Integer.MAX_VALUE/r.nextInt(), where legal, and where r is a java.util.random obj
                     // TODO CASE THREE
                     //update, condition, node, program, rule
-			/*Node selected;
+				/*Node selected;
                      if(selected==null)
                      {
                      go = false;
@@ -76,11 +74,9 @@ public class FaultInjector {
                      ((BinaryRelation)n).setRelation(((BinaryRelation) selected).getRelation());
                      /*else if(selected instanceof Condition)
                      ????*/
-                    /*else if(selected instanceof Expression)
-                     ((Expression)n).setValue(((Expression) selected).eval());*/
-                    else if(selected instanceof Constant)
-                        n.set(new Constant(((Expression)selected).eval())); //FTFY - hwh
-			/*else if(selected instanceof Program)
+                    /*			else if(selected instanceof Expression)
+                     ((Expression)n).setValue(((Expression) selected).getValue());
+                     /*else if(selected instanceof Program)
                      ???
                      else if(selected instanceof Rule)
                      ???*/
@@ -91,30 +87,55 @@ public class FaultInjector {
                     break;
                 case 4: // a newly created node is inserted as the parent of the node, taking its place in the tree. if the newly created node has more than one child, the children that are not the original node are copies of randomly chosen nodes of the right kind from the whole rule set
                     // TODO CASE 4
-
+                    Node parent = n.getParent();
+                    if (parent instanceof Access) {
+                    } 
+                    else if (parent instanceof BinaryArithmeticOperator) {
+                    } 
+                    else if (parent instanceof BinaryBooleanOperator) {
+                    } 
+                    else if (parent instanceof BinaryRelation) {
+                        BinaryArithmeticOperator bao = new BinaryArithmeticOperator((Expression)n, (Expression)(randomNode(root, Expression.class)));
+                        //replace
+                    } 
+                    else if (parent instanceof Condition) {
+                    } 
+                    else if (parent instanceof Program) {
+                    } 
+                    else if (parent instanceof Rule) {
+                    } 
+                    else if (parent instanceof Tag) {
+                        BinaryArithmeticOperator bao = new BinaryArithmeticOperator((Expression)n, (Expression)(randomNode(root, Expression.class)));
+                        //replace
+                    } 
+                    else {
+                        go = false;
+                    }
+                    //n.getParent().class
                     break;
+                //return null;
             }
         }
-        /*		for(int i=0; i<ORIGINAL.length; i++)
-         {
-
-         }*/
-        return null;
     }
+
+    
 
     public Node randomNode(Node start, Class<? extends Node> c) {
         Node[] arr = start.toArray();
-        LinkedList<Node> sameType = new LinkedList<Node>();
-        for (Node nd : arr) {
-            if (nd.getClass().equals(c)) {
-                sameType.add(nd);
+        if (c != null) {
+            LinkedList<Node> sameType = new LinkedList<Node>();
+            for (Node nd : arr) {
+                if (nd.getClass().isAssignableFrom(c)) {
+                    sameType.add(nd);
+                }
             }
-        }
-        if (sameType.size() > 0) {
-            Random r = new Random();
-            return sameType.get((r.nextInt(sameType.size())));
+            if (sameType.size() > 0) {
+                return sameType.get((int) (Math.random() * (sameType.size())));
+            } else {
+                return null;
+            }
         } else {
-            return null;
+            return arr[(int) (Math.random() * (arr.length))];
         }
     }
     //mem[0] length of critter's memory (immutable, always at least 9)
