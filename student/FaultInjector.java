@@ -13,7 +13,7 @@ public class FaultInjector {
      * @param root the given program
      * @return the resultant AST
      */
-    public Node injectFault(Node n, Program root) {
+    public static Node injectFault(Node n, Program root) {
         //int index = (int)(Math.random()*ORIGINAL.length);
         //Node[] arr = n.toArray();
         //int i = (int)(Math.random()*arr.length);
@@ -108,7 +108,7 @@ public class FaultInjector {
      * @param c the given type of node
      * @return 
      */
-    public Node randomNode(Node start, Class<? extends Node> c) {
+    public static Node randomNode(Node start, Class<? extends Node> c) {
         Node[] arr = start.toArray();
         if (c != null) {
             LinkedList<Node> sameType = new LinkedList();

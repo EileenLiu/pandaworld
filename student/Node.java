@@ -64,8 +64,8 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
      * side effects on the original AST.
      */
     public Node<?> mutate() {
-        FaultInjector mutator = new FaultInjector();
-        Node mutated = mutator.injectFault(this, null); //TODO Fix ref
+        //FaultInjector mutator = new FaultInjector();
+        Node mutated = FaultInjector.injectFault(this, null); //TODO Fix ref
         return mutated;
     }
 
