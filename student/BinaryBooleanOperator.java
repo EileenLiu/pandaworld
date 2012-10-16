@@ -2,19 +2,21 @@ package student;
 
 import student.util.Functions;
 import static student.util.Functions.*;
+import static student.util.PrettyPrint.*;
 
 public class BinaryBooleanOperator extends Condition<Condition<?>> {
-    
     private Op op;
 
     public BinaryBooleanOperator(Condition<?> l, String op, Condition<?> r) {
         super(l, r);
         this.op = forName(Op.class, op);
     }
+    
     public BinaryBooleanOperator(Condition<?> l, Condition<?> r) {
         super(l, r);
     	this.op = Functions.randEnum(Op.class);
     }
+    
     public Condition<?> left() {
         return children.get(0);
     }
@@ -34,15 +36,6 @@ public class BinaryBooleanOperator extends Condition<Condition<?>> {
     }
 
     @Override
-    public void prettyPrint(StringBuffer sb) {
-        left().prettyPrint(sb);
-        sb.append(" ");
-        sb.append(en2s(op));
-        sb.append(" ");
-        right().prettyPrint(sb);
-    }
-
-    @Override
     public boolean deleteChild(Condition<?> n) {
         if (!(n instanceof BinaryBooleanOperator)) {
             return false;
@@ -58,6 +51,7 @@ public class BinaryBooleanOperator extends Condition<Condition<?>> {
         }
         return true;
     }
+
     @Override
         public boolean randomize()
     {
@@ -91,5 +85,24 @@ public class BinaryBooleanOperator extends Condition<Condition<?>> {
 
     public void setConditionOp(Op conditionOp) {
         op = conditionOp;
+    }
+
+    @Override
+    public StringBuffer toString(StringBuffer sb) {
+        ppsn(sb,left());
+        sb.append(' ');
+        sb.append(en2s(op));
+        sb.append(' ');
+        ppsn(sb,right());
+        return sb;
+    }
+    
+    private void ppsn(StringBuffer sb, Node n) { //TODO (if time): take precedence into account
+        if(n instanceof BinaryBooleanOperator) {
+            sb.append('{');
+            n.toString(sb);
+            sb.append('}');
+        } else
+            n.toString(sb);
     }
 }

@@ -4,9 +4,6 @@
  */
 package student;
 
-import java.util.Random;
-
-
 public class Constant extends Expression<Constant> {
     private int value;
 
@@ -49,22 +46,20 @@ public class Constant extends Expression<Constant> {
     public int eval() {
         return value;
     }
+    
+    @Override
+    public StringBuffer toString(StringBuffer sb) {
+        sb.append(value);
+        return sb;
+    }
 
     public Constant(int val) {
         super();
         value = val;
     }
+    
     public Constant() {
-        super();
-        Random r = new Random();
-        value = Integer.MAX_VALUE/r.nextInt();
-    }
-    @Override
-        public boolean randomize()
-    {
-        Random r = new Random();
-    	value = Integer.MAX_VALUE/r.nextInt();
-    	return true;
+    	value = (int) (Math.random() * 999);
     }
     
 }

@@ -75,4 +75,8 @@ public abstract class Condition<SubNodeType extends Node<?>> extends Node<SubNod
      */
     public abstract boolean eval();
 
+    @Override
+    public StringBuffer toString(StringBuffer sb) {
+        return test("Condition",sb);
+    }
 }

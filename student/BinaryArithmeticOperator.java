@@ -48,7 +48,7 @@ public class BinaryArithmeticOperator extends Expression<Expression<?>> { // nee
      *
      * @return
      */
-    public Expression getLeft() {
+    public Expression left() {
         return children.get(0);
     }
 
@@ -57,7 +57,7 @@ public class BinaryArithmeticOperator extends Expression<Expression<?>> { // nee
      *
      * @return
      */
-    public Expression getRight() {
+    public Expression right() {
         return children.get(1);
     }
 
@@ -108,13 +108,28 @@ public class BinaryArithmeticOperator extends Expression<Expression<?>> { // nee
     public Node mutate() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
+    
     @Override
-    public void prettyPrint(StringBuffer sb) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public StringBuffer toString(StringBuffer sb) {
+        ppsn(sb,left());
+        sb.append(' ');
+        sb.append(op.getSym());
+        sb.append(' ');
+        ppsn(sb,right());
+        return sb;
     }
+    
+    private void ppsn(StringBuffer sb, Node n) { //TODO (if time): take precedence into account
+        if(n instanceof BinaryBooleanOperator) {
+            sb.append('(');
+            n.toString(sb);
+            sb.append(')');
+        } else
+            n.toString(sb);
+    }
+    
     @Override
-        public boolean randomize()
+    public boolean randomize()
     {
     	op = Functions.randEnum(BinaryOp.class);
     	return true;

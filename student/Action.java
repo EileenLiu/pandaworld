@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package student;
 
 import java.util.Collections;
@@ -52,16 +48,19 @@ public class Action extends Node<Expression<?>> {
     }
 
     @Override
-    public void prettyPrint(StringBuffer sb) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public StringBuffer toString(StringBuffer sb) {
+        sb.append(Functions.en2s(act));
+        return sb;
     }
+    
     @Override
         public boolean randomize()
     {
     	act = Functions.randEnum(Act.class);
     	return true;
     }
-    private static enum Act {
+    
+    public static enum Act {
         WAIT {
             @Override public void exec() {
                 throw new Error("Can't do that yet!");

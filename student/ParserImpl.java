@@ -251,10 +251,11 @@ public class ParserImpl implements Parser {
         aop.add("-");
         fiAop = Collections.unmodifiableSet(aop);
         
-        Set<String> mop = new HashSet<String>(3,1);
+        Set<String> mop = new HashSet<String>(4,1);
         mop.add("*");
         mop.add("/");
         mop.add("mod");
+        mop.add("%");
         fiMop = Collections.unmodifiableSet(mop);
     }
     

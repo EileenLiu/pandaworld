@@ -1,6 +1,3 @@
-/**
- *
- */
 package student;
 
 import java.util.Arrays;

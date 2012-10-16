@@ -26,7 +26,7 @@ public final class Functions {
         try {
             return (E[]) e.getMethod("values").invoke(null);
         } catch (ReflectiveOperationException roe) {
-            throw new RuntimeException("Functions.randEnum", roe);
+            throw new RuntimeException("Functions.enval: " + roe.getMessage(), roe);
         }
     }
     

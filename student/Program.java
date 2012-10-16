@@ -39,10 +39,9 @@ public class Program extends Node<Rule> {
     }
 
     @Override
-    public void prettyPrint(StringBuffer sb) {
-        for(Rule r : children) {
-            r.prettyPrint(sb);
-            sb.append("\n\n");
-        }
+    public StringBuffer toString(StringBuffer sb) {
+        for(Rule r : children)
+            sb = r.toString(sb);
+        return sb;
     }
 }

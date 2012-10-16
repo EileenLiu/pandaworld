@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import static student.ParserImpl.*;
 import student.ParserImpl.HistObj;
+import static student.util.PrettyPrint.*;
 
 public abstract class Expression<SubNodeType extends Expression<?>> extends Node<SubNodeType> {
     public static Expression parse(LinkedList<HistObj> hist) throws SyntaxError {
@@ -60,11 +61,6 @@ public abstract class Expression<SubNodeType extends Expression<?>> extends Node
     protected Expression(List<SubNodeType> subs) {
         super(subs);
     }
-
-    @Override
-    public String toString() {
-        return "(E " + eval() + ")";
-    }
     
     public abstract int eval();
 
@@ -74,7 +70,7 @@ public abstract class Expression<SubNodeType extends Expression<?>> extends Node
     }
 
     @Override
-    public void prettyPrint(StringBuffer sb) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public StringBuffer toString(StringBuffer sb) {
+        return test("Expression", sb);
     }
 }
