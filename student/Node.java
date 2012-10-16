@@ -206,24 +206,22 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
     public boolean deleteChild(SubNodeType n) {
         return children.remove(n);
     }
-
+    
     /**
      * Retrieves a random child node
-     *
      * @return a random child of the node
      */
-    public Node<?> randomChild() {
-        return children.get((int) (Math.random() * children.size()));
+    public Node<?> randomChild()
+    {
+    	return children.get((int)(Math.random()*children.size()));
     }
-
     /**
      * Replaces one child with another
-     * Precondition: the node actually has the given node as a child
-     *
      * @param old the old child to replace
      * @param neww the new child to replace with
      */
-    public void replaceChild(SubNodeType old, SubNodeType neww) {
+    public void replaceChild(SubNodeType old, SubNodeType neww)
+    {
         children.set(children.indexOf(old), neww);
     }
 }
