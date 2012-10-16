@@ -8,14 +8,19 @@ import java.util.List;
  * A node in the abstract syntax tree of a program.
  */
 public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
-	
-	private final String mutation1 = "The node was removed. If its parent node needed a replacement node, " +
-			"one of its randomly selectedchildren of the right kind was used. The child to be used was randomly selected.";
-	private final String mutation2 = "The order of two children of the node was switched.";
-	private final String mutation3 = "";
-	private final String mutation4 = "";
-	private final String mutation5 = "";
 
+    private final String mutation1 = "The node was removed. If its parent node needed a replacement node, "
+            + "one of its randomly selected children of the right kind was used.";
+    private final String mutation2 = "The order of two children of the node was switched.";
+    private final String mutation3 = "The node and its children were replaced with a copy of another "
+            + "randomly selected node of the right kind, found somewhere in the rule set. The entire "
+            + "AST subtree rooted at the selected node was copied.";
+    private final String mutation4 = "The node was replaced with a randomly chosen node of the same"
+            + " kind but its children remained the same.";
+    private final String mutation5 = "A newly created node was inserted as the parent of the node, taking"
+            + " its place in the tree. If the newly created node needed more than one child, the children "
+            + "that are not the original node were copies of randomly chosen nodes of the right kind from "
+            + "the whole rule set.";
     protected Node<Node<SubNodeType>> parent;
     protected final List<SubNodeType> children;
     private int mutationType = 0;
@@ -24,21 +29,24 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
         children = childNodes;
     }
 
-    public Node(SubNodeType...subs) {
+    public Node(SubNodeType... subs) {
         this(Arrays.asList(subs));
     }
-    
-    public Node () {
+
+    public Node() {
         this(new LinkedList<SubNodeType>());
     }
+
     /**
      * Randomizes the Node without changing its children
-     * @return true if the operation is supported for this type of Node, false otherwise
+     *
+     * @return true if the operation is supported for this type of Node, false
+     * otherwise
      */
-    public boolean randomize()
-    {
-    	return false;
+    public boolean randomize() {
+        return false;
     }
+
     /**
      * The number of nodes in this AST, including the current node. This can be
      * helpful for implementing mutate() correctly.
@@ -55,19 +63,21 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
      * Return a version of the same AST with one random mutation in it. May have
      * side effects on the original AST.
      */
-    public Node<?> mutate(){
-    	FaultInjector mutator = new FaultInjector();
-    	Node mutated = mutator.injectFault(this, null); //TODO Fix ref
+    public Node<?> mutate() {
+        FaultInjector mutator = new FaultInjector();
+        Node mutated = mutator.injectFault(this, null); //TODO Fix ref
         return mutated;
     }
+
     /**
      * Stores the type of mutation that was last applied
+     *
      * @param i the type of mutation
      */
-    public void setMutationType(int i)
-    {
-    	mutationType = i;
+    public void setMutationType(int i) {
+        mutationType = i;
     }
+
     /**
      * Appends the program represented by this node prettily to the given
      * StringBuffer.
@@ -127,15 +137,17 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
 
     /**
      * Flattens the subtree starting from the current node
+     *
      * @return the subtree starting from the current node as a Node array
      */
     public Node<?>[] toArray() {
         Node<?>[] arr = (Node[]) buildList(new LinkedList<Node<?>>()).toArray();
         return arr;
     }
-    
+
     /**
-     * Recursive helper method for toArray, creates a list of Nodes of the subtree starting from the current node
+     * Recursive helper method for toArray, creates a list of Nodes of the
+     * subtree starting from the current node
      */
     protected LinkedList<Node<?>> buildList(LinkedList<Node<?>> list) {
         list.add(this);
@@ -167,21 +179,22 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
      */
     public boolean swapChildren() {
         int nc = numChildren();
-        if(nc < 2)
+        if (nc < 2) {
             return false;
+        }
         int c1, c2;
         do {
-            c1 = (int)(Math.random()*nc);
-            c2 = (int)(Math.random()*nc);
-        } while(c1 == c2);
+            c1 = (int) (Math.random() * nc);
+            c2 = (int) (Math.random() * nc);
+        } while (c1 == c2);
         SubNodeType temp = children.get(c1);
         children.set(c1, children.get(c2));
         children.set(c2, temp);
         return true;
     }
-    
+
     public boolean deleteChild() {
-        return deleteChild(children.get((int)(numChildren()*Math.random())));
+        return deleteChild(children.get((int) (numChildren() * Math.random())));
     }
 
     /**
@@ -192,21 +205,29 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
     public boolean deleteChild(SubNodeType n) {
         return children.remove(n);
     }
+
     /**
      * Retrieves a random child node
+     *
      * @return a random child of the node
      */
-    public Node<?> randomChild()
-    {
-    	return children.get((int)(Math.random()*children.size()));
+    public Node<?> randomChild() {
+        return children.get((int) (Math.random() * children.size()));
     }
+
     /**
      * Replaces one child with another
+     *
      * @param old the old child to replace
      * @param neww the new child to replace with
      */
-    public void replaceChild(SubNodeType old, SubNodeType neww)
-    {
+    public void replaceChild(SubNodeType old, SubNodeType neww) {
         children.set(children.indexOf(old), neww);
+    }
+    @Override
+    public String toString()
+    {
+        //TODO fill out
+        return "";
     }
 }

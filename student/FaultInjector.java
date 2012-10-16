@@ -11,7 +11,7 @@ public class FaultInjector {
      * Injects a fault for the given node in the given program
      * @param n the given node
      * @param root the given program
-     * @return 
+     * @return the resultant AST
      */
     public Node injectFault(Node n, Program root) {
         //int index = (int)(Math.random()*ORIGINAL.length);
