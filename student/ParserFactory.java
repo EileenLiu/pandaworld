@@ -23,9 +23,7 @@ public class ParserFactory {
                 selected.mutate();
                 System.out.println(selected.mutationDescription());    
                 }
-                StringBuffer sb = new StringBuffer();
-                program.prettyPrint(sb);
-                System.out.println(sb);
+                System.out.println(program.prettyPrint());
             } catch (FileNotFoundException e) {
                 System.out.println("The given file was not found.");
             } catch (NumberFormatException e) {
@@ -37,9 +35,7 @@ public class ParserFactory {
             try {
                 Reader inStreamReader = new InputStreamReader(new FileInputStream(new File(args[0])));
                 Program program = ParserFactory.getParser().parse(inStreamReader);
-                StringBuffer sb = new StringBuffer();
-                program.prettyPrint(sb);
-                System.out.println(sb);
+                System.out.println(program.prettyPrint());
             } catch (FileNotFoundException e) {
 
                 System.out.println("The given file was not found.");

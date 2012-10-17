@@ -63,12 +63,7 @@ public abstract class Expression<SubNodeType extends Expression<?>> extends Node
     }
     
     public abstract int eval();
-
-    @Override
-    public Node mutate() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
+    
     @Override
     public StringBuffer toString(StringBuffer sb) {
         return test("Expression", sb);

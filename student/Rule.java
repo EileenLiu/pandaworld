@@ -52,12 +52,6 @@ public class Rule extends Node<Update> {
     }
 
     @Override
-    public Node mutate() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
     public StringBuffer toString(StringBuffer sb) {
         condition.toString(sb);
         sb.append(" --> ");

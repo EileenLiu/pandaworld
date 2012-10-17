@@ -77,7 +77,7 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
      * Return a version of the same AST with one random mutation in it. May have
      * side effects on the original AST.
      */
-    public Node<?> mutate() {
+    public final Node<?> mutate() {
         //FaultInjector mutator = new FaultInjector();
         Node mutated = FaultInjector.injectFault(this, null); //TODO Fix ref
         return mutated;
@@ -104,11 +104,9 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
     /**
      * Appends the program represented by this node prettily to the given
      * StringBuffer.
-     *
-     * @param sb The StringBuffer to be appended
      */
-    public void prettyPrint(StringBuffer sb) {
-        toString(sb);
+    public final String prettyPrint() {
+        return toString(new StringBuffer()).toString();
     }
     
     /**
