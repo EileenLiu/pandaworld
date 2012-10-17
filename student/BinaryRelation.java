@@ -46,12 +46,6 @@ public class BinaryRelation extends Condition<Expression<?>> {
     }
 
     @Override
-    public Node<?> mutate() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
     public boolean deleteChild(Expression<?> n) {
         if (!(n instanceof BinaryArithmeticOperator)) {
             return false;

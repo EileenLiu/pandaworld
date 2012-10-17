@@ -79,8 +79,8 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
      * @param p the topmost node
      * @return a version of the same AST with one random mutation in it from the topmost node
      */
-    public Node<?> mutate(Program p) {
-        Node mutated = FaultInjector.injectFault(this, p); //TODO Fix ref
+    public final Node<?> mutate(Program p) {
+        Node mutated = FaultInjector.injectFault(this, p);
         return mutated;
     }
 

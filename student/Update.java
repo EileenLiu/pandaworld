@@ -51,11 +51,6 @@ public class Update extends Node<Expression<?>> {
     }
 
     @Override
-    public Node mutate() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
     public StringBuffer toString(StringBuffer sb) {
         sb.append("mem[");
         index().prettyPrint(sb);

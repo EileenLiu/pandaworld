@@ -33,12 +33,6 @@ public class Program extends Node<Rule> {
     }
 
     @Override
-    public Node mutate() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
     public StringBuffer toString(StringBuffer sb) {
         for(Rule r : children)
             sb = r.toString(sb);
