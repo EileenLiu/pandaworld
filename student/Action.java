@@ -7,7 +7,7 @@ import student.util.Functions;
 import static student.util.Functions.forName;
 
 /**
- *
+ * Represents an action a critter can take.
  * @author haro
  */
 public class Action extends Node<Expression<?>> {
@@ -25,12 +25,12 @@ public class Action extends Node<Expression<?>> {
             return new Action(type);
     }
 
-    private Action(String type) {
+    protected Action(String type) {
         super(Collections.EMPTY_LIST);
         this.act = forName(Act.class,type);
     }
     
-    public Action() {
+    protected Action() {
         super(Collections.EMPTY_LIST);
     }
     
@@ -38,13 +38,12 @@ public class Action extends Node<Expression<?>> {
         super(e);
     }
     
+    /**
+     * Executes the action, by which I mean it throws an error.
+     * This method's signature is expected to change.
+     */
     public void execute() {
         act.exec();
-    }
-
-    @Override
-    public Node mutate() {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override

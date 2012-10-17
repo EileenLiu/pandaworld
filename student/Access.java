@@ -7,7 +7,7 @@ import static student.util.Functions.forName;
 import student.util.PrettyPrint;
 
 /**
- *
+ * Represents an access of some external quantity, such as memory or a sensor.
  * @author haro
  */
 public class Access extends Expression {
@@ -27,6 +27,11 @@ public class Access extends Expression {
         this.sen = sen;
         this.ind = ind;
     }
+    
+    /**
+     * Randomly changes the type of access being made.
+     * @return true
+     */
     @Override
     public boolean randomize()
     {
@@ -34,6 +39,9 @@ public class Access extends Expression {
     	return true;
     }
 
+    /**
+     * Returns the value of the specified memory/sensor.
+     */
     @Override
     public int eval() {
         return sen.val(ind.eval());

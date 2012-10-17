@@ -6,7 +6,9 @@ import java.util.List;
 
 import student.util.Functions;
 
-// Represents +, -, *, /, %
+/**
+ * Represents +, -, *, /, %
+ */
 public class BinaryArithmeticOperator extends Expression<Expression<?>> { // need not be abstract
     //private Expression left, right;
 
@@ -102,11 +104,6 @@ public class BinaryArithmeticOperator extends Expression<Expression<?>> { // nee
             return false;
         }
         return true;
-    }
-
-    @Override
-    public Node mutate() {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
     
     @Override

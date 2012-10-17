@@ -4,23 +4,33 @@ import student.util.Functions;
 import static student.util.Functions.*;
 import static student.util.PrettyPrint.*;
 
+/**
+ * Represents a conjunction or disjunction.
+ * @author haro
+ */
 public class BinaryBooleanOperator extends Condition<Condition<?>> {
     private Op op;
 
-    public BinaryBooleanOperator(Condition<?> l, String op, Condition<?> r) {
+    BinaryBooleanOperator(Condition<?> l, String op, Condition<?> r) {
         super(l, r);
         this.op = forName(Op.class, op);
     }
     
-    public BinaryBooleanOperator(Condition<?> l, Condition<?> r) {
+    BinaryBooleanOperator(Condition<?> l, Condition<?> r) {
         super(l, r);
     	this.op = Functions.randEnum(Op.class);
     }
     
+    /**
+     * Returns this condition's left child.
+     */
     public Condition<?> left() {
         return children.get(0);
     }
 
+    /**
+     * Returns this condition's right child.
+     */
     public Condition<?> right() {
         return children.get(1);
     }
@@ -28,11 +38,6 @@ public class BinaryBooleanOperator extends Condition<Condition<?>> {
     @Override
     public boolean eval() { //I like Lisp.
         return op.apply(left().eval(), right().eval());
-    }
-
-    @Override
-    public Node mutate() {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override

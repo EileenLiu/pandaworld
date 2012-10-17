@@ -26,15 +26,26 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
     protected final List<SubNodeType> children;
     private int mutationType = 0;
 
-    public Node(List<SubNodeType> childNodes) {
+    /**
+     * Creates a new Node with the given nodes as children.
+     * @param childNodes the new Node's children.
+     */
+    protected Node(List<SubNodeType> childNodes) {
         children = childNodes;
     }
 
-    public Node(SubNodeType... subs) {
+    /**
+     * Creates a new Node with the given nodes as children.
+     * @param subs the new Node's children.
+     */
+    protected Node(SubNodeType... subs) {
         this(Arrays.asList(subs));
     }
-
-    public Node() {
+    
+    /**
+     * Creates a new Node to accept a variable number of children.
+     */
+    protected Node() {
         this(new LinkedList<SubNodeType>());
     }
 
@@ -78,7 +89,11 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
     public void setMutationType(int i) {
         mutationType = i;
     }
-    public String mutationDescription(){
+    
+    /**
+     * Returns a description of the last mutation applied.
+     */
+    String mutationDescription(){
         if(mutationType!=0)
             return (mutationDescriptions[mutationType][0] + "Node["+toString()+"]"+ mutationDescriptions[mutationType][1]);
         else
@@ -94,8 +109,20 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
         toString(sb);
     }
     
+    /**
+     * Places a string representation of the Node into the buffer.
+     * @param sb The buffer to accept the Node's string representation
+     * @return sb
+     */
     protected abstract StringBuffer toString(StringBuffer sb);
     
+    /**
+     * Returns a lexically-equivalent string to this node. 
+     * 
+     * It is guaranteed that this string will parse if inserted into a
+     * correct context, but the whitespace, delimiters, &c. are not guaranteed 
+     * to be in any way optimal.
+     */
     @Override
     public final String toString() {
         return toString(new StringBuffer()).toString();
@@ -208,6 +235,10 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
         return true;
     }
 
+    /**
+     * Deletes a random child of this node
+     * @return Whether the deletion was successful.
+     */
     public boolean deleteChild() {
         return deleteChild(children.get((int) (numChildren() * Math.random())));
     }
