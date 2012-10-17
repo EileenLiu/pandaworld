@@ -32,8 +32,11 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
      * Creates a new Node with the given nodes as children.
      * @param childNodes the new Node's children.
      */
+    @SuppressWarnings("LeakingThisInConstructor")
     protected Node(List<SubNodeType> childNodes) {
         children = childNodes;
+        for(Node c : children)
+            c.parent = this;
     }
 
     /**
@@ -207,9 +210,14 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
      *
      * @param n
      */
-    public void set(Node n) {
+    public boolean set(Node n) {
+        System.err.println("set: "+ n.getClass().getCanonicalName());
         int pos = parent.children.indexOf(this);
+        if(pos < 0)
+            return false;
         parent.children.set(pos, n);
+        n.parent = parent;
+        return true;
     }
 
     /**
@@ -255,7 +263,11 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
      * @param n the given child node
      */
     public boolean deleteChild(SubNodeType n) {
-        return children.remove(n);
+        try {
+            return children.remove(n);
+        } catch (UnsupportedOperationException uoe) { //TODO: If we created with the wrong constructor, this fails.
+            return false;
+        }
     }
     
     /**
@@ -276,6 +288,11 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
         children.set(children.indexOf(old), neww);
     }
 
+    public void addChild(SubNodeType ch) {
+        ((Node)ch).parent = this;
+        children.add(ch);
+    }
+    
     @Override
     protected Object clone() throws CloneNotSupportedException {
         Node n = (Node)super.clone();

@@ -32,12 +32,14 @@ public class Rule extends Node<Update> {
         HistObj self = hist.pop();
         //Rule => Condition --> Command ;
         r.condition =  Condition.parse(hist);
+        r.condition.parent = r;
         hist.pop().expect("-->");
         while(hist.peek().rule.startsWith("Command") && hist.pop().production.length > 0) {
             if(hist.peek().rule.equals("Update"))
-                r.children.add(Update.parse(hist));
+                r.addChild(Update.parse(hist));
             else if(hist.peek().rule.equals("Action")) {
                 r.action = Action.parse(hist);
+                ((Node)r.action).parent = r;
                 break;
             }
         }

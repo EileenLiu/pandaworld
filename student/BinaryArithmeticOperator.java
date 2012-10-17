@@ -119,7 +119,7 @@ public class BinaryArithmeticOperator extends Expression<Expression<?>> { // nee
     /**
      * An enumeration of all possible binary operators.
      */
-    private enum BinaryOp {
+    public enum BinaryOp {
         
         PLUS("+", Prec.ADD) {
             @Override

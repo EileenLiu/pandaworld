@@ -20,6 +20,9 @@ public class FaultInjector {
             i = (int) (Math.random() * faultType.size());
             switch (faultType.get(i)) {
                 case 1: //the node is removed. if its parent node needs a replacement node, one of its children of the right kind is used. The child to be used is randomly selected. Thus rule nodes are simply removed, but binary operation nodes would be replaced with either their left or right child
+                    if (n instanceof Program) //we don't delete this!
+                        break;
+                    System.err.println("1: "+n.getClass().getCanonicalName());
                     if (n.getParent().deleteChild(n)) {
                         n.setMutationType(1);
                         return root;
@@ -33,9 +36,10 @@ public class FaultInjector {
                     }
                     break;
                 case 3: //the node and its children are replaced with a copy of another randomly selected node of the right kind, found somewhere in the rule set. the entire AST subtree rooted at the selected node is copied
+                    if(n instanceof Program) //not replacing program!
+                        break;
                     Node selected = randomNode(root, n.getClass());
-                    if (selected != null) {
-                        n.set(selected.copy());
+                    if (selected != null && n.set(selected.copy())) {
                         n.setMutationType(3);
                         return root;
                     }
@@ -140,5 +144,5 @@ public class FaultInjector {
         } else {
             return arr[(int) (Math.random() * (arr.length))];
         }
-    }
+    } 
 }
