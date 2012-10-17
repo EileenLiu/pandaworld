@@ -11,8 +11,8 @@ import java.io.Reader;
  */
 public class ParserFactory {
 
-    public static void main(String[] args) {
-        if (args[0].equals("--mutate")) {
+    public static void main(String[] args) { 
+        if (args[0].equals("--mutate")) { //java -jar <your jar> --mutate <n> <input file>
             try {
                 Reader inStreamReader = new InputStreamReader(new FileInputStream(new File(args[2])));
                 Program program = ParserFactory.getParser().parse(inStreamReader);
@@ -29,11 +29,11 @@ public class ParserFactory {
             } catch (FileNotFoundException e) {
                 System.out.println("The given file was not found.");
             } catch (NumberFormatException e) {
-                System.out.println("--mutate requires an integer for number of mutations");
+                System.out.println("Operation invalid. --mutate requires an integer for number of mutations");
             }
         } else if (args[0].equals("--extend")) {
             ////////
-        } else {
+        } else { //java -jar <your jar> <input file>
             try {
                 Reader inStreamReader = new InputStreamReader(new FileInputStream(new File(args[0])));
                 Program program = ParserFactory.getParser().parse(inStreamReader);
