@@ -10,23 +10,13 @@ import java.util.LinkedList;
 public final class PrettyPrint {
     private PrettyPrint(){}
     
-    public static final int CONDITION_BREAK = 38; //magic number alert
-    public static int tabWidth(StringBuffer sb) {
-        return lastTo(sb, "\n");
-    }
-    
-    public static int lastTo(StringBuffer sb, String c) {
-        return sb.length() - sb.lastIndexOf(c);
+    public static int lnl(StringBuffer sb) {
+        return sb.length() - sb.lastIndexOf("\n");
     }
     
     public static void tab(StringBuffer sb, int ts) {
-        sb.append("\n");
-        while(ts --> 1)
+        while(ts --> 0)
             sb.append(" ");
-    }
-    
-    public static boolean shouldBreak(StringBuffer sb, int dist) {
-        return tabWidth(sb) > dist;
     }
     
     public static StringBuffer test(String n, StringBuffer sb) {
@@ -37,16 +27,42 @@ public final class PrettyPrint {
     }
     
     public static String pp(String s) {
-        @SuppressWarnings("StringBufferMayBeStringBuilder")
+        @SuppressWarnings("StringBufferMayBeStringBuilder") 
         StringBuffer res = new StringBuffer(s.length()); //a guess, better than def.16
-        Deque<Integer> inds = new LinkedList<Integer>();
-        
-        int i; char c = s.charAt(0);
-        for(i = 0; i<s.length(); c = s.charAt(i++)) {
-            switch (c) {
-                case '{':
-                    
+        int tab = 0;
+                
+        int i;
+        for(i = 0; i<s.length(); i++) {
+            char c = s.charAt(i);
+            int lnl = lnl(res);
+            if(c == '\n') {
+                res.append('\n');
+                tab(res, tab);
+                continue;
             }
+            if(Character.isWhitespace(c)) {
+                res.append(c);
+                continue;
+            }
+            if(c == ';') {
+                res.append(";\n\n");
+                tab = 0;
+                continue;
+            }
+            if(c == '(' || c == '{')
+                tab++;
+            if(c == '}' || c == ')')
+                tab--;
+            if(s.length()-i>4) {
+                if(s.substring(i,i+3).equals("-->")) {
+                    res.append("\n");
+                    tab = 8;
+                    tab(res,tab);
+                    tab += 4;
+                }
+            }
+            //res.append(tab);
+            res.append(c);
         }
         
         return res.toString();

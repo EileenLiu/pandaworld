@@ -62,7 +62,7 @@ public class Rule extends Node<Update> {
         condition.toString(sb);
         sb.append(" --> ");
         for(Update u : children) 
-            u.toString(sb).append(' ');
+            u.toString(sb).append('\n');
         if (action != null) 
             sb = action.toString(sb);
         else

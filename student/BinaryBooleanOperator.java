@@ -89,20 +89,32 @@ public class BinaryBooleanOperator extends Condition<Condition<?>> {
 
     @Override
     public StringBuffer toString(StringBuffer sb) {
-        ppsn(sb,left());
+        Node l = left();
+        if(l instanceof BinaryBooleanOperator && ((BinaryBooleanOperator)l).op != op) {
+            sb.append('{');
+            l.toString(sb);
+            sb.append('}');
+        } else
+            l.toString(sb);
         sb.append(' ');
         sb.append(en2s(op));
         sb.append(' ');
-        ppsn(sb,right());
+        Node r = right();
+        if(r instanceof BinaryBooleanOperator) {
+            if(((BinaryBooleanOperator)r).op != op) {
+                sb.append('{');
+                r.toString(sb);
+                sb.append('}');
+            } else {
+                sb.append("\n");
+                r.toString(sb);
+            }
+        } else
+            r.toString(sb);
         return sb;
     }
     
-    private void ppsn(StringBuffer sb, Node n) { //TODO (if time): take precedence into account
-        if(n instanceof BinaryBooleanOperator) {
-            sb.append('{');
-            n.toString(sb);
-            sb.append('}');
-        } else
-            n.toString(sb);
+    private void ppsn(StringBuffer sb, Node n) { 
+
     }
 }

@@ -24,7 +24,7 @@ public abstract class Condition<SubNodeType extends Node<?>> extends Node<SubNod
                     HistObj tok = hist.pop();
                     tok.expect("or"); //or
                     Condition cnj = Condition.parse(hist); //Conjunction
-                    res = new BinaryBooleanOperator(res, "or", cnj);
+                    res = new BinaryBooleanOperator(cnj, "or", res);
                 }
             }
             return res;
@@ -39,7 +39,7 @@ public abstract class Condition<SubNodeType extends Node<?>> extends Node<SubNod
                     HistObj tok = hist.pop();
                     tok.expect("and"); //and
                     Condition rel = Condition.parse(hist); //Relation
-                    res = new BinaryBooleanOperator(res, "and", rel);
+                    res = new BinaryBooleanOperator(rel, "and", res);
                 }
             }
             return res;
