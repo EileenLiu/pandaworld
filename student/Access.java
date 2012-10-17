@@ -7,7 +7,6 @@ import static student.util.Functions.forName;
 
 /**
  * Represents an access of some external quantity, such as memory or a sensor.
- * @author haro
  */
 public class Access extends Expression {
     Sen sen;

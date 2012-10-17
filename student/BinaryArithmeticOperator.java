@@ -47,7 +47,7 @@ public class BinaryArithmeticOperator extends Expression<Expression<?>> { // nee
     /**
      * Retrieves the BinaryOp's left
      *
-     * @return
+     * @return left
      */
     public Expression left() {
         return children.get(0);
@@ -56,7 +56,7 @@ public class BinaryArithmeticOperator extends Expression<Expression<?>> { // nee
     /**
      * Retrieves the BinaryOp's right
      *
-     * @return
+     * @return right
      */
     public Expression right() {
         return children.get(1);

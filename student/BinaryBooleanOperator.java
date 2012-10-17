@@ -5,7 +5,6 @@ import static student.util.Functions.*;
 
 /**
  * Represents a conjunction or disjunction.
- * @author haro
  */
 public class BinaryBooleanOperator extends Condition<Condition<?>> {
     private Op op;
@@ -35,7 +34,7 @@ public class BinaryBooleanOperator extends Condition<Condition<?>> {
     }
 
     @Override
-    public boolean eval() { //I like Lisp.
+    public boolean eval() {
         return op.apply(left().eval(), right().eval());
     }
 

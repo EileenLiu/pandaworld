@@ -11,9 +11,6 @@ public class FaultInjector {
      * @return the resultant AST
      */
     public static Node injectFault(Node n, Program root) {
-        //int index = (int)(Math.random()*ORIGINAL.length);
-        //Node[] arr = n.toArray();
-        //int i = (int)(Math.random()*arr.length);
         LinkedList<Integer> faultType = new LinkedList();
         faultType.addAll(Arrays.asList(1,2,3,4,5));
         int i;      
@@ -35,13 +32,6 @@ public class FaultInjector {
                     }
                     break;
                 case 3: //the node and its children are replaced with a copy of another randomly selected node of the right kind, found somewhere in the rule set. the entire AST subtree rooted at the selected node is copied
-                    /*Node pointer = n;
-                    while (pointer.getParent().getParent() != null) //finds the topmost node in the AST
-                    {
-                        pointer = pointer.getParent();
-                    }*/
-                    //find selected
-                    //Node selected = randomNode(pointer, n.getClass());
                     Node selected = randomNode(root, n.getClass());
                     if (selected != null) {
                         n.set(selected.copy());
@@ -49,8 +39,7 @@ public class FaultInjector {
                         return root;
                     }
                     break;
-                case 4:// the node is replaced with a randomly chosen node of the same kind( for example, replacing attack with eat, or + with *) but its children remain the same. Literal integer constants are adjusted up or down with the value of java.lang.Integer.MAX_VALUE/r.nextInt(), where legal, and where r is a java.util.random obj
-                    //cannot: update, condition, node, program, rule				
+                case 4:// the node is replaced with a randomly chosen node of the same kind( for example, replacing attack with eat, or + with *) but its children remain the same. Literal integer constants are adjusted up or down with the value of java.lang.Integer.MAX_VALUE/r.nextInt(), where legal, and where r is a java.util.random obj			
                     if (n.randomize()) {
                         n.setMutationType(4);
                         return root;
