@@ -3,7 +3,6 @@ package student;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
 import student.util.Functions;
 
 /**
@@ -48,7 +47,7 @@ public class BinaryArithmeticOperator extends Expression<Expression<?>> { // nee
     /**
      * Retrieves the BinaryOp's left
      *
-     * @return
+     * @return left
      */
     public Expression left() {
         return children.get(0);
@@ -57,7 +56,7 @@ public class BinaryArithmeticOperator extends Expression<Expression<?>> { // nee
     /**
      * Retrieves the BinaryOp's right
      *
-     * @return
+     * @return right
      */
     public Expression right() {
         return children.get(1);
@@ -69,24 +68,6 @@ public class BinaryArithmeticOperator extends Expression<Expression<?>> { // nee
     @Override
     public int eval() {
         return op.apply(children.get(0).eval(), children.get(1).eval());
-    }
-
-    /**
-     * Retrieves the BinaryOp's BinaryOperator
-     *
-     * @return BinaryOp's BinaryOperator
-     */
-    public BinaryOp getBinaryOp() {
-        return op;
-    }
-
-    /**
-     * Sets the BinaryCondition's operator to the given BinaryConditionOperator
-     *
-     * @param b the given BinaryConditionOperator
-     */
-    public void setBinaryOp(BinaryOp b) {
-        op = b;
     }
 
     @Override

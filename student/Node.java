@@ -2,7 +2,6 @@ package student;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import student.util.PrettyPrint;
@@ -185,7 +184,8 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
      * @return the subtree starting from the current node as a Node array
      */
     public Node<?>[] toArray() {
-        Node<?>[] arr = (Node[]) buildList(new LinkedList<Node<?>>()).toArray();
+        List<Node<?>> ln = buildList(new LinkedList<Node<?>>());
+        Node<?> arr[] = ln.toArray(new Node<?>[]{});
         return arr;
     }
 
@@ -195,6 +195,10 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
      */
     protected LinkedList<Node<?>> buildList(LinkedList<Node<?>> list) {
         list.add(this);
+        for(SubNodeType snt: children)
+        {
+            list = snt.buildList(list);
+        }
         return list;
     }
 
