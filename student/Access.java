@@ -10,9 +10,8 @@ import student.util.PrettyPrint;
  * Represents an access of some external quantity, such as memory or a sensor.
  * @author haro
  */
-public class Access extends Expression {
+public class Access extends Expression<Expression<?>> {
     Sen sen;
-    Expression ind;
     
     public static Access parse(LinkedList<HistObj> hist) throws SyntaxError {
         HistObj self = hist.pop();
@@ -24,8 +23,8 @@ public class Access extends Expression {
     }
 
     private Access(Sen sen, Expression ind) {
+        super(ind);
         this.sen = sen;
-        this.ind = ind;
     }
     
     /**
@@ -44,14 +43,21 @@ public class Access extends Expression {
      */
     @Override
     public int eval() {
-        return sen.val(ind.eval());
+        return sen.val(ind().eval());
+    }
+    
+    /**
+     * Returns the Expression index into the sensor array.
+     */
+    public Expression ind() {
+        return children.get(0);
     }
 
     @Override
     public StringBuffer toString(StringBuffer sb) {
         sb.append(Functions.en2s(sen));
         sb.append('[');
-        ind.toString(sb);
+        ind().toString(sb);
         sb.append(']');
         return sb;
     }
@@ -59,7 +65,7 @@ public class Access extends Expression {
     @Override
     protected Object clone() throws CloneNotSupportedException {
         Access a = (Access) super.clone();
-        a.ind = (Expression) ind.clone();
+        a.children.set(0,(Expression) ind().clone());
         return a;
     }
     

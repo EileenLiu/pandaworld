@@ -7,10 +7,8 @@ import java.util.Deque;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
-import student.SyntaxError.ExpectationFailure;
 
 public class ParserImpl implements Parser {
 
@@ -26,8 +24,6 @@ public class ParserImpl implements Parser {
             Tokenizer t = new Tokenizer(r);
             stack.push("Program");
             while (stack.size() > 0) {
-                System.out.print(t.peek() + " ");
-                System.out.println(Arrays.toString(stack.toArray()));
                 String top = stack.pop();
                 int p = top.charAt(0) - 'A';
                 if (p >= 0 && p < 26) {
@@ -39,7 +35,6 @@ public class ParserImpl implements Parser {
                     hist.add(HistObj.tok(top));
                 }
             }
-            System.out.println(hist);
             return Program.parse(hist);
         } catch (SyntaxError e) {
             //throw new RuntimeException(e);

@@ -24,7 +24,7 @@ public class BinaryArithmeticOperator extends Expression<Expression<?>> { // nee
      * @throws InvalidBinaryOpException
      */
     public BinaryArithmeticOperator(Expression<?> l, Expression<?> r, String v) {
-        super(Arrays.asList(new Expression<?>[]{l, r}));
+        super(l, r);
         l.setParent((Node) this); //*I* know it's fine.
         r.setParent((Node) this);
         op = BinaryOp.forSym(v);
@@ -39,7 +39,7 @@ public class BinaryArithmeticOperator extends Expression<Expression<?>> { // nee
      * @param r the given right
      */
     public BinaryArithmeticOperator(Expression<?> l, Expression<?> r) {
-        super(Arrays.asList(new Expression<?>[]{l, r}));
+        super(l, r);
         l.setParent((Node)this);
         r.setParent((Node)this);
         op = Functions.randEnum(BinaryOp.class);

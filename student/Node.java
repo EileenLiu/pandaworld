@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import student.util.PrettyPrint;
 
 /**
  * A node in the abstract syntax tree of a program.
@@ -107,7 +108,7 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
      * StringBuffer.
      */
     public final String prettyPrint() {
-        return toString(new StringBuffer()).toString();
+        return PrettyPrint.pp(toString(new StringBuffer()).toString());
     }
     
     /**

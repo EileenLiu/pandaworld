@@ -58,7 +58,7 @@ public abstract class Expression<SubNodeType extends Expression<?>> extends Node
         super();
     }
 
-    protected Expression(List<SubNodeType> subs) {
+    protected Expression(SubNodeType...subs) {
         super(subs);
     }
     
