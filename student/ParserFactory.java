@@ -20,7 +20,7 @@ public class ParserFactory {
                 for(int i = 0; i<numMutations; i++)
                 {
                 Node selected = FaultInjector.randomNode(program, null);
-                selected.mutate();
+                selected.mutate(program);
                 System.out.println(selected.mutationDescription());    
                 }
                 System.out.println(program.prettyPrint());
