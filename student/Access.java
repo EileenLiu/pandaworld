@@ -55,6 +55,15 @@ public class Access extends Expression {
         sb.append(']');
         return sb;
     }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        Access a = (Access) super.clone();
+        a.ind = (Expression) ind.clone();
+        return a;
+    }
+    
+    
     
     public static enum Sen {
         MEM {

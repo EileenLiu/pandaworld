@@ -1,6 +1,8 @@
 package student;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,7 +25,7 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
             + "that are not the original node were copies of randomly chosen nodes of the right kind from "
             + "the whole rule set." }};
     protected Node<Node<SubNodeType>> parent;
-    protected final List<SubNodeType> children;
+    protected List<SubNodeType> children;
     private int mutationType = 0;
 
     /**
@@ -269,4 +271,15 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
     {
         children.set(children.indexOf(old), neww);
     }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        Node n = (Node)super.clone();
+        List<SubNodeType> nc = new ArrayList<SubNodeType>(children.size());
+        for(SubNodeType sn : children)
+            nc.add((SubNodeType)sn.clone());
+        n.children = nc;
+        return n;
+    }
+    
 }
