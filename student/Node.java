@@ -1,6 +1,8 @@
 package student;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,18 +25,29 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
             + "that are not the original node were copies of randomly chosen nodes of the right kind from "
             + "the whole rule set." }};
     protected Node<Node<SubNodeType>> parent;
-    protected final List<SubNodeType> children;
+    protected List<SubNodeType> children;
     private int mutationType = 0;
 
-    public Node(List<SubNodeType> childNodes) {
+    /**
+     * Creates a new Node with the given nodes as children.
+     * @param childNodes the new Node's children.
+     */
+    protected Node(List<SubNodeType> childNodes) {
         children = childNodes;
     }
 
-    public Node(SubNodeType... subs) {
+    /**
+     * Creates a new Node with the given nodes as children.
+     * @param subs the new Node's children.
+     */
+    protected Node(SubNodeType... subs) {
         this(Arrays.asList(subs));
     }
-
-    public Node() {
+    
+    /**
+     * Creates a new Node to accept a variable number of children.
+     */
+    protected Node() {
         this(new LinkedList<SubNodeType>());
     }
 
@@ -79,7 +92,11 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
     public void setMutationType(int i) {
         mutationType = i;
     }
-    public String mutationDescription(){
+    
+    /**
+     * Returns a description of the last mutation applied.
+     */
+    String mutationDescription(){
         if(mutationType!=0)
             return (mutationDescriptions[mutationType][0] + "Node["+toString()+"]"+ mutationDescriptions[mutationType][1]);
         else
@@ -95,8 +112,20 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
         toString(sb);
     }
     
+    /**
+     * Places a string representation of the Node into the buffer.
+     * @param sb The buffer to accept the Node's string representation
+     * @return sb
+     */
     protected abstract StringBuffer toString(StringBuffer sb);
     
+    /**
+     * Returns a lexically-equivalent string to this node. 
+     * 
+     * It is guaranteed that this string will parse if inserted into a
+     * correct context, but the whitespace, delimiters, &c. are not guaranteed 
+     * to be in any way optimal.
+     */
     @Override
     public final String toString() {
         return toString(new StringBuffer()).toString();
@@ -209,6 +238,10 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
         return true;
     }
 
+    /**
+     * Deletes a random child of this node
+     * @return Whether the deletion was successful.
+     */
     public boolean deleteChild() {
         return deleteChild(children.get((int) (numChildren() * Math.random())));
     }
@@ -239,4 +272,15 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
     {
         children.set(children.indexOf(old), neww);
     }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        Node n = (Node)super.clone();
+        List<SubNodeType> nc = new ArrayList<SubNodeType>(children.size());
+        for(SubNodeType sn : children)
+            nc.add((SubNodeType)sn.clone());
+        n.children = nc;
+        return n;
+    }
+    
 }

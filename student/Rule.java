@@ -75,4 +75,13 @@ public class Rule extends Node<Update> {
     public boolean hasChildren() {
         return true;
     }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        Rule r = (Rule) super.clone();
+        r.condition = (Condition) condition.clone();
+        if(action != null)
+            r.action = (Action) action.clone();
+        return r;
+    }
 }
