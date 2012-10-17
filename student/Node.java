@@ -185,7 +185,8 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
      * @return the subtree starting from the current node as a Node array
      */
     public Node<?>[] toArray() {
-        Node<?>[] arr = ((Node<?>[]) ((buildList(new LinkedList<Node<?>>())).toArray()));
+        List<Node<?>> ln = buildList(new LinkedList<Node<?>>());
+        Node<?> arr[] = ln.toArray(new Node<?>[]{});
         return arr;
     }
 
