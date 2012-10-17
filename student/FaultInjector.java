@@ -57,7 +57,6 @@ public class FaultInjector {
                     }
                     break;
                 case 5: // a newly created node is inserted as the parent of the node, taking its place in the tree. if the newly created node has more than one child, the children that are not the original node are copies of randomly chosen nodes of the right kind from the whole rule set
-                    // TODO CASE 4
                     Node parent = n.getParent();
                     n.setMutationType(5); //assume the mutation is applicable for now
                     if (parent instanceof Access) {

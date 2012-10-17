@@ -4,10 +4,8 @@
  */
 package student;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import student.ParserImpl.HistObj;
-import static student.util.PrettyPrint.*;
 
 /**
  *

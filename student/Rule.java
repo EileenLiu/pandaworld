@@ -1,10 +1,8 @@
 package student;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import student.ParserImpl.HistObj;
-import static student.util.PrettyPrint.*;
 
 /**
  * A representation of a critter rule.

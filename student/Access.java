@@ -4,7 +4,6 @@ import java.util.LinkedList;
 import student.ParserImpl.HistObj;
 import student.util.Functions;
 import static student.util.Functions.forName;
-import student.util.PrettyPrint;
 
 /**
  * Represents an access of some external quantity, such as memory or a sensor.

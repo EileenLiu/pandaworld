@@ -2,7 +2,6 @@ package student;
 
 import student.util.Functions;
 import static student.util.Functions.*;
-import static student.util.PrettyPrint.*;
 
 /**
  * Represents a conjunction or disjunction.
