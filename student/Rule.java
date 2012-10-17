@@ -1,5 +1,6 @@
 package student;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import student.ParserImpl.HistObj;
@@ -75,5 +76,20 @@ public class Rule extends Node<Update> {
         if(action != null)
             r.action = (Action) action.clone();
         return r;
+    }
+    @Override
+   protected LinkedList<Node<?>> buildList(LinkedList<Node<?>> list) {
+        list.add(this);
+        Iterator it = children.iterator();
+        Node child;
+        list = condition.buildList(list);
+        while(it.hasNext())
+        {
+            child = (Node)it.next();
+            child.buildList(list);
+        }
+        if(action!=null)
+            list = action.buildList(list);
+        return list;
     }
 }
