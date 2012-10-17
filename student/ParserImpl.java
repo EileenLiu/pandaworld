@@ -42,6 +42,8 @@ public class ParserImpl implements Parser {
             System.out.println(hist);
             return Program.parse(hist);
         } catch (SyntaxError e) {
+            //throw new RuntimeException(e);
+            e.printStackTrace(System.out);
             return null;
         }
     }
@@ -129,7 +131,7 @@ public class ParserImpl implements Parser {
                 stack.push("Condition");
                 stack.push("{");
                 return new HistObj("Relation","{","Condition","}");
-            } else if(fiExpr.contains(fst)) { //Exp Rsy Exp
+            } else if(fiExpr.contains(fst) || nump(fst)) { //Exp Rsy Exp
                 stack.push("Expression");
                 stack.push("Rel");
                 stack.push("Expression");
@@ -255,7 +257,7 @@ public class ParserImpl implements Parser {
         mop.add("*");
         mop.add("/");
         mop.add("mod");
-        mop.add("%");
+        //mop.add("%");
         fiMop = Collections.unmodifiableSet(mop);
     }
     

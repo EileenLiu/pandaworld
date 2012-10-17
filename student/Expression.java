@@ -20,7 +20,7 @@ public abstract class Expression<SubNodeType extends Expression<?>> extends Node
                 else { //Expression1 => +- Factor Expression1
                     HistObj tok = hist.pop();
                     Expression fac = Expression.parse(hist); //Factor
-                    res = new BinaryArithmeticOperator(res, fac, tok.token.charAt(0));
+                    res = new BinaryArithmeticOperator(res, fac, tok.token);
                 }
             }
             return res;
@@ -34,7 +34,7 @@ public abstract class Expression<SubNodeType extends Expression<?>> extends Node
                 else { //Factor1 => */% Atom Factor1
                     HistObj tok = hist.pop();
                     Expression at = Expression.parse(hist); //Atom
-                    res = new BinaryArithmeticOperator(res, at, tok.token.charAt(0));
+                    res = new BinaryArithmeticOperator(res, at, tok.token);
                 }
             }
             return res;

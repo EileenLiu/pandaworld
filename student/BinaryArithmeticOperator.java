@@ -21,7 +21,7 @@ public class BinaryArithmeticOperator extends Expression<Expression<?>> { // nee
      * @param v the given value
      * @throws InvalidBinaryOpException
      */
-    public BinaryArithmeticOperator(Expression<?> l, Expression<?> r, char v) {
+    public BinaryArithmeticOperator(Expression<?> l, Expression<?> r, String v) {
         super(Arrays.asList(new Expression<?>[]{l, r}));
         l.setParent((Node) this); //*I* know it's fine.
         r.setParent((Node) this);
@@ -111,21 +111,25 @@ public class BinaryArithmeticOperator extends Expression<Expression<?>> { // nee
     
     @Override
     public StringBuffer toString(StringBuffer sb) {
-        ppsn(sb,left());
+        Node l = left();
+        if(l instanceof BinaryArithmeticOperator && ((BinaryArithmeticOperator)l).op.prec != op.prec) {
+            sb.append('(');
+            l.toString(sb);
+            sb.append(')');
+        } else
+            l.toString(sb);
         sb.append(' ');
         sb.append(op.getSym());
         sb.append(' ');
-        ppsn(sb,right());
-        return sb;
-    }
-    
-    private void ppsn(StringBuffer sb, Node n) { //TODO (if time): take precedence into account
-        if(n instanceof BinaryBooleanOperator) {
+        Node r = right();
+        if(r instanceof BinaryArithmeticOperator &&
+           ((BinaryArithmeticOperator)r).op.prec.exc(op.prec)) {
             sb.append('(');
-            n.toString(sb);
+            r.toString(sb);
             sb.append(')');
         } else
-            n.toString(sb);
+            r.toString(sb);
+        return sb;
     }
     
     @Override
@@ -138,41 +142,43 @@ public class BinaryArithmeticOperator extends Expression<Expression<?>> { // nee
      * An enumeration of all possible binary operators.
      */
     private enum BinaryOp {
-
-        PLUS('+') {
+        
+        PLUS("+", Prec.ADD) {
             @Override
             public int apply(int l, int r) {
                 return l + r;
             }
         },
-        MINUS('-') {
+        MINUS("-", Prec.ADD) {
             @Override
             public int apply(int l, int r) {
                 return l - r;
             }
         },
-        TIMES('*') {
+        TIMES("*", Prec.MUL) {
             @Override
             public int apply(int l, int r) {
                 return l * r;
             }
         },
-        DIVIDE('/') {
+        DIVIDE("/", Prec.MUL) {
             @Override
             public int apply(int l, int r) {
                 return l / r;
             }
         },
-        MOD('%') {
+        MOD("mod", Prec.MUL) {
             @Override
             public int apply(int l, int r) {
                 return l % r;
             }
         };
-        private char sym;
+        private String sym;
+        private Prec prec;
 
-        private BinaryOp(char s) {
+        private BinaryOp(String s, Prec p) {
             sym = s;
+            prec = p;
         }
 
         /**
@@ -180,7 +186,7 @@ public class BinaryArithmeticOperator extends Expression<Expression<?>> { // nee
          *
          * @return symbol of the Binary Operator
          */
-        public char getSym() {
+        public String getSym() {
             return sym;
         }
 
@@ -199,9 +205,9 @@ public class BinaryArithmeticOperator extends Expression<Expression<?>> { // nee
          * @param s a character representing a binary integer operation
          * @return the operation
          */
-        public static BinaryOp forSym(char s) {
+        public static BinaryOp forSym(String s) {
             for (BinaryOp bo : VALUES) {
-                if (bo.sym == s) {
+                if (bo.sym.equals(s)) {
                     return bo;
                 }
             }
@@ -216,5 +222,13 @@ public class BinaryArithmeticOperator extends Expression<Expression<?>> { // nee
          * The number of operators.
          */
         public static final int NUM_OPS = VALUES.size();
+        
+        public enum Prec {
+            ADD, MUL;
+            
+            public boolean exc(Prec p) {
+                return this == ADD && p == MUL;
+            }
+        }
     }
 }

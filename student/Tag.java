@@ -21,4 +21,14 @@ class Tag extends Action {
     public void execute() {
         throw new Error("Can't execute yet!");
     }
+
+    @Override
+    public StringBuffer toString(StringBuffer sb) {
+        sb.append("tag[");
+        ind().toString(sb);
+        sb.append("]");
+        return sb;
+    }
+    
+    
 }

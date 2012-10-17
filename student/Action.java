@@ -54,12 +54,11 @@ public class Action extends Node<Expression<?>> {
     }
     
     @Override
-        public boolean randomize()
-    {
-    	act = Functions.randEnum(Act.class);
-    	return true;
+    public boolean randomize() {
+        act = Functions.randEnum(Act.class);
+        return true;
     }
-    
+
     public static enum Act {
         WAIT {
             @Override public void exec() {

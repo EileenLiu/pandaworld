@@ -106,7 +106,7 @@ public class BinaryBooleanOperator extends Condition<Condition<?>> {
                 r.toString(sb);
                 sb.append('}');
             } else {
-                sb.append("\n");
+                sb.append('\n');
                 r.toString(sb);
             }
         } else
