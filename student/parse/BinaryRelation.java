@@ -1,6 +1,6 @@
-package student;
+package student.parse;
 
-import student.util.Functions;
+import student.parse.util.Functions;
 
 public class BinaryRelation extends Condition<Expression<?>> {
 

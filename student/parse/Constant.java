@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package student;
+package student.parse;
 
 public class Constant extends Expression<Constant> {
     private int value;

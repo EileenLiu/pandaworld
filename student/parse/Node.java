@@ -1,10 +1,10 @@
-package student;
+package student.parse;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import student.util.PrettyPrint;
+import student.parse.util.PrettyPrint;
 
 /**
  * A node in the abstract syntax tree of a program.

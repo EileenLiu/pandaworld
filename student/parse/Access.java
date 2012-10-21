@@ -1,9 +1,9 @@
-package student;
+package student.parse;
 
 import java.util.LinkedList;
-import student.ParserImpl.HistObj;
-import student.util.Functions;
-import static student.util.Functions.forName;
+import student.parse.ParserImpl.HistObj;
+import student.parse.util.Functions;
+import static student.parse.util.Functions.forName;
 
 /**
  * Represents an access of some external quantity, such as memory or a sensor.

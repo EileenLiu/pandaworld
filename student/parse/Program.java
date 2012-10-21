@@ -1,9 +1,9 @@
-package student;
+package student.parse;
 
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import student.ParserImpl.HistObj;
+import student.parse.ParserImpl.HistObj;
 
 /**
  * A representation of a critter program.

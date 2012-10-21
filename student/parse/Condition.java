@@ -1,10 +1,10 @@
-package student;
+package student.parse;
 
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import student.ParserImpl.HistObj;
-import static student.util.PrettyPrint.*;
+import student.parse.ParserImpl.HistObj;
+import static student.parse.util.PrettyPrint.*;
 
 /**
  * An abstract class representing a Boolean condition in a critter program.

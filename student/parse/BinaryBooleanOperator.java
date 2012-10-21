@@ -1,7 +1,7 @@
-package student;
+package student.parse;
 
-import student.util.Functions;
-import static student.util.Functions.*;
+import student.parse.util.Functions;
+import static student.parse.util.Functions.*;
 
 /**
  * Represents a conjunction or disjunction.

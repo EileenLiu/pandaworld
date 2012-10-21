@@ -1,4 +1,4 @@
-package student;
+package student.parse;
 
 import java.io.File;
 import java.io.FileInputStream;

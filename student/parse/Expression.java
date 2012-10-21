@@ -1,11 +1,11 @@
-package student;
+package student.parse;
 
 // A critter program expression that has an integer value.
 import java.util.LinkedList;
 import java.util.List;
-import static student.ParserImpl.*;
-import student.ParserImpl.HistObj;
-import static student.util.PrettyPrint.*;
+import static student.parse.ParserImpl.*;
+import student.parse.ParserImpl.HistObj;
+import static student.parse.util.PrettyPrint.*;
 
 public abstract class Expression<SubNodeType extends Expression<?>> extends Node<SubNodeType> {
     public static Expression parse(LinkedList<HistObj> hist) throws SyntaxError {

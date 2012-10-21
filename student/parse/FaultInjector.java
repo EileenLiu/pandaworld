@@ -1,4 +1,4 @@
-package student;
+package student.parse;
 
 import java.util.Arrays;
 import java.util.LinkedList;
