@@ -26,9 +26,8 @@ public interface HexGrid<E> {
      * @param c The column of the item
      * @param r The row of the item
      * @param e The item.
-     * @throws HexIndexOutOfBoundsException if the given location is invalid
      */
-    public boolean set(int c, int r, E e) throws HexIndexOutOfBoundsException;
+    public void set(int c, int r, E e) throws HexIndexOutOfBoundsException;
 
     public int nRows();
     public int nCols();
