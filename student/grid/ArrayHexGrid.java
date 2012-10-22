@@ -5,7 +5,6 @@
 package student.grid;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
 import static student.grid.HexGrid.HexDir.*;
 
 
@@ -17,23 +16,32 @@ public class ArrayHexGrid<E> implements HexGrid<E> {
         wid = _wid;
         data = (Ref[][]) Array.newInstance(Ref[].class, 2*wid-1);
         for(int r = 0; r < 2*wid-1; r++) {
-            int j = r;
-            if(j > wid - 1)
-                j = 2*wid - r - 2;
-            data[r] = (Ref[]) Array.newInstance(Ref.class, wid + j);
-            for(int c = 0; c < wid+j; c++)
+            data[r] = (Ref[]) Array.newInstance(Ref.class, rowSize(r));
+            for(int c = 0; c < rowSize(r); c++)
                 data[r][c] = new Ref(r,c);
         }
+    }
+    
+    private int rowSize(int r) {
+        if(r > wid - 1)
+            r = 2*wid - r - 2;
+        return wid + r;
     }
 
     @Override
     public E get(int c, int r) throws HexIndexOutOfBoundsException {
-        return ref(c,r).contents();
+        Reference<E> ref = ref(c,r);
+        if(ref == null)
+            throw new HexIndexOutOfBoundsException(r, c);
+        return ref.contents();
     }
 
     @Override
     public void set(int c, int r, E e) throws HexIndexOutOfBoundsException {
-        ref(c,r).setContents(e);
+        Reference<E> ref = ref(c,r);
+        if(ref == null)
+            throw new HexIndexOutOfBoundsException(r, c);
+        ref.setContents(e);
     }
 
     @Override
@@ -53,7 +61,9 @@ public class ArrayHexGrid<E> implements HexGrid<E> {
 
     @Override
     public Reference<E> ref(int c, int r) {
-        return data[c][r];
+        if(r < 0 || c < 0 || r >= data.length || c >= rowSize(r))
+            throw new HexIndexOutOfBoundsException(r, c);
+        return data[r][c];
     }
    
     private class Ref implements Reference<E> {
@@ -106,7 +116,7 @@ public class ArrayHexGrid<E> implements HexGrid<E> {
                 er += dist;
             if(dir == SE || dir == NE)
                 ec += dist;
-            return data[ec][er];
+            return data[er][ec];
         }
 
         @Override
