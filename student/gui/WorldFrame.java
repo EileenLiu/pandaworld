@@ -15,7 +15,7 @@ public class WorldFrame extends JFrame {
 
     private World world;
     public JTextArea worldStatusArea; //text display of world status
-    private JPanel worldDisplay; //- made up of two JPanels, one is the grid, one is the current attributes
+    public WorldDisplay worldDisplay; //- made up of two JPanels, one is the grid, one is the current attributes
 
     public WorldFrame(World w) {
         world = w;

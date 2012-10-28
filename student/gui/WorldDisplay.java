@@ -5,6 +5,7 @@
 package student.gui;
 
 import javax.swing.*;
+import student.world.World;
 
 /**
  *
@@ -13,4 +14,16 @@ import javax.swing.*;
 public class WorldDisplay extends JPanel{
     public JPanel gridpanel;
     public JPanel statepanel;
+    public JTextArea state;
+    public World world;
+
+    public WorldDisplay(World world) {
+        this.gridpanel = new JPanel();
+        this.statepanel = new JPanel();
+        this.state = new JTextArea();
+    }
+    public void updateState(){
+        //state.setText(world.currentLocation.getState());
+    }
+    
 }

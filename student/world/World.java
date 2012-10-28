@@ -9,6 +9,7 @@ package student.world;
  * @author Panda
  */
 public class World {
+
     public String getStatus()
     {
         //TODO: get status
