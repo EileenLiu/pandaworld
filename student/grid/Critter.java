@@ -5,6 +5,7 @@
 package student.grid;
 
 import java.util.Set;
+import static student.grid.Constants.*;
 import student.grid.HexGrid.HexDir;
 import static student.grid.HexGrid.HexDir.*;
 import student.grid.HexGrid.Reference;
@@ -15,12 +16,6 @@ import student.world.World;
  * @author haro
  */
 public class Critter extends Entity {
-    private static final int BASE_DAMAGE = 100;
-    private static final double DAMAGE_INC = 0.2;
-    private static final int MOVE_COST = 3;
-    private static final int ATTACK_COST = 5;
-    private static final int GROW_COST = 1;
-    private static final int ABILITY_COST = 25;
     
     private World wor;
     private Reference<Set<Entity>> pos;
