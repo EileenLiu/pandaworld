@@ -5,6 +5,8 @@
 package student.grid;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Iterator;
 import static student.grid.HexGrid.HexDir.*;
 
 
@@ -64,6 +66,37 @@ public class ArrayHexGrid<E> implements HexGrid<E> {
         if(r < 0 || c < 0 || r >= data.length || c >= rowSize(r))
             throw new HexIndexOutOfBoundsException(r, c);
         return data[r][c];
+    }
+
+    @Override
+    public Iterator<E> iterator() {
+        return new Itr();
+    }
+
+    private class Itr implements Iterator<E> {
+        int row = -1, col = -1;
+        
+        @Override
+        public boolean hasNext() {
+            return row < data.length - 1
+                || col < data[row].length - 1;
+        }
+
+        @Override
+        public E next() {
+            col++;
+            if(row < 0 || col >= data[row].length) {
+                row ++;
+                col = 0;
+            }
+            return data[row][col].contents();
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException("Not supported yet.^H^H^H^Hever.");
+        }
+        
     }
    
     private class Ref implements Reference<E> {
