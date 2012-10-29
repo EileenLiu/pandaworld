@@ -33,7 +33,6 @@ public interface HexGrid<E> extends Iterable<E> {
 
     public int nRows();
     public int nCols();
-    public int nSlices();
     
     /**
      * Returns an iterator over its contents.

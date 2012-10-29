@@ -5,29 +5,22 @@
 package student.grid;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Iterator;
 import static student.grid.HexGrid.HexDir.*;
 
 
 public class ArrayHexGrid<E> implements HexGrid<E> {
-    private int wid;
+    private int rs, cs;
     private Ref data[][];
     
-    public ArrayHexGrid(int _wid) {
-        wid = _wid;
-        data = (Ref[][]) Array.newInstance(Ref[].class, 2*wid-1);
-        for(int r = 0; r < 2*wid-1; r++) {
-            data[r] = (Ref[]) Array.newInstance(Ref.class, rowSize(r));
-            for(int c = 0; c < rowSize(r); c++)
+    public ArrayHexGrid(int _rs, int _cs) {
+        rs = _rs; cs = _cs;
+        data = (Ref[][]) Array.newInstance(Ref[].class, rs);
+        for(int r = 0; r < rs; r++) {
+            data[r] = (Ref[]) Array.newInstance(Ref.class, cs);
+            for(int c = 0; c < cs; c++)
                 data[r][c] = new Ref(r,c);
         }
-    }
-    
-    private int rowSize(int r) {
-        if(r > wid - 1)
-            r = 2*wid - r - 2;
-        return wid + r;
     }
 
     @Override
@@ -48,22 +41,17 @@ public class ArrayHexGrid<E> implements HexGrid<E> {
 
     @Override
     public int nRows() {
-        return 2*wid - 1;
+        return rs;
     }
 
     @Override
     public int nCols() {
-        return 2*wid - 1;
-    }
-
-    @Override
-    public int nSlices() {
-        return 2*wid - 1;
+        return cs;
     }
 
     @Override
     public Reference<E> ref(int c, int r) {
-        if(r < 0 || c < 0 || r >= data.length || c >= rowSize(r))
+        if(r < 0 || c < 0 || r >= rs || c >= cs)
             throw new HexIndexOutOfBoundsException(r, c);
         return data[r][c];
     }

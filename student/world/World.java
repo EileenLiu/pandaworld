@@ -20,16 +20,15 @@ public class World {
         return "";
     }
     HexGrid<Set<Entity>> world;
-    int siz;
 
-    public World(int _siz) {
-        siz = _siz;
-        world = new ArrayHexGrid<Set<Entity>>(siz);
+    public World(int _r, int _c) {
+        world = new ArrayHexGrid<Set<Entity>>(_r, _c);
     }
     
     public void step() {
-        for(Entity e : world) 
-            if(e != null)
-                e.timeStep();
+        for(Set<Entity> e : world) 
+            for(Entity ee : e)
+                if(ee != null)
+                    ee.timeStep();
     }
 }

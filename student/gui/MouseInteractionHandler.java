@@ -32,6 +32,14 @@ public class MouseInteractionHandler extends MouseAdapter {
                 break;
         }
     }
+
+    private void leftClick(MouseEvent e) {
+        
+    }
+
+    private void rightClick(MouseEvent e) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
     
     
 }

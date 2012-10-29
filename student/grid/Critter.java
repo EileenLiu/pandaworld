@@ -81,7 +81,7 @@ public class Critter extends Entity {
         return rest;
     }
 
-    @IsProperty("energy")
+    @IsProperty
     public int energy() {
         return mem[4];
     }

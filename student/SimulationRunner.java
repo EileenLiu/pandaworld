@@ -15,7 +15,7 @@ import student.world.World;
 public class SimulationRunner {
 
     public static void main(String[] args) {
-        World model = new World(6);
+        World model = new World(6,6);
         WorldFrame view = new WorldFrame(model);
         MouseInteractionHandler controller = new MouseInteractionHandler(model, view);
         view.setVisible(true);

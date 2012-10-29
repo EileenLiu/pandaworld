@@ -17,8 +17,9 @@ public class WorldDisplay extends JPanel{
     public JPanel statepanel;
     public JTextArea state;
     public World world;
-    public final int xSTART;
-    public final int ySTART;
+    public final int xSTART = 50;
+    public final int ySTART = 50;
+    private int hxsz = 10;
 
     public WorldDisplay(World world) {
         gridpanel = generateGridpanel();
@@ -51,6 +52,16 @@ public class WorldDisplay extends JPanel{
      * draw hex at
      * y = startY + (
      */
+    public int[] point(int row, int col) {
+        int x = col*hxsz*2;
+        int y = row*hxsz*2 
+                +col% 
+                2==0 
+                ?hxsz/2: 
+                0; //It's just as readable as anything else here --el
+        return new int[] {x, y};
+    }
+    
     public int[] point(int row, int col, int[] startpoint, int hexsize)
     {
         return new int[]{startpoint[0]+(hexsize*3/4)*row, startpoint[1]+(hexsize/2)*col}; //[x, y]
