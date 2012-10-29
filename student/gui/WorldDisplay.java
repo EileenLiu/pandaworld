@@ -12,10 +12,11 @@ public class WorldDisplay extends JPanel{
     public GridPanel gp;
     public JPanel sp;
     public JTextArea state;
-    public World world;
+    public World WORLD;
 
 
     public WorldDisplay(World world) {
+        WORLD = world;
 //        xSTART = 100;
 //        ySTART = 100;
         gp = generateGridpanel();
@@ -24,11 +25,12 @@ public class WorldDisplay extends JPanel{
         sp.add(state);
         setLayout(new BorderLayout());
         add(gp, BorderLayout.EAST);
-        add(sp, BorderLayout.WEST);
+        //add(sp, BorderLayout.WEST);
         gp.setVisible(true);
     }
     public final GridPanel generateGridpanel(){
-        GridPanel grid = new GridPanel(world);
+        GridPanel grid = new GridPanel(WORLD);
+        grid.setSize(10000, 10000);
         return grid;
     }
     public void updateState(){

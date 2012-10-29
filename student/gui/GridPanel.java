@@ -12,12 +12,12 @@ import student.world.World;
 
 public class GridPanel extends JPanel {
 
-    public int xSTART = 50;
-    public int ySTART = 50;
-    private int HEXSIZE = 10;
-    public World ZA_WARUDO;
+    public int xSTART = 0;
+    public int ySTART = 0;
+    private int HEXSIZE = 100;
+    public World WORLD;
     public GridPanel(World world) {
-        ZA_WARUDO = world;
+        WORLD = world;
     }
     
     /**
@@ -50,7 +50,7 @@ public class GridPanel extends JPanel {
      */
     public void update(Graphics g)//overrides update method to prevent continuous uneccessary repainting
     {
-        //drawGrid()
+        drawGrid(HEXSIZE, g);
     }
 
     /**
@@ -60,7 +60,7 @@ public class GridPanel extends JPanel {
      * hexagon grid
      * @param hexsize the size of each hexagon
      */
-    public void drawGrid(int length, int hexsize, Graphics g) {
+   /* public void drawGrid(int length, int hexsize, Graphics g) {
         int numrows = length * 2 - 1;
         int numcols = length;
         int medianrow = length - 1;
@@ -82,7 +82,7 @@ public class GridPanel extends JPanel {
             }
 
         }
-    }
+    }*/
 
     /**
      * Draws a hexagon of the given coordinates
@@ -139,15 +139,16 @@ public class GridPanel extends JPanel {
    /**
      * Draws the entire grid of hexagons
      */
-    @Deprecated
-    public void HWHdrawGrid(int hxsz, Graphics gp) {
-        for (int c = 0; c < ZA_WARUDO.width(); c++) {
+    //@Deprecated
+    public void drawGrid(int hexsize, Graphics gp) {//HWHdrawGrid(int hxsz, Graphics gp) {
+        for (int c = 0; c < WORLD.width(); c++) {
             int x = pnX(0, c);
-            for (int r = 0; r < ZA_WARUDO.height(); r++) {
+            for (int r = 0; r < WORLD.height(); r++) {
                 int y = pnY(r, c);
-                drawHexagon(hexCoordinates(x, y, hxsz), gp);
+                drawHexagon(hexCoordinates(x, y, hexsize), gp);
             }
         }
     }
+    
 
 }
