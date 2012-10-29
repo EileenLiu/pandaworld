@@ -16,10 +16,11 @@ public class GridPanel extends JPanel {
     public int xSTART = 0;
     public int ySTART = 0;
     private int HEXSIZE = 100;
-    public World WORLD;
+    public World ZA_WARUDO;
     public GridPanel(World world) {
-        WORLD = world;
-        this.setBorder(new LineBorder(Color.MAGENTA, 3));
+        ZA_WARUDO = world;
+        System.out.println("" + ZA_WARUDO.width() + ZA_WARUDO.height());
+        //this.setBorder(new LineBorder(Color.MAGENTA, 3));
     }
     
     /**
@@ -50,6 +51,7 @@ public class GridPanel extends JPanel {
      *
      * @see javax.swing.JComponent#update(java.awt.Graphics)
      */
+    @Override
     public void update(Graphics g)//overrides update method to prevent continuous uneccessary repainting
     {
         drawGrid(HEXSIZE, g);
@@ -105,11 +107,10 @@ public class GridPanel extends JPanel {
     }
 
     public int pnY(int row, int col) {
-        return row * HEXSIZE * 2
-                + col
-                % 2 == 0
-                ? HEXSIZE
-                / 2 : 0;
+        return row * HEXSIZE * 2 
+             + (col%2==0
+                 ? HEXSIZE/2 
+                 : 0);
     }
 
     /**
@@ -143,10 +144,12 @@ public class GridPanel extends JPanel {
      */
     //@Deprecated
     public void drawGrid(int hexsize, Graphics gp) {//HWHdrawGrid(int hxsz, Graphics gp) {
-        for (int c = 0; c < WORLD.width(); c++) {
+        for (int c = 0; c < ZA_WARUDO.width(); c++) {
             int x = pnX(0, c);
-            for (int r = 0; r < WORLD.height(); r++) {
+            for (int r = 0; r < ZA_WARUDO.height(); r++) {
                 int y = pnY(r, c);
+                System.out.println(""+x+","+y);
+                gp.fillOval(x, y, 10, 10);
                 drawHexagon(hexCoordinates(x, y, hexsize), gp);
             }
         }
