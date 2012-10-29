@@ -19,8 +19,9 @@ public class GridPanel extends JPanel {
     public World ZA_WARUDO;
     public GridPanel(World world) {
         ZA_WARUDO = world;
-        System.out.println("" + ZA_WARUDO.width() + ZA_WARUDO.height());
-        //this.setBorder(new LineBorder(Color.MAGENTA, 3));
+        this.setBorder(new LineBorder(Color.MAGENTA, 3));
+        //GridPanel.HEIGHT = WORLD.height()*HEXSIZE;
+        //this.WIDTH = WORLD.width()*HEXSIZE;
     }
     
     /**
@@ -54,6 +55,7 @@ public class GridPanel extends JPanel {
     @Override
     public void update(Graphics g)//overrides update method to prevent continuous uneccessary repainting
     {
+        //g.fillRect(0, 0, this.getWidth(), this.getHeight());
         drawGrid(HEXSIZE, g);
     }
 
@@ -125,12 +127,12 @@ public class GridPanel extends JPanel {
      */
     public int[][] hexCoordinates(int startX, int startY, int size) {
         int[][] hexCoord = new int[6][2]; //[Xj, Yj] for j= 1,2,3,4,5,6
-        hexCoord[0] = new int[]{size / 4, 0};
-        hexCoord[1] = new int[]{size * 3 / 4, 0};
-        hexCoord[2] = new int[]{size, size / 2};
-        hexCoord[3] = new int[]{size * 3 / 4, size};
-        hexCoord[4] = new int[]{size / 4, size};
-        hexCoord[5] = new int[]{0, size / 2};
+        hexCoord[0] = new int[]{size / 4 + startX, 0 + startY};
+        hexCoord[1] = new int[]{size * 3 / 4 + startX, 0+ startY};
+        hexCoord[2] = new int[]{size + startX, size / 2+ startY};
+        hexCoord[3] = new int[]{size * 3 / 4 + startX, size+ startY};
+        hexCoord[4] = new int[]{size / 4 + startX, size+ startY};
+        hexCoord[5] = new int[]{0+ startX, size / 2+ startY};
         /*hexCoord[0] = new int[]{startX, B};
          hexCoord[1] = new int[]{sidelength/2, startY};
          hexCoord[2] = new int[]{A+sidelength, startY};

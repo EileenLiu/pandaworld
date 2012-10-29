@@ -4,7 +4,6 @@
  */
 package student.gui;
 
-import java.awt.BorderLayout;
 import javax.swing.*;
 import student.world.World;
 
@@ -30,7 +29,8 @@ public class WorldDisplay extends JPanel{
     }
     public final GridPanel generateGridpanel(){
         GridPanel grid = new GridPanel(WORLD);
-        grid.setSize(10000, 10000);
+        grid.setMinimumSize(new Dimension(WORLD.width(), WORLD.height()));
+        grid.setSize(WORLD.width()*100, WORLD.height()*100);
         return grid;
     }
     public void updateState(){

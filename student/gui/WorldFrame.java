@@ -16,9 +16,10 @@ public class WorldFrame extends JFrame {
         world = w;
         worldStatusArea = new JTextArea("World Status/n"+"");
         worldDisplay = new WorldDisplay(world);
+        this.setSize(worldDisplay.getWidth(), worldDisplay.getHeight()+worldStatusArea.getHeight());
         this.add(worldDisplay);
-        worldDisplay.setSize(500, 500);
-        this.setSize(500,500);
+
+        //this.setSize(5000,5000);
     }
 
     public void repaint() {
