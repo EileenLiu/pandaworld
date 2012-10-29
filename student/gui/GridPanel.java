@@ -105,11 +105,11 @@ public class GridPanel extends JPanel {
     }
 
     public int pnX(int row, int col) {
-        return col * HEXSIZE * 2;
+        return col * HEXSIZE * 3/4;
     }
 
     public int pnY(int row, int col) {
-        return row * HEXSIZE * 2 
+        return row * HEXSIZE
              + (col%2==0
                  ? HEXSIZE/2 
                  : 0);

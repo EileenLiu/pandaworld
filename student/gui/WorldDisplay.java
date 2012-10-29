@@ -4,6 +4,8 @@
  */
 package student.gui;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import javax.swing.*;
 import student.world.World;
 
