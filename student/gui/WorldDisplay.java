@@ -21,6 +21,8 @@ public class WorldDisplay extends JPanel{
     public final int ySTART;
 
     public WorldDisplay(World world) {
+        xSTART = 100;
+        ySTART = 100;
         gridpanel = generateGridpanel();
         statepanel = new JPanel();
         state = new JTextArea();
@@ -85,6 +87,10 @@ public class WorldDisplay extends JPanel{
     }
     public void drawHexagon(int[][] hexCoordinates)
     {
+        for(int i = 0; i<hexCoordinates.length; i++)
+        {
+            
+        }
         //TODO drawHexagon
     }
     /**
