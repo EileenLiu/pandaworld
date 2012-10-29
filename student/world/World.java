@@ -31,4 +31,12 @@ public class World {
                 if(ee != null)
                     ee.timeStep();
     }
+
+    public int height() {
+        return world.nRows();
+    }
+    
+    public int width() {
+        return world.nCols();
+    }
 }

@@ -7,6 +7,7 @@ package student.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import javax.swing.*;
 import student.world.World;
 
@@ -15,8 +16,7 @@ import student.world.World;
  * @author Panda
  */
 public class WorldDisplay extends JPanel{
-    public JPanel gridpanel;
-    public JPanel statepanel;
+    public JPanel gp, sp;
     public JTextArea state;
     public World world;
     public int xSTART = 50;
@@ -26,13 +26,14 @@ public class WorldDisplay extends JPanel{
     public WorldDisplay(World world) {
         xSTART = 100;
         ySTART = 100;
-        gridpanel = generateGridpanel();
-        statepanel = new JPanel();
+        gp = generateGridpanel();
+        sp = new JPanel();
         state = new JTextArea();
-        statepanel.add(state);
+        sp.add(state);
         setLayout(new BorderLayout());
-        add(gridpanel, BorderLayout.EAST);
-        add(statepanel, BorderLayout.WEST);
+        add(gp, BorderLayout.EAST);
+        add(sp, BorderLayout.WEST);
+        gp.setVisible(true);
     }
     public final JPanel generateGridpanel(){
         JPanel grid = new JPanel();
@@ -59,7 +60,7 @@ public class WorldDisplay extends JPanel{
     public int pnX(int row, int col) {
         return col*hxsz*2;
     }
-    public int pxY(int row, int col) {
+    public int pnY(int row, int col) {
         return row*hxsz*2 
             +col% 
             2==0 
@@ -80,35 +81,16 @@ public class WorldDisplay extends JPanel{
     }
     /**
      * Draws the entire grid of hexagons
-     * @param length the number of hexagons that make of a side length of the hexagon grid 
-     * @param hexsize the size of each hexagon
      */
-    public void drawGrid(int length, int hexsize)
+    public void drawGrid()
     {
-        int numrows = length*2-1;
-        int numcols = length;
-        int medianrow = length-1;
-        int[] rowstartpoint = new int[]{(hexsize-1)*(length-1),0};
-        for(int i =0; i<numrows; i++)
-        {
-            for(int j = 0; j<numcols; j++)
-            {
-                int[] point = point(i, j, rowstartpoint, hexsize);
-                //drawHexagon(hexCoordinates(point[0]+xSTART, point[1]+ySTART, hexsize));
+        Graphics2D gp2 =(Graphics2D) gp.getGraphics();
+        for(int c = 0; c < world.width(); c++) {
+            int x = pnX(0,c);
+            for(int r = 0; r < world.height(); r++) {
+                int y = pnY(r,c);
+                drawHexagon(hexCoordinates(x, y, hxsz), gp2);
             }
-            if(i > medianrow)
-            {
-                rowstartpoint[0] = 0;
-                rowstartpoint[1] = rowstartpoint[1] + hexsize;
-                numcols--;
-            }
-            else
-            {
-                rowstartpoint[0] = 0;
-                rowstartpoint[1] = rowstartpoint[1] + hexsize;
-                numcols++;
-            }
-            
         }
     }
     /**
