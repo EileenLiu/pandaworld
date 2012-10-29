@@ -25,4 +25,10 @@ public class World {
         siz = _siz;
         world = new ArrayHexGrid<Entity>(siz);
     }
+    
+    public void step() {
+        for(Entity e : world) 
+            if(e != null)
+                e.timeStep();
+    }
 }

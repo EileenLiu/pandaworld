@@ -21,8 +21,10 @@ public final class Constants {
                              MOVE_COST = 3,
                              ATTACK_COST = 5,
                              GROW_COST = 1,
-                             ABILITY_COST = 25;
-    public static volatile double DAMAGE_INC = 0.2;
+                             ABILITY_COST = 25,
+                             ENERGY_PER_PLANT = 100;
+    public static volatile double DAMAGE_INC = 0.2,
+                                  PLANT_GROW_PROB = .005;
     
     private static final Pattern constant = Pattern.compile("\\{[^\\}]*\\}");
     public static void loadFromFile(File f) throws IOException {

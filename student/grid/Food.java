@@ -12,6 +12,7 @@ public class Food extends Entity {
     public final int energy = 0;
 
     @Override
+    @IsProperty("energy")
     public int read() {
         return -energy;
     }

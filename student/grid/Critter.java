@@ -82,10 +82,15 @@ public class Critter extends Entity {
         return rest;
     }
 
-    @Override
     @IsProperty("energy")
-    public int read() {
+    public int energy() {
         return mem[4];
+    }
+    
+    @Override
+    @IsProperty("appearance")
+    public int read() {
+        return 100000*tag() + 1000*size() + posture();
     }
 
     @Override
