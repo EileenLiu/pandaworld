@@ -5,14 +5,12 @@
 package student.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import javax.swing.*;
 import student.world.World;
 
 public class WorldDisplay extends JPanel{
-    public JPanel gp, sp;
+    public GridPanel gp;
+    public JPanel sp;
     public JTextArea state;
     public World world;
 
