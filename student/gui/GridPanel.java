@@ -8,6 +8,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import student.world.World;
 
 public class GridPanel extends JPanel {
@@ -18,6 +19,7 @@ public class GridPanel extends JPanel {
     public World WORLD;
     public GridPanel(World world) {
         WORLD = world;
+        this.setBorder(new LineBorder(Color.MAGENTA, 3));
     }
     
     /**

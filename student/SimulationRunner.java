@@ -19,5 +19,6 @@ public class SimulationRunner {
         WorldFrame view = new WorldFrame(model);
         MouseInteractionHandler controller = new MouseInteractionHandler(model, view);
         view.setVisible(true);
+        view.setDefaultCloseOperation(WorldFrame.EXIT_ON_CLOSE);
     }
 }

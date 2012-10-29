@@ -34,6 +34,8 @@ public class MouseInteractionHandler extends MouseAdapter {
     }
 
     private void leftClick(MouseEvent e) {
+        int x = e.getX();
+        int y = e.getY();
         
     }
 

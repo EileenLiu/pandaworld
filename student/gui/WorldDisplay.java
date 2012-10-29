@@ -24,7 +24,7 @@ public class WorldDisplay extends JPanel{
         state = new JTextArea();
         sp.add(state);
         setLayout(new BorderLayout());
-        add(gp, BorderLayout.EAST);
+        add(gp, BorderLayout.CENTER);
         //add(sp, BorderLayout.WEST);
         gp.setVisible(true);
     }
