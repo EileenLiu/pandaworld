@@ -52,14 +52,15 @@ public class WorldDisplay extends JPanel{
      * draw hex at
      * y = startY + (
      */
-    public int[] point(int row, int col) {
-        int x = col*hxsz*2;
-        int y = row*hxsz*2 
-                +col% 
-                2==0 
-                ?hxsz/2: 
-                0; //It's just as readable as anything else here --el
-        return new int[] {x, y};
+    public int pnX(int row, int col) {
+        return col*hxsz*2;
+    }
+    public int pxY(int row, int col) {
+        return row*hxsz*2 
+            +col% 
+            2==0 
+            ?hxsz/ 
+            2:0; //It's just as readable as anything else here --el
     }
     
     public int[] point(int row, int col, int[] startpoint, int hexsize)
