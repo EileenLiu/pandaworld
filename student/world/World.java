@@ -4,6 +4,7 @@
  */
 package student.world;
 
+import java.util.Set;
 import student.grid.ArrayHexGrid;
 import student.grid.Entity;
 import student.grid.HexGrid;
@@ -18,11 +19,11 @@ public class World {
         //TODO: get status
         return "";
     }
-    HexGrid<Entity> world;
+    HexGrid<Set<Entity>> world;
     int siz;
 
     public World(int _siz) {
         siz = _siz;
-        world = new ArrayHexGrid<Entity>(siz);
+        world = new ArrayHexGrid<Set<Entity>>(siz);
     }
 }

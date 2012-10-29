@@ -8,6 +8,7 @@ import java.util.Set;
 import student.grid.HexGrid.HexDir;
 import static student.grid.HexGrid.HexDir.*;
 import student.grid.HexGrid.Reference;
+import student.world.World;
 
 /**
  *
