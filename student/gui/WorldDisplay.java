@@ -6,6 +6,7 @@ package student.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.*;
@@ -26,13 +27,14 @@ public class WorldDisplay extends JPanel{
         state = new JTextArea();
         sp.add(state);
         setLayout(new BorderLayout());
-        add(gp, BorderLayout.EAST);
+        add(gp, BorderLayout.CENTER);
         //add(sp, BorderLayout.WEST);
         gp.setVisible(true);
     }
     public final GridPanel generateGridpanel(){
         GridPanel grid = new GridPanel(WORLD);
-        grid.setSize(10000, 10000);
+        grid.setMinimumSize(new Dimension(WORLD.width(), WORLD.height()));
+        grid.setSize(WORLD.width()*100, WORLD.height()*100);
         return grid;
     }
     public void updateState(){
