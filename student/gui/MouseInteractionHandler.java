@@ -5,26 +5,33 @@
 package student.gui;
 
 import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import student.world.World;
 
 /**
  *
- * @author Panda
+ * @author Panda^H^H^H^H^Hhwh48
  */
-public class MouseInteractionHandler {
-
-    public MouseInteractionHandler(final World model, final WorldFrame view) {
-        view.worldDisplay.addMouseListener(new MouseAdapter() {
-			/*@Override public void mouseEntered(MouseEvent e) {
-				view.button.setEnabled(true);
-			}
-			@Override public void mouseExited(MouseEvent e) {
-				Point p = new Point(e.getPoint().x - view.panel.getBounds().x,
-							e.getPoint().y - view.panel.getBounds().y);
-				if (!view.button.getBounds().contains(p))
-					view.button.setEnabled(false);	
-			}*/
-		});
+public class MouseInteractionHandler extends MouseAdapter {
+    private World model;
+    private WorldFrame view;
+    
+    public MouseInteractionHandler(final World _model, final WorldFrame _view) {
+        model = _model;
+        view = _view;
     }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        switch(e.getButton()) {
+            case 1:
+                leftClick(e);
+                break;
+            case 2:
+                rightClick(e);
+                break;
+        }
+    }
+    
     
 }
