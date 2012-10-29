@@ -7,10 +7,6 @@ package student.gui;
 import javax.swing.*;
 import student.world.World;
 
-/**
- *
- * @author Panda
- */
 public class WorldFrame extends JFrame {
 
     private World world;
