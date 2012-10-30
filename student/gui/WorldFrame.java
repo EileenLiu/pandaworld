@@ -21,6 +21,9 @@ public class WorldFrame extends JFrame {
         //worldStatusPanel.setLayout(new BorderLayout());
         //worldStatusPanel.add(worldStatusArea, BorderLayout.CENTER);
         worldDisplay = new WorldDisplay(world);
+        worldDisplay.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 0));
+        worldDisplay.setBackground(new Color(112, 126, 185));
+        this.setBackground(new Color(112, 126, 185));
         //this.setSize(worldDisplay.getWidth(), worldDisplay.getHeight() + worldStatusArea.getHeight());
         setLayout(new BorderLayout());
 
@@ -57,6 +60,7 @@ public class WorldFrame extends JFrame {
      */
     private void setFullScreen() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        this.setSize(screenSize.width, screenSize.height);
+        int taskBarSize = Toolkit.getDefaultToolkit().getScreenInsets(getGraphicsConfiguration()).bottom;
+        this.setSize(screenSize.width, screenSize.height-taskBarSize);
     }
 }

@@ -26,7 +26,7 @@ public class GridPanel extends JPanel {
     public int xSTART = 0;
     public int ySTART = 0;
     //A MULTIPLE OF FOUR
-    private int HEXSIZE = 152;
+    private int HEXSIZE = 100;
     public World zaWarudo; //WRYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY
     public GridPanel(World world) {
         zaWarudo = world;
@@ -83,7 +83,7 @@ public class GridPanel extends JPanel {
     public void update(Graphics g)//overrides update method to prevent continuous uneccessary repainting
     {
         g.setColor(Color.BLACK);
-        g.fillRect(0, 0, this.getWidth(), this.getHeight());
+        //g.fillRect(0, 0, this.getWidth(), this.getHeight());
         drawGrid(HEXSIZE, g);
     }
 

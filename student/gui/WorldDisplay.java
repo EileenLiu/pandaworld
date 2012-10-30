@@ -6,9 +6,11 @@ package student.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.util.Set;
 import javax.swing.*;
+import javax.swing.border.BevelBorder;
 import student.grid.Critter;
 import student.grid.HexGrid;
 import student.grid.Tile;
@@ -16,23 +18,24 @@ import student.world.World;
 
 public class WorldDisplay extends JPanel{
     public GridPanel gridpane;
-    //public JPanel attributesPanel;
     public JPanel textDisplay;
     public JPanel worldStatusPanel;
-    //public JPanel attributesPanel;
-    public JLabel timestep, crittercount, plantcount, foodcount, rockcount;
     public JTextArea attributes;
+    public ControlPanel controls;
+    public JLabel timestep, crittercount, plantcount, foodcount, rockcount;
+    
     public World WORLD;
     public HexGrid.Reference<Tile> currentLocation;
-
+    
     public WorldDisplay(World world) {
         WORLD = world;
         currentLocation = WORLD.defaultLoc();
         
         setLayout(new BorderLayout());
-//        xSTART = 100;
-//        ySTART = 100;
-        attributes = new JTextArea();
+        
+        controls = new ControlPanel();
+        controls.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));//createBevelBorder(0, 10, 0, 10));
+        attributes = generateAttributes();
         gridpane = generateGridPanel();
         worldStatusPanel = generateWorldStatusPanel();
         textDisplay = generateTextDisplayPanel();
@@ -42,36 +45,52 @@ public class WorldDisplay extends JPanel{
 
         add(gridpane, BorderLayout.CENTER);
         add(textDisplay, BorderLayout.EAST);
-        
         gridpane.setVisible(true);
         textDisplay.setVisible(true);
         attributes.setVisible(true);
     }
-    public final GridPanel generateGridPanel(){
+    private final JTextArea generateAttributes(){
+        JTextArea textArea = new JTextArea();
+        textArea.setEditable(false);
+        //textArea.setLineWrap(true);
+        textArea.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+        textArea.setOpaque(false);
+        return textArea;
+    }
+    private final GridPanel generateGridPanel(){
         GridPanel grid = new GridPanel(WORLD);
         grid.setMinimumSize(new Dimension(WORLD.width(), WORLD.height()));
         grid.setSize(WORLD.width()*100, WORLD.height()*100);
         return grid;
     }
-    public final JPanel generateWorldStatusPanel(){
+    private final JPanel generateWorldStatusPanel(){
         JPanel wst = new JPanel();
         wst.setLayout(new GridLayout(8,1));
-        wst.add(new JLabel("World Status\n\n")); //1
-        timestep = new JLabel();
-        wst.add(timestep); //2
-        wst.add(new JLabel("Population")); //4
-        crittercount = new JLabel(); 
-        wst.add(crittercount); //5
-        plantcount = new JLabel();
-        wst.add(plantcount); //6
-        foodcount = new JLabel();
-        wst.add(foodcount); //7
-        rockcount = new JLabel();
-        wst.add(rockcount); //8
+        JLabel worldstatus = new JLabel("[ World Status ]\n\n", JLabel.CENTER);
+        worldstatus.setFont(new Font("Serif", Font.BOLD, 16));
+        wst.add(worldstatus); 
+        timestep = new JLabel("", JLabel.CENTER);
+        timestep.setFont(new Font("Serif", Font.BOLD, 14));
+        wst.add(timestep); 
+        JLabel population = new JLabel("Population: ", JLabel.CENTER);
+        population.setFont(new Font("Serif", Font.BOLD, 14));
+        wst.add(population);
+        crittercount = new JLabel("", JLabel.CENTER);
+        crittercount.setFont(new Font("Serif", Font.PLAIN, 12));
+        wst.add(crittercount); 
+        plantcount = new JLabel("", JLabel.CENTER);
+        plantcount.setFont(new Font("Serif", Font.PLAIN, 12));
+        wst.add(plantcount); 
+        foodcount = new JLabel("", JLabel.CENTER);
+        foodcount.setFont(new Font("Serif", Font.PLAIN, 12));
+        wst.add(foodcount); 
+        rockcount = new JLabel("", JLabel.CENTER);
+        rockcount.setFont(new Font("Serif", Font.PLAIN, 12));
+        wst.add(rockcount); 
 
         return wst;
     }
-    public final void updateWorldStatus(){
+    private final void updateWorldStatus(){
         int[] population = WORLD.population();
         timestep.setText("Timestep: "+WORLD.getTimesteps());
         crittercount.setText("\n\tCritters: "+population[0]);
@@ -79,32 +98,34 @@ public class WorldDisplay extends JPanel{
         foodcount.setText("\n\tFood: "+population[2]);
         rockcount.setText("\n\tRocks: "+population[3]);
     }
-    public final JPanel generateTextDisplayPanel(){
+    private final JPanel generateTextDisplayPanel(){
         JPanel textDisp = new JPanel();
         textDisp.setLayout(new BorderLayout());
         textDisp.add(worldStatusPanel, BorderLayout.NORTH);
         textDisp.add(attributes, BorderLayout.CENTER);
+        textDisp.add(controls, BorderLayout.SOUTH);
+        textDisp.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
         return textDisp;
     }
     public GridPanel grid() {
         return gridpane;
     }
-
-    public final void updateAttributes() {
+    
+    private final void updateAttributes() {
         //state.setText()
-        String s = "The currently selected location has ";
+        String s = "The currently selected\nlocation has ";
         if (currentLocation.contents() == null)
-            s = s+"nothing";
+            s = s+"\nnothing... ";
         else
         {
         if (currentLocation.contents().rock())
-            s = s + "\na rock...";
+            s = s + "\na rock... ";
         if (currentLocation.contents().food())
-            s = s + "\nfood...";
+            s = s + "\nfood... ";
         if (currentLocation.contents().plant())
-            s = s + "\na plant...";
+            s = s + "\na plant... ";
         if (currentLocation.contents().critter()) {
-            s = s + "\na critter with";
+            s = s + "\na critter with ";
             int[] memory = currentLocation.contents().getCritter().memory();
             s = s + "\n\tMemory: " + memory[0]
                     + "\n\tDefense: " + memory[1]
@@ -119,6 +140,10 @@ public class WorldDisplay extends JPanel{
         }
         attributes.setText(s);
     }
+    /**
+     * Updates the current location with the given location reference
+     * @param r the given location reference
+     */
     public void setCurrentLocation(HexGrid.Reference<Tile> r)
     {
         currentLocation = r;
@@ -129,4 +154,5 @@ public class WorldDisplay extends JPanel{
         updateAttributes();
         
     }
+    
 }
