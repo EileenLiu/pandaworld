@@ -18,6 +18,7 @@ public class World {
     private static final int DEFAULT_ROWS = 6;
     private static final int DEFAULT_COLS = 6;
     HexGrid<Set<Entity>> world;
+    
     public World() {
         this(DEFAULT_ROWS, DEFAULT_COLS);
     }
@@ -41,5 +42,13 @@ public class World {
     
     public int width() {
         return world.nCols();
+    }
+    /**
+     * Retrieves the default reference at 0, 0
+     * @return the default reference
+     */
+    public HexGrid.Reference<Set<Entity>> defaultLoc()
+    {
+        return world.ref(0, 0);
     }
 }

@@ -4,38 +4,76 @@
  */
 package student.gui;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.util.Set;
 import javax.swing.*;
+import student.grid.Critter;
+import student.grid.Entity;
+import student.grid.HexGrid;
 import student.world.World;
 
 public class WorldDisplay extends JPanel{
     public GridPanel gp;
-    public JPanel sp;
-    public JTextArea state;
+    public JPanel ap;
+    public JTextArea attributes;
     public World WORLD;
-
+    public HexGrid.Reference<Set<Entity>> currentLocation;
 
     public WorldDisplay(World world) {
         WORLD = world;
+        currentLocation = WORLD.defaultLoc();
 //        xSTART = 100;
 //        ySTART = 100;
-        gp = generateGridpanel();
-        sp = new JPanel();
-        state = new JTextArea();
-        sp.add(state);
+        gp = generateGridPanel();
+        ap = new JPanel();
+        attributes = new JTextArea();
+        ap.add(attributes);
         setLayout(new BorderLayout());
         add(gp, BorderLayout.CENTER);
         //add(sp, BorderLayout.WEST);
         gp.setVisible(true);
     }
-    public final GridPanel generateGridpanel(){
+    public final GridPanel generateGridPanel(){
         GridPanel grid = new GridPanel(WORLD);
         grid.setMinimumSize(new Dimension(WORLD.width(), WORLD.height()));
         grid.setSize(WORLD.width()*100, WORLD.height()*100);
         return grid;
     }
-    public void updateState(){
-        //state.setText(world.currentLocation.getState());
+    public final JPanel generateStatePanel(){
+        JPanel statepanel = new JPanel();
+        return statepanel;
     }
+    public final JTextArea generateStateArea(){
+        JTextArea stateArea = new JTextArea();
+        return stateArea;
+    }
+    public void updateAttributes(){
+        //state.setText()
+        String s = "";
+        for(Entity e: currentLocation.contents())
+        {
+            s = s+e.getClass().getName()+"/n";
+            int[] memory = null;
+            if(e instanceof Critter)
+            {
+               memory = ((Critter)e).memory();
+            s =    s+"/nMemory: "       + memory[0]
+                    +"/nDefense: "      + memory[1]
+                    +"/nOffense: "      + memory[2]
+                    +"/nSize: "         + memory[3]
+                    +"/nEnergy: "       + memory[4]
+                    +"/nRule Counter: " + memory[5]
+                    +"/nEvent Log: "    + memory[6]
+                    
+                    +"/nTag: "          + memory[7]
+                    +"/nPosture: "      + memory[8];
+            }
+            s = s+"/n/n";
+        }
+        attributes.setText(s);
+    }
+   
     /**
      * unit = hexlength/4
      * height = (numhexes*2-1)hexlength
