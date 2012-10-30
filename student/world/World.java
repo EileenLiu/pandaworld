@@ -67,6 +67,7 @@ public class World {
         Iterator<Tile> it = grid.iterator();
         while (it.hasNext()) {
             Tile t = it.next();
+            if(t==null)continue;
             population[0] = population[0] + (t.critter() ? 1 : 0);
             population[1] = population[1] + (t.plant() ? 1 : 0);
             population[2] = population[2] + (t.food() ? 1 : 0);
