@@ -4,6 +4,7 @@
  */
 package student.gui;
 
+import java.awt.BorderLayout;
 import javax.swing.*;
 import student.world.World;
 
@@ -14,11 +15,12 @@ public class WorldFrame extends JFrame {
     public WorldDisplay worldDisplay; //- made up of two JPanels, one is the grid, one is the current attributes
     public WorldFrame(World w) {
         world = w;
-        worldStatusArea = new JTextArea("World Status/n"+"");
+        worldStatusArea = new JTextArea("World Status/n/n"+world.getStatus());
         worldDisplay = new WorldDisplay(world);
         //this.setSize(worldDisplay.getWidth(), worldDisplay.getHeight()+worldStatusArea.getHeight());
-        this.add(worldDisplay);
-
+        setLayout(new BorderLayout());
+        this.add(worldStatusArea, BorderLayout.NORTH);
+        this.add(worldDisplay, BorderLayout.CENTER);
         this.setSize(1000,1000);
     }
 

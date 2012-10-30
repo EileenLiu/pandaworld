@@ -4,6 +4,7 @@
  */
 package student.world;
 
+import java.util.Iterator;
 import java.util.Set;
 import student.grid.ArrayHexGrid;
 import student.grid.HexGrid;
@@ -18,57 +19,38 @@ public class World {
 
     private static final int DEFAULT_ROWS = 6;
     private static final int DEFAULT_COLS = 6;
-<<<<<<< HEAD
-    HexGrid<Tile> world;
-    
-=======
-    HexGrid<Set<Entity>> world;
-
->>>>>>> origin/gui
+    HexGrid<Tile> grid;
+    private int timesteps=0;
     public World() {
         this(DEFAULT_ROWS, DEFAULT_COLS);
     }
 
     public World(int _r, int _c) {
-        world = new ArrayHexGrid<Tile>(_r, _c);
+        grid = new ArrayHexGrid<Tile>(_r, _c);
     }
 
     public String getStatus() {
-        //TODO: get status
-        return "";
+        return "Timesteps: "+timesteps +"/n"+ population();
     }
 
     public void step() {
-<<<<<<< HEAD
-        for(Tile e : world) 
-            if(e != null)
+        for (Tile e : grid) {
+            if (e != null) {
                 e.timeStep();
-=======
-        for (Set<Entity> e : world) {
-            for (Entity ee : e) {
-                if (ee != null) {
-                    ee.timeStep();
-                }
             }
         }
->>>>>>> origin/gui
+        timesteps++;
     }
-
     public int height() {
-        return world.nRows();
+        return grid.nRows();
     }
 
     public int width() {
-        return world.nCols();
+        return grid.nCols();
     }
-<<<<<<< HEAD
-    
-    public Reference<Tile> at(int r, int c) {
-=======
 
-    public Reference<Set<Entity>> at(int r, int c) {
->>>>>>> origin/gui
-        return world.ref(c, r);
+    public Reference<Tile> at(int r, int c) {
+        return grid.ref(c, r);
     }
 
     /**
@@ -76,21 +58,25 @@ public class World {
      *
      * @return the default reference
      */
-<<<<<<< HEAD
-    public HexGrid.Reference<Tile> defaultLoc()
-    {
-=======
-    public HexGrid.Reference<Set<Entity>> defaultLoc() {
->>>>>>> origin/gui
-        return world.ref(0, 0);
+    public HexGrid.Reference<Tile> defaultLoc() {
+        return grid.ref(0, 0);
     }
-    public String population()
-    {
+
+    public String population() {
+        int[] population = new int[4]; //[critters, plants, food, rocks]
+        Iterator<Tile> it = grid.iterator();
+        while (it.hasNext()) {
+            Tile t = it.next();
+            population[0] = population[0] + (t.critter() ? 1 : 0);
+            population[1] = population[1] + (t.plant() ? 1 : 0);
+            population[2] = population[2] + (t.food() ? 1 : 0);
+            population[3] = population[3] + (t.rock() ? 1 : 0);
+        }
         String pop = "Population/n/n"
-                    +"Critters: "//+getCrittersCount()
-                    +"Plants: "//+getPlantsCount()
-                    +"Rocks: "//+getRocksCount()
-                    +"Food: ";//+getFoodCount;
+                + "Critters: "+population[0]
+                + "Plants: "+population[1]
+                + "Food: "+population[2]
+                + "Rocks: "+population[3];
         return pop;
     }
 }
