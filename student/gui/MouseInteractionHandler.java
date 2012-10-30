@@ -42,6 +42,7 @@ public class MouseInteractionHandler extends MouseAdapter {
         int r = ret[0];
         int c = ret[1];
         Reference<Tile> at = model.at(r, c);
+        view.worldDisplay.setCurrentLocation(at);
         at.setContents(new Tile.Rock());
         System.out.println("put rock at ("+r+","+c+")");  
         view.repaint();

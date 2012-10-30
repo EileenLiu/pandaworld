@@ -20,7 +20,8 @@ public class World {
     private static final int DEFAULT_ROWS = 6;
     private static final int DEFAULT_COLS = 6;
     HexGrid<Tile> grid;
-    private int timesteps=0;
+    private int timesteps = 0;
+
     public World() {
         this(DEFAULT_ROWS, DEFAULT_COLS);
     }
@@ -30,7 +31,7 @@ public class World {
     }
 
     public String getStatus() {
-        return "Timesteps: "+timesteps +"/n"+ population();
+        return "Timesteps: " + timesteps + "\n" + population();
     }
 
     public void step() {
@@ -40,6 +41,10 @@ public class World {
             }
         }
         timesteps++;
+    }
+    public int getTimesteps()
+    {
+        return timesteps;
     }
     public int height() {
         return grid.nRows();
@@ -62,21 +67,37 @@ public class World {
         return grid.ref(0, 0);
     }
 
-    public String population() {
+    /*public String population() {
+     int[] population = new int[4]; //[critters, plants, food, rocks]
+     Iterator<Tile> it = grid.iterator();
+     while (it.hasNext()) {
+     Tile t = it.next();
+     if(t==null)continue;
+     population[0] = population[0] + (t.critter() ? 1 : 0);
+     population[1] = population[1] + (t.plant() ? 1 : 0);
+     population[2] = population[2] + (t.food() ? 1 : 0);
+     population[3] = population[3] + (t.rock() ? 1 : 0);
+     }
+     String pop = "Population\n"
+     + "\n\tCritters: "+population[0]
+     + "\n\tPlants: "+population[1]
+     + "\n\tFood: "+population[2]
+     + "\n\tRocks: "+population[3];
+     return pop;
+     }*/
+    public int[] population() {
         int[] population = new int[4]; //[critters, plants, food, rocks]
         Iterator<Tile> it = grid.iterator();
         while (it.hasNext()) {
             Tile t = it.next();
+            if (t == null) {
+                continue;
+            }
             population[0] = population[0] + (t.critter() ? 1 : 0);
             population[1] = population[1] + (t.plant() ? 1 : 0);
             population[2] = population[2] + (t.food() ? 1 : 0);
             population[3] = population[3] + (t.rock() ? 1 : 0);
         }
-        String pop = "Population/n/n"
-                + "Critters: "+population[0]
-                + "Plants: "+population[1]
-                + "Food: "+population[2]
-                + "Rocks: "+population[3];
-        return pop;
+        return population;
     }
 }
