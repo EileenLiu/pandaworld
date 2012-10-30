@@ -28,10 +28,11 @@ public class WorldDisplay extends JPanel{
         gp = generateGridPanel();
         ap = new JPanel();
         attributes = new JTextArea();
+        updateAttributes();
         ap.add(attributes);
         setLayout(new BorderLayout());
         add(gp, BorderLayout.CENTER);
-        //add(sp, BorderLayout.WEST);
+        add(ap, BorderLayout.WEST);
         gp.setVisible(true);
     }
     public final GridPanel generateGridPanel(){
@@ -44,13 +45,13 @@ public class WorldDisplay extends JPanel{
     public GridPanel grid() {
         return gp;
     }
-    public final JPanel generateStatePanel(){
-        JPanel statepanel = new JPanel();
-        return statepanel;
+    public final JPanel generateAttPanel(){
+        JPanel attpanel = new JPanel();
+        return attpanel;
     }
-    public final JTextArea generateStateArea(){
-        JTextArea stateArea = new JTextArea();
-        return stateArea;
+    public final JTextArea generateAttArea(){
+        JTextArea attArea = new JTextArea();
+        return attArea;
     }
     public void updateAttributes() {
         //state.setText()
