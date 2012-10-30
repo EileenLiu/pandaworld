@@ -9,8 +9,8 @@ import java.awt.Dimension;
 import java.util.Set;
 import javax.swing.*;
 import student.grid.Critter;
-import student.grid.Entity;
 import student.grid.HexGrid;
+import student.grid.Tile;
 import student.world.World;
 
 public class WorldDisplay extends JPanel{
@@ -18,7 +18,7 @@ public class WorldDisplay extends JPanel{
     public JPanel ap;
     public JTextArea attributes;
     public World WORLD;
-    public HexGrid.Reference<Set<Entity>> currentLocation;
+    public HexGrid.Reference<Tile> currentLocation;
 
     public WorldDisplay(World world) {
         WORLD = world;
@@ -52,28 +52,21 @@ public class WorldDisplay extends JPanel{
         JTextArea stateArea = new JTextArea();
         return stateArea;
     }
-    public void updateAttributes(){
+    public void updateAttributes() {
         //state.setText()
         String s = "";
-        for(Entity e: currentLocation.contents())
-        {
-            s = s+e.getClass().getName()+"/n";
-            int[] memory = null;
-            if(e instanceof Critter)
-            {
-               memory = ((Critter)e).memory();
-            s =    s+"/nMemory: "       + memory[0]
-                    +"/nDefense: "      + memory[1]
-                    +"/nOffense: "      + memory[2]
-                    +"/nSize: "         + memory[3]
-                    +"/nEnergy: "       + memory[4]
-                    +"/nRule Counter: " + memory[5]
-                    +"/nEvent Log: "    + memory[6]
-                    
-                    +"/nTag: "          + memory[7]
-                    +"/nPosture: "      + memory[8];
-            }
-            s = s+"/n/n";
+        if (currentLocation.contents().critter()) {
+            int[] memory = currentLocation.contents().getCritter().memory();
+            s = s + "/nMemory: " + memory[0]
+                    + "/nDefense: " + memory[1]
+                    + "/nOffense: " + memory[2]
+                    + "/nSize: " + memory[3]
+                    + "/nEnergy: " + memory[4]
+                    + "/nRule Counter: " + memory[5]
+                    + "/nEvent Log: " + memory[6]
+                    + "/nTag: " + memory[7]
+                    + "/nPosture: " + memory[8];
+            s = s + "/n/n";
         }
         attributes.setText(s);
     }

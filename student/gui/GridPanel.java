@@ -13,9 +13,8 @@ import java.awt.Rectangle;
 import java.util.Set;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
-import student.grid.Entity;
 import student.grid.HexGrid.Reference;
-import student.grid.Rock;
+import student.grid.Tile;
 import student.world.World;
 
 public class GridPanel extends JPanel {
@@ -191,14 +190,11 @@ public class GridPanel extends JPanel {
             for (int r = 0; r < zaWarudo.height(); r++) {
                 Polygon loc = hexen[r][c];
                 Rectangle bbx = loc.getBounds();
-                Reference<Set<Entity>> ref = zaWarudo.at(r, c);
-                if(ref.contents() != null)
-                    for(Entity e : ref.contents())
-                        if(e instanceof Rock) {
-                            drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, ROCK_IMG);
-                            continue;
-                        }
-                drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, TILE_IMG);
+                Tile t = zaWarudo.at(r, c).contents();
+                if(t != null && t.rock()) 
+                    drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, ROCK_IMG);
+                else
+                    drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, TILE_IMG);
             }
         }
     }
