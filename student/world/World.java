@@ -8,6 +8,7 @@ import java.util.Set;
 import student.grid.ArrayHexGrid;
 import student.grid.Entity;
 import student.grid.HexGrid;
+import student.grid.HexGrid.Reference;
 
 /**
  *
@@ -41,5 +42,9 @@ public class World {
     
     public int width() {
         return world.nCols();
+    }
+    
+    public Reference<Set<Entity>> at(int r, int c) {
+        return world.ref(c, r);
     }
 }

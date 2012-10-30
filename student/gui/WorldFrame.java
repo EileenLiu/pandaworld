@@ -22,6 +22,10 @@ public class WorldFrame extends JFrame {
         this.setSize(1000,1000);
     }
 
+    public WorldDisplay display() {
+        return worldDisplay;
+    }
+    
     public void repaint() {
         String status = world.getStatus();
         worldStatusArea.setText(status);

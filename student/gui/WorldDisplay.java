@@ -35,6 +35,11 @@ public class WorldDisplay extends JPanel{
         grid.setSize(WORLD.width()*100, WORLD.height()*100);
         return grid;
     }
+    
+    public GridPanel grid() {
+        return gp;
+    }
+    
     public void updateState(){
         //state.setText(world.currentLocation.getState());
     }

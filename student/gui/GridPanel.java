@@ -7,21 +7,49 @@ package student.gui;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Polygon;
+import java.awt.Rectangle;
+import java.util.Set;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import student.grid.Entity;
+import student.grid.HexGrid.Reference;
+import student.grid.Rock;
 import student.world.World;
 
 public class GridPanel extends JPanel {
 
+    private static Image TILE_IMG = new ImageIcon("tile.png").getImage();
+    private static Image ROCK_IMG = new ImageIcon("rock.png").getImage();
+    
+    private Polygon hexen[][];
     public int xSTART = 0;
     public int ySTART = 0;
-    private int HEXSIZE = 100;
-    public World ZA_WARUDO;
+    //A MULTIPLE OF FOUR
+    private int HEXSIZE = 152;
+    public World zaWarudo; //WRYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY
     public GridPanel(World world) {
-        ZA_WARUDO = world;
+        zaWarudo = world;
         this.setBorder(new LineBorder(Color.MAGENTA, 3));
-        //GridPanel.HEIGHT = WORLD.height()*HEXSIZE;
-        //this.WIDTH = WORLD.width()*HEXSIZE;
+        hexen = new Polygon[world.height()][world.width()];
+        for (int c = 0; c < zaWarudo.width(); c++) {
+            int x = pnX(0, c);
+            for (int r = 0; r < zaWarudo.height(); r++) {
+                int y = pnY(r, c);
+                //System.out.println(""+x+","+y);
+                //gp.fillOval(x, y, 10, 10);
+                hexen[r][c] = makePoly(x,y,HEXSIZE);
+            }
+        }
+    }
+    
+    public int []hexAt(int x, int y) {
+        for(int r = 0; r < zaWarudo.height(); r++)
+            for(int c = 0; c < zaWarudo.width(); c++)
+                if(hexen[r][c].contains(x, y))
+                    return new int[]{r,c};
+        return null;
     }
     
     /**
@@ -55,7 +83,8 @@ public class GridPanel extends JPanel {
     @Override
     public void update(Graphics g)//overrides update method to prevent continuous uneccessary repainting
     {
-        //g.fillRect(0, 0, this.getWidth(), this.getHeight());
+        g.setColor(Color.BLACK);
+        g.fillRect(0, 0, this.getWidth(), this.getHeight());
         drawGrid(HEXSIZE, g);
     }
 
@@ -96,18 +125,24 @@ public class GridPanel extends JPanel {
      * @param hexCoordinates the given coordinates
      * @param g graphics
      */
-    public void drawHexagon(int[][] hexCoordinates, Graphics g) {
+    public void drawHexagon(int x, int y, int r, int c, int hexsize, Graphics g, Image i) {
+        /*int [][]hexCoordinates = hexCoordinates(x, y, hexsize);
         for (int i = 0; i < hexCoordinates.length - 1; i++) {
             g.setColor(Color.GREEN);
             g.drawLine(hexCoordinates[i][0], hexCoordinates[i][1], hexCoordinates[i + 1][0], hexCoordinates[i + 1][1]);
         }
         g.drawLine(hexCoordinates[hexCoordinates.length - 1][0], hexCoordinates[hexCoordinates.length - 1][1], hexCoordinates[0][0], hexCoordinates[0][1]);
+        */
+        
+        g.drawImage(i, x, y, hexsize, hexsize, this);
     }
+    
+    Polygon p;
 
     public int pnX(int row, int col) {
-        return col * HEXSIZE * 3/4;
+        return col * HEXSIZE / 4 * 3;
     }
-
+    
     public int pnY(int row, int col) {
         return row * HEXSIZE
              + (col%2==0
@@ -125,34 +160,45 @@ public class GridPanel extends JPanel {
      * @param size the side length of square the hexagon will be contained in
      * @return
      */
-    public int[][] hexCoordinates(int startX, int startY, int size) {
-        int[][] hexCoord = new int[6][2]; //[Xj, Yj] for j= 1,2,3,4,5,6
-        hexCoord[0] = new int[]{size / 4 + startX, 0 + startY};
-        hexCoord[1] = new int[]{size * 3 / 4 + startX, 0+ startY};
-        hexCoord[2] = new int[]{size + startX, size / 2+ startY};
-        hexCoord[3] = new int[]{size * 3 / 4 + startX, size+ startY};
-        hexCoord[4] = new int[]{size / 4 + startX, size+ startY};
-        hexCoord[5] = new int[]{0+ startX, size / 2+ startY};
+    public static Polygon makePoly(int startX, int startY, int size) {
+        int xs[] = new int[6], ys[] = new int[6]; //[Xj, Yj] for j= 1,2,3,4,5,6
+        xs[0] = size / 4 + startX;
+            ys[0] = startY;
+        xs[1] = size * 3 / 4 + startX;
+            ys[1] = startY;
+        xs[2] = size + startX;
+            ys[2] = size / 2+ startY;
+        xs[3] = size * 3 / 4 + startX;
+            ys[3] = size+ startY;
+        xs[4] = size / 4 + startX;
+            ys[4] = size+ startY;
+        xs[5] = startX;
+            ys[5] = size / 2+ startY;
         /*hexCoord[0] = new int[]{startX, B};
          hexCoord[1] = new int[]{sidelength/2, startY};
          hexCoord[2] = new int[]{A+sidelength, startY};
          hexCoord[3] = new int[]{2*sidelength, B};
          hexCoord[4] = new int[]{A+sidelength, 2*B};
          hexCoord[5] = new int[]{A, 2*B};*/
-        return hexCoord;
+        return new Polygon(xs, ys, 6);
     }
    /**
      * Draws the entire grid of hexagons
      */
     //@Deprecated
     public void drawGrid(int hexsize, Graphics gp) {//HWHdrawGrid(int hxsz, Graphics gp) {
-        for (int c = 0; c < ZA_WARUDO.width(); c++) {
-            int x = pnX(0, c);
-            for (int r = 0; r < ZA_WARUDO.height(); r++) {
-                int y = pnY(r, c);
-                System.out.println(""+x+","+y);
-                gp.fillOval(x, y, 10, 10);
-                drawHexagon(hexCoordinates(x, y, hexsize), gp);
+        for (int c = 0; c < zaWarudo.width(); c++) {
+            for (int r = 0; r < zaWarudo.height(); r++) {
+                Polygon loc = hexen[r][c];
+                Rectangle bbx = loc.getBounds();
+                Reference<Set<Entity>> ref = zaWarudo.at(r, c);
+                if(ref.contents() != null)
+                    for(Entity e : ref.contents())
+                        if(e instanceof Rock) {
+                            drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, ROCK_IMG);
+                            continue;
+                        }
+                drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, TILE_IMG);
             }
         }
     }

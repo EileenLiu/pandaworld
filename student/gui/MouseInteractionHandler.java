@@ -6,6 +6,11 @@ package student.gui;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.HashSet;
+import java.util.Set;
+import student.grid.Entity;
+import student.grid.HexGrid.Reference;
+import student.grid.Rock;
 import student.world.World;
 
 /**
@@ -36,7 +41,14 @@ public class MouseInteractionHandler extends MouseAdapter {
     private void leftClick(MouseEvent e) {
         int x = e.getX();
         int y = e.getY();
-        
+        int ret[] = view.display().grid().hexAt(x, y);
+        int r = ret[0];
+        int c = ret[1];
+        Reference<Set<Entity>> at = model.at(r, c);
+        if(at.contents() == null)
+            at.setContents(new HashSet<Entity>());
+        at.contents().add(new Rock());
+        System.out.println("put rock at ("+r+","+c+")");    v
     }
 
     private void rightClick(MouseEvent e) {
