@@ -48,7 +48,7 @@ public class MouseInteractionHandler extends MouseAdapter {
         if(at.contents() == null)
             at.setContents(new HashSet<Entity>());
         at.contents().add(new Rock());
-        System.out.println("put rock at ("+r+","+c+")");    v
+        System.out.println("put rock at ("+r+","+c+")");    
     }
 
     private void rightClick(MouseEvent e) {

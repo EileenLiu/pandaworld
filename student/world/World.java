@@ -19,41 +19,57 @@ public class World {
     private static final int DEFAULT_ROWS = 6;
     private static final int DEFAULT_COLS = 6;
     HexGrid<Set<Entity>> world;
-    
+
     public World() {
         this(DEFAULT_ROWS, DEFAULT_COLS);
     }
+
     public World(int _r, int _c) {
         world = new ArrayHexGrid<Set<Entity>>(_r, _c);
     }
+
     public String getStatus() {
         //TODO: get status
         return "";
     }
+
     public void step() {
-        for(Set<Entity> e : world) 
-            for(Entity ee : e)
-                if(ee != null)
+        for (Set<Entity> e : world) {
+            for (Entity ee : e) {
+                if (ee != null) {
                     ee.timeStep();
+                }
+            }
+        }
     }
 
     public int height() {
         return world.nRows();
     }
-    
+
     public int width() {
         return world.nCols();
     }
-    
+
     public Reference<Set<Entity>> at(int r, int c) {
         return world.ref(c, r);
     }
+
     /**
      * Retrieves the default reference at 0, 0
+     *
      * @return the default reference
      */
-    public HexGrid.Reference<Set<Entity>> defaultLoc()
-    {
+    public HexGrid.Reference<Set<Entity>> defaultLoc() {
         return world.ref(0, 0);
+    }
+    public String population()
+    {
+        String pop = "Population/n/n"
+                    +"Critters: "//+getCrittersCount()
+                    +"Plants: "//+getPlantsCount()
+                    +"Rocks: "//+getRocksCount()
+                    +"Food: ";//+getFoodCount;
+        return pop;
     }
 }
