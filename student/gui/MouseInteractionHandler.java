@@ -10,6 +10,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JPopupMenu;
+import student.grid.Critter;
 import student.grid.HexGrid.Reference;
 import student.grid.Tile;
 import student.world.World;
@@ -25,67 +26,75 @@ public class MouseInteractionHandler extends MouseAdapter {
     
     private JPopupMenu men;
     
-    private Action genMenIts[] = new Action[2];
-    private Action criMenIts[] = new Action[7];
+    private Action rock, unrock;
+    private Action crit, critMenIts[] = new Action[7];
     
     public MouseInteractionHandler(final World _model, final WorldFrame _view) {
         model = _model;
         view = _view;
-        genMenIts[0] = new LocAxn("rock") {
+        rock = new LocAxn("rock") {
             @Override
             public void act() {
                 rclxtar.setContents(new Tile.Rock());
             }
         };
-        genMenIts[1] = new LocAxn("derock") {
+        unrock = new LocAxn("derock") {
             @Override
             public void act() {
                 rclxtar.setContents(new Tile(false, 0));
             }
         };
-        criMenIts[0] = new LocAxn("forward") {
+        crit = new LocAxn("critify") {
+            @Override
+            protected void act() {
+                Tile t = new Tile(false, 0);
+                t.putCritter(new Critter(model, rclxtar, 9));
+                rclxtar.setContents(t);
+            }
+        };
+        critMenIts[0] = new LocAxn("forward") {
             @Override
             public void act() {
                 if(rclxtar.contents().critter())
                     rclxtar.contents().getCritter().forward();
             }
         };
-        criMenIts[1] = new LocAxn("backward") {
+        critMenIts[1] = new LocAxn("backward") {
             @Override
             public void act() {
                 if(rclxtar.contents().critter())
                     rclxtar.contents().getCritter().backward();
             }
         };
-        criMenIts[2] = new LocAxn("left") {
+        critMenIts[2] = new LocAxn("left") {
             @Override
             public void act() {
                 if(rclxtar.contents().critter())
                     rclxtar.contents().getCritter().left();
             }
         };
-        criMenIts[3] = new LocAxn("right") {
+        critMenIts[3] = new LocAxn("right") {
             @Override
             public void act() {
                 if(rclxtar.contents().critter())
                     rclxtar.contents().getCritter().right();
             }
         };
-        criMenIts[4] = new LocAxn("eat") {
+        critMenIts[4] = new LocAxn("eat") {
             @Override
             public void act() {
                 if(rclxtar.contents().critter())
                     rclxtar.contents().getCritter().eat();
             }
         };
-        criMenIts[5] = new LocAxn("attack") {
+        critMenIts[5] = new LocAxn("attack") {
             @Override
             public void act() {
                 if(rclxtar.contents().critter())
                     rclxtar.contents().getCritter().attack();
             }
         };
-        criMenIts[6] = new LocAxn("grow") {
+        critMenIts[6] = new LocAxn("grow") {
             @Override
             public void act() {
                 if(rclxtar.contents().critter())
@@ -129,20 +138,26 @@ public class MouseInteractionHandler extends MouseAdapter {
 
     private void leftClick(MouseEvent e) {
         Reference<Tile> at = lookup(e);
-        at.setContents(new Tile.Rock());
+        view.display().setCurrentLocation(at);
         view.repaint();
     }
 
     private void rightClick(MouseEvent e) {
+        if(men != null)
+            men.setVisible(false);
         rclxtar = lookup(e);
         if(rclxtar.contents() == null)
             rclxtar.setContents(new Tile(false,0));
         men = new JPopupMenu();
         if(rclxtar.contents().critter())
-            for(Action a : criMenIts)
+            for(Action a : critMenIts)
                 men.add(a);
-        for(Action a : genMenIts)
-            men.add(a);
+        if(rclxtar.contents().rock())
+            men.add(unrock);
+        else {
+            men.add(rock);
+            men.add(crit);
+        }
         men.setLocation(e.getLocationOnScreen());
         men.setVisible(true);
     }

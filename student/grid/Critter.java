@@ -27,6 +27,7 @@ public class Critter /*extends Entity*/ {
         wor = _wor;
         pos = _pos;
         mem = new int[memsiz];
+        dir = HexDir.N;
     }
 
     public HexDir direction() {
@@ -95,18 +96,25 @@ public class Critter /*extends Entity*/ {
     
     public void forward() {
         mem[4] -= mem[3] * MOVE_COST;
-        pos.contents().removeCritter();
-        pos = pos.adj(dir);
-        pos.contents().putCritter(this);
-        acted = true;
+        Reference<Tile> newPos = pos.adj(dir);
+        if(newPos.contents().rock())
+            System.out.println("Won't do that; it's a rock");
+        else {
+            pos.contents().removeCritter();
+            newPos.contents().putCritter(this);
+            acted = true;
+        }
     }
     
     public void backward() {
-        mem[4] -= mem[3] * MOVE_COST;
-        pos.contents().removeCritter();
-        pos = pos.lin(-1, dir);
-        pos.contents().putCritter(this);
-        acted = true;
+        Reference<Tile> newPos = pos.lin(-1,dir);
+        if(newPos.contents().rock())
+            System.out.println("Won't do that; it's a rock");
+        else {
+            pos.contents().removeCritter();
+            newPos.contents().putCritter(this);
+            acted = true;
+        }
     }
     
     public void left() {
