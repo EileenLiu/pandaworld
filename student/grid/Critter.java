@@ -38,46 +38,46 @@ public class Critter extends Entity {
     public int size() {
         return mem[3];
     }
-    
+
     @IsProperty
     public int memsize() {
         return mem.length;
     }
-    
+
     @IsProperty
     public int defense() {
         return mem[1];
     }
-    
+
     @IsProperty
     public int offense() {
         return mem[2];
     }
-    
+
     @IsProperty
     public int ruleCount() {
         return mem[5];
     }
-    
+
     @IsProperty
     public int log() {
         return mem[6];
     }
-    
+
     @IsProperty
     public int tag() {
         return mem[7];
     }
-    
+
     @IsProperty
     public int posture() {
         return mem[8];
     }
-    
+
     @IsProperty
-    public int []memory() {
+    public int[] memory() {
         int rest[] = new int[mem.length - 9];
-        System.arraycopy(mem, 9, rest, 0, mem.length-9);
+        System.arraycopy(mem, 9, rest, 0, mem.length - 9);
         return rest;
     }
 
@@ -85,11 +85,11 @@ public class Critter extends Entity {
     public int energy() {
         return mem[4];
     }
-    
+
     @Override
     @IsProperty("appearance")
     public int read() {
-        return 100000*tag() + 1000*size() + posture();
+        return 100000 * tag() + 1000 * size() + posture();
     }
 
     @Override
@@ -206,5 +206,54 @@ public class Critter extends Entity {
 
     private int complexity() {
         return /*rules * RULE_COST +*/ (mem[1] + mem[2]) * ABILITY_COST;
+    }
+
+    public String state() {
+        String s = "/nMemory: " + mem[0]
+                + "/nDefense: " + mem[1]
+                + "/nOffense: " + mem[2]
+                + "/nSize: " + mem[3]
+                + "/nEnergy: " + mem[4]
+                + "/nRule Counter: " + mem[5]
+                + "/nEvent Log: /n" + eventLog()//mem[6]
+                + "/nTag: " + mem[7]
+                + "/nPosture: " + mem[8];
+        return s;
+    }
+    /**
+     * Generates the event log of the critter
+     * @return the event log as a string
+     */
+    public String eventLog() {
+        String eventLog = "";
+        int events = mem[6];
+        while (events > 99) {
+            int e = events % 1000;
+            if (e < 300) {
+                eventLog = eventLog + "/tThis critter was " + ((e < 200) ? "attacked" : "tagged") + " from direction "+direction(e%100);
+            }
+            events = events / 1000;
+        }
+        return eventLog;
+    }
+
+    private final String direction(int d) {
+        String direction = "";
+        switch (d) {
+            case 0:direction = "north";
+                break;
+            case 1:direction = "northeast";
+                break;
+            case 2:direction = "southeast";
+                break;
+            case 3:direction = "south";
+                break;
+            case 4:direction = "southwest";
+                break;
+            case 5:direction = "northwest";
+                break;
+            //throw new RuntimeException("Unreachable code: Invalid direction");
+        }
+        return direction;
     }
 }
