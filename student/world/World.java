@@ -18,13 +18,7 @@ public class World {
 
     private static final int DEFAULT_ROWS = 6;
     private static final int DEFAULT_COLS = 6;
-<<<<<<< HEAD
     HexGrid<Tile> world;
-    
-=======
-    HexGrid<Set<Entity>> world;
-
->>>>>>> origin/gui
     public World() {
         this(DEFAULT_ROWS, DEFAULT_COLS);
     }
@@ -39,19 +33,9 @@ public class World {
     }
 
     public void step() {
-<<<<<<< HEAD
         for(Tile e : world) 
             if(e != null)
                 e.timeStep();
-=======
-        for (Set<Entity> e : world) {
-            for (Entity ee : e) {
-                if (ee != null) {
-                    ee.timeStep();
-                }
-            }
-        }
->>>>>>> origin/gui
     }
 
     public int height() {
@@ -61,13 +45,8 @@ public class World {
     public int width() {
         return world.nCols();
     }
-<<<<<<< HEAD
     
     public Reference<Tile> at(int r, int c) {
-=======
-
-    public Reference<Set<Entity>> at(int r, int c) {
->>>>>>> origin/gui
         return world.ref(c, r);
     }
 
@@ -76,12 +55,8 @@ public class World {
      *
      * @return the default reference
      */
-<<<<<<< HEAD
     public HexGrid.Reference<Tile> defaultLoc()
     {
-=======
-    public HexGrid.Reference<Set<Entity>> defaultLoc() {
->>>>>>> origin/gui
         return world.ref(0, 0);
     }
     public String population()

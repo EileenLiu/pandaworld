@@ -56,7 +56,7 @@ public class WorldDisplay extends JPanel{
     public void updateAttributes() {
         //state.setText()
         String s = "";
-        if (currentLocation.contents().critter()) {
+        if (currentLocation.contents() != null && currentLocation.contents().critter()) {
             int[] memory = currentLocation.contents().getCritter().memory();
             s = s + "/nMemory: " + memory[0]
                     + "/nDefense: " + memory[1]

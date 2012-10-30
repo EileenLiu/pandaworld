@@ -29,7 +29,7 @@ public class MouseInteractionHandler extends MouseAdapter {
             case 1:
                 leftClick(e);
                 break;
-            case 2:
+            case 3:
                 rightClick(e);
                 break;
         }
@@ -43,7 +43,8 @@ public class MouseInteractionHandler extends MouseAdapter {
         int c = ret[1];
         Reference<Tile> at = model.at(r, c);
         at.setContents(new Tile.Rock());
-        System.out.println("put rock at ("+r+","+c+")");    
+        System.out.println("put rock at ("+r+","+c+")");  
+        view.repaint();
     }
 
     private void rightClick(MouseEvent e) {
