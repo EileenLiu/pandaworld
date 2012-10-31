@@ -27,12 +27,12 @@ public class MouseInteractionHandler extends MouseAdapter {
     private JPopupMenu men;
     
     private Action rock, unrock;
-    private Action crit, critMenIts[] = new Action[7];
+    private Action crit, critMenIts[] = new Action[8];
     
     public MouseInteractionHandler(final World _model, final WorldFrame _view) {
         model = _model;
         view = _view;
-        rock = new LocAxn("rock") {
+        rock = new LocAxn("put rock") {
             @Override
             public void act() {
                 rclxtar.setContents(new Tile.Rock());
@@ -44,7 +44,7 @@ public class MouseInteractionHandler extends MouseAdapter {
                 rclxtar.setContents(new Tile(false, 0));
             }
         };
-        crit = new LocAxn("critify") {
+        crit = new LocAxn("add critter") {
             @Override
             protected void act() {
                 Tile t = new Tile(false, 0);
@@ -101,6 +101,13 @@ public class MouseInteractionHandler extends MouseAdapter {
                     rclxtar.contents().getCritter().grow();
             }
         };
+        critMenIts[7] = new LocAxn("remove") {
+            @Override
+            public void act() {
+                if(rclxtar.contents().critter())
+                    rclxtar.contents().removeCritter();
+            }
+        };
         /*criMenIts[0] = new LocAxn("bud") {
             @Override
             public void act() {
@@ -149,14 +156,15 @@ public class MouseInteractionHandler extends MouseAdapter {
         if(rclxtar.contents() == null)
             rclxtar.setContents(new Tile(false,0));
         men = new JPopupMenu();
-        if(rclxtar.contents().critter())
-            for(Action a : critMenIts)
-                men.add(a);
         if(rclxtar.contents().rock())
             men.add(unrock);
         else {
             men.add(rock);
-            men.add(crit);
+            if(rclxtar.contents().critter())
+                for(Action a : critMenIts)
+                    men.add(a);
+            else
+                men.add(crit);
         }
         men.setLocation(e.getLocationOnScreen());
         men.setVisible(true);

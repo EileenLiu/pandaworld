@@ -102,6 +102,7 @@ public class Critter /*extends Entity*/ {
         else {
             pos.contents().removeCritter();
             newPos.contents().putCritter(this);
+            pos = newPos;
             acted = true;
         }
     }
@@ -113,6 +114,7 @@ public class Critter /*extends Entity*/ {
         else {
             pos.contents().removeCritter();
             newPos.contents().putCritter(this);
+            pos = newPos;
             acted = true;
         }
     }
