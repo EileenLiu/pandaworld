@@ -236,20 +236,25 @@ public class GridPanel extends JPanel {
                 Tile t = zaWarudo.at(r, c).contents();
                 if(t != null && t.rock()) 
                     drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, ROCK);
-                else if(t != null && t.critter()) {
+                else {
                     drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, TILE);
-                    Image i = null;
-                    switch(t.getCritter().direction()) {
-                        case N:  i = CNN; break;
-                        case NE: i = CNE; break;
-                        case NW: i = CNW; break;
-                        case S:  i = CSS; break;
-                        case SW: i = CSW; break;
-                        case SE: i = CSE; break;
+                    if(t.food())
+                        drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, FOOD);
+                    if(t.plant())
+                        drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, PLNT);
+                    if(t.critter()) {
+                        Image i = null;
+                        switch (t.getCritter().direction()) {
+                             case N:  i = CNN; break;
+                             case NE: i = CNE; break;
+                             case NW: i = CNW; break;
+                             case S:  i = CSS; break;
+                             case SW: i = CSW; break;
+                             case SE: i = CSE; break;
+                        }
+                        drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, i);
                     }
-                    drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, i);
-                } else
-                    drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, TILE);
+                }
                 gp.setColor(Color.RED);
                 String s = "("+r+","+c+")";
                 gp.drawChars(s.toCharArray(), 0, s.length(), bbx.x+20, bbx.y+20);

@@ -5,8 +5,10 @@
 package student.gui;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.security.Key;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JPopupMenu;
@@ -19,14 +21,15 @@ import student.world.World;
  *
  * @author Panda^H^H^H^H^Hhwh48
  */
-public class MouseInteractionHandler extends MouseAdapter {
+public class MouseInteractionHandler extends MouseAdapter implements java.awt.event.KeyListener {
     private World model;
     private WorldFrame view;
     private Reference<Tile> rclxtar = null;
     
     private JPopupMenu men;
     
-    private Action rock, unrock;
+    private Action rock,  unrock,
+                   plant, unplant;
     private Action crit, critMenIts[] = new Action[8];
     
     public MouseInteractionHandler(final World _model, final WorldFrame _view) {
@@ -44,6 +47,18 @@ public class MouseInteractionHandler extends MouseAdapter {
                 rclxtar.setContents(new Tile(false, 0));
             }
         };
+        plant = new LocAxn("plant") {
+            @Override
+            protected void act() {
+                rclxtar.contents().putPlant();
+            }
+        };
+        unplant = new LocAxn("weed-x") {
+            @Override
+            protected void act() {
+                rclxtar.contents().removePlant();
+            }
+        };
         crit = new LocAxn("add critter") {
             @Override
             protected void act() {
@@ -57,6 +72,7 @@ public class MouseInteractionHandler extends MouseAdapter {
             public void act() {
                 if(rclxtar.contents().critter())
                     rclxtar.contents().getCritter().forward();
+                //
             }
         };
         critMenIts[1] = new LocAxn("backward") {
@@ -157,12 +173,17 @@ public class MouseInteractionHandler extends MouseAdapter {
         if(rclxtar.contents() == null)
             rclxtar.setContents(new Tile(false,0));
         men = new JPopupMenu();
+        men.addKeyListener(this);
         if(rclxtar.contents().rock())
             men.add(unrock);
         else if(rclxtar.contents().critter())
                 for(Action a : critMenIts)
                     men.add(a);
-        else{
+        else {
+            if(rclxtar.contents().plant())
+                men.add(unplant);
+            else
+                men.add(plant);
             men.add(rock);
             men.add(crit);
         }
@@ -178,6 +199,21 @@ public class MouseInteractionHandler extends MouseAdapter {
         int c = ret[1];
         return model.at(r, c);
     }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        System.out.println("Kev");
+        if(e.getKeyCode() == KeyEvent.VK_ESCAPE && men != null) {
+            System.out.println("ESC");
+            men.setVisible(false);
+        }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) { keyTyped(e); }
+
+    @Override
+    public void keyReleased(KeyEvent e) { keyTyped(e); }
     
     private abstract class LocAxn extends AbstractAction {
         @Override
