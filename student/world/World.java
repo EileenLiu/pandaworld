@@ -21,7 +21,8 @@ public class World {
     private static final int DEFAULT_COLS = 6;
     HexGrid<Tile> grid;
     private int timesteps = 0;
-
+    private boolean RUNNING = false;
+    private boolean WAIT = true; //if false, random action
     public World() {
         this(DEFAULT_ROWS, DEFAULT_COLS);
     }
