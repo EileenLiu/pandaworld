@@ -22,8 +22,8 @@ public class WorldFrame extends JFrame {
         //worldStatusPanel.add(worldStatusArea, BorderLayout.CENTER);
         worldDisplay = new WorldDisplay(world);
         worldDisplay.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 0));
-        worldDisplay.setBackground(new Color(112, 126, 185));
-        this.setBackground(new Color(112, 126, 185));
+        //worldDisplay.setBackground(new Color(112, 126, 185));
+        //this.setBackground(new Color(112, 126, 185));
         //this.setSize(worldDisplay.getWidth(), worldDisplay.getHeight() + worldStatusArea.getHeight());
         setLayout(new BorderLayout());
 

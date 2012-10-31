@@ -86,7 +86,10 @@ public class Critter /*extends Entity*/ {
         }
         acted = false;
         if (mem[4] < 0)
-            ;//die
+        {//die
+           pos.contents().addFood(MOVE_COST);
+           pos.contents().removeCritter();
+        }
     }
     
     public void _wait() {
