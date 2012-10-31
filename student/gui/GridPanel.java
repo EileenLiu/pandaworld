@@ -137,8 +137,6 @@ public class GridPanel extends JPanel {
         
         g.drawImage(i, x, y, hexsize, hexsize, this);
     }
-    
-    Polygon p;
 
     public int pnX(int row, int col) {
         return col * HEXSIZE / 4 * 3;
@@ -199,6 +197,9 @@ public class GridPanel extends JPanel {
                     drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, CRIT_IMG);
                 else
                     drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, TILE_IMG);
+                gp.setColor(Color.RED);
+                String s = "("+r+","+c+")";
+                gp.drawChars(s.toCharArray(), 0, s.length(), bbx.x+20, bbx.y+20);
             }
         }
     }
