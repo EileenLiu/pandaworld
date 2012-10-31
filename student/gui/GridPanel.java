@@ -6,11 +6,9 @@ package student.gui;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Polygon;
 import java.awt.Rectangle;
-import java.util.Set;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import student.grid.HexGrid.Reference;
@@ -21,10 +19,9 @@ public class GridPanel extends JPanel {
 
     private static Image TILE_IMG = new ImageIcon("tile.png").getImage();
     private static Image ROCK_IMG = new ImageIcon("rock.png").getImage();
+    private static Image CRIT_IMG = new ImageIcon("crit.png").getImage();
     
     private Polygon hexen[][];
-    public int xSTART = 0;
-    public int ySTART = 0;
     //A MULTIPLE OF FOUR
     private int HEXSIZE = 100;
     public World zaWarudo; 
@@ -39,11 +36,16 @@ public class GridPanel extends JPanel {
                 //System.out.println(""+x+","+y);
                 //gp.fillOval(x, y, 10, 10);
                 hexen[r][c] = makePoly(x,y,HEXSIZE);
+                Reference<Tile> rt = world.at(r, c);
+                if(rt.contents() == null)
+                    rt.setContents(new Tile(false, 0));
             }
         }
     }
     
     public int []hexAt(int x, int y) {
+        x -= this.getX();
+        y -= this.getY();
         for(int r = 0; r < zaWarudo.height(); r++)
             for(int c = 0; c < zaWarudo.width(); c++)
                 if(hexen[r][c].contains(x, y))
@@ -193,11 +195,11 @@ public class GridPanel extends JPanel {
                 Tile t = zaWarudo.at(r, c).contents();
                 if(t != null && t.rock()) 
                     drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, ROCK_IMG);
+                else if(t != null && t.critter())
+                    drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, CRIT_IMG);
                 else
                     drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, TILE_IMG);
             }
         }
     }
-    
-
 }
