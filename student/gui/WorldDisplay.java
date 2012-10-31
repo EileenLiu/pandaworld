@@ -117,7 +117,7 @@ public class WorldDisplay extends JPanel{
     private final void updateAttributes() {
         //state.setText()
         String s = "The currently selected\nlocation has ";
-        if (currentLocation.contents() == null)
+        if (currentLocation.contents() == null || currentLocation.contents().isEmpty())
             s = s+"\nnothing... ";
         else
         {

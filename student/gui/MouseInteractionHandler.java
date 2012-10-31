@@ -153,18 +153,18 @@ public class MouseInteractionHandler extends MouseAdapter {
         if(men != null)
             men.setVisible(false);
         rclxtar = lookup(e);
+        view.display().setCurrentLocation(rclxtar);
         if(rclxtar.contents() == null)
             rclxtar.setContents(new Tile(false,0));
         men = new JPopupMenu();
         if(rclxtar.contents().rock())
             men.add(unrock);
-        else {
-            men.add(rock);
-            if(rclxtar.contents().critter())
+        else if(rclxtar.contents().critter())
                 for(Action a : critMenIts)
                     men.add(a);
-            else
-                men.add(crit);
+        else{
+            men.add(rock);
+            men.add(crit);
         }
         men.setLocation(e.getLocationOnScreen());
         men.setVisible(true);

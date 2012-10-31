@@ -16,7 +16,9 @@ public class Tile {
     public Tile(boolean _plant, int _food) {
         plant = _plant; food = _food;
     }
-    
+    public boolean isEmpty(){
+        return !(rock()||food()||plant()||critter());
+    }
     public boolean rock() {
         return false;
     }

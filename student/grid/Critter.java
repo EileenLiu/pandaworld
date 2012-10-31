@@ -91,7 +91,9 @@ public class Critter /*extends Entity*/ {
            pos.contents().removeCritter();
         }
     }
-    
+    public void randomAct(){
+        //TODO
+    }
     public void _wait() {
         mem[4] -= mem[3];
         acted = true;
