@@ -7,9 +7,12 @@ package student.gui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.KeyEvent;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JSlider;
 
 /**
@@ -18,6 +21,7 @@ import javax.swing.JSlider;
  */
 public class ControlPanel extends JPanel{
     public JButton stepButton, runButton, stopButton;
+    public JRadioButton wait, random;
     public JSlider speedSlider;
     public static final int INDEFINITE = 0, FIXED_STEPS = 1, PROMPT_STEPS = 2;
 
@@ -27,20 +31,22 @@ public class ControlPanel extends JPanel{
 
     public ControlPanel(){
         //setLayout(new BorderLayout());
-        setLayout(new GridLayout(2,3));
-        JLabel slow = new JLabel("Slow", JLabel.RIGHT);
+        setLayout(new GridLayout(3,3));
+        /*JLabel slow = new JLabel("Slow", JLabel.RIGHT);
         speedSlider = generateSlider();
-        JLabel fast = new JLabel("Fast", JLabel.LEFT);
+        JLabel fast = new JLabel("Fast", JLabel.LEFT);*
         add(slow);
         add(speedSlider);
-        add(fast);
+        add(fast);*/
+        addSlider();
+        addToggleButtons();
         addButtons();
         //JPanel buttonPane = generateButtonPanel();
         //add(buttonPane, BorderLayout.CENTER);
         //add(speedSlider, BorderLayout.SOUTH);
     }
     
-    private JSlider generateSlider()
+    /*private JSlider generateSlider()
     {
        JSlider slide = new JSlider(MIN_DELAY_MSECS, MAX_DELAY_MSECS,
                 INITIAL_DELAY);
@@ -48,6 +54,37 @@ public class ControlPanel extends JPanel{
         slide.setPreferredSize(new Dimension(100, slide.getPreferredSize().height));
         slide.setMaximumSize(slide.getPreferredSize()); 
         return slide;
+    }*/
+    private void addSlider()
+    {
+        speedSlider = new JSlider(MIN_DELAY_MSECS, MAX_DELAY_MSECS,
+                INITIAL_DELAY);
+        speedSlider.setInverted(true);
+        speedSlider.setPreferredSize(new Dimension(100, speedSlider.getPreferredSize().height));
+        speedSlider.setMaximumSize(speedSlider.getPreferredSize()); 
+        JLabel slow = new JLabel("Slow", JLabel.RIGHT);
+        JLabel fast = new JLabel("Fast", JLabel.LEFT);
+        add(slow);
+        add(speedSlider);
+        add(fast);
+    }
+    private void addToggleButtons()
+    {
+    JLabel action = new JLabel("Action", JLabel.RIGHT);
+    wait = new JRadioButton("Wait");
+    wait.setMnemonic(KeyEvent.VK_W);
+    wait.setActionCommand("Wait");
+    wait.setSelected(true);
+    random = new JRadioButton("Random");
+    random.setMnemonic(KeyEvent.VK_R);
+    random.setActionCommand("Random");
+    ButtonGroup group = new ButtonGroup();
+    group.add(wait);
+    group.add(random);
+    add(action);
+    add(wait);
+    add(random);
+    
     }
         private void addButtons()
     {
