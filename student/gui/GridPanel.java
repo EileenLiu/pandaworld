@@ -9,17 +9,60 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Polygon;
 import java.awt.Rectangle;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import student.grid.HexGrid.Reference;
 import student.grid.Tile;
 import student.world.World;
 
 public class GridPanel extends JPanel {
 
-    private static Image TILE_IMG = new ImageIcon("tile.png").getImage();
-    private static Image ROCK_IMG = new ImageIcon("rock.png").getImage();
-    private static Image CRIT_IMG = new ImageIcon("crit.png").getImage();
+    private static Image TILE, ROCK, PLNT, FOOD, CNN, CNE, CNW, CSE, CSW, CSS;
+    static {
+        try {
+            ZipFile zf = new ZipFile("data.zip");
+            ZipEntry eti = zf.getEntry("tile.png"),
+                     erk = zf.getEntry("rock.png"),
+                     epl = zf.getEntry("plnt.png"),
+                     efd = zf.getEntry("food.png"),
+                     enn = zf.getEntry("nn.png"),
+                     ene = zf.getEntry("ne.png"),
+                     enw = zf.getEntry("nw.png"),
+                     ese = zf.getEntry("se.png"),
+                     esw = zf.getEntry("sw.png"),
+                     ess = zf.getEntry("ss.png");
+            InputStream iti = zf.getInputStream(eti),
+                        irk = zf.getInputStream(erk),
+                        ipl = zf.getInputStream(epl),
+                        ifd = zf.getInputStream(efd),
+                        inn = zf.getInputStream(enn),
+                        ine = zf.getInputStream(ene),
+                        inw = zf.getInputStream(enw),
+                        ise = zf.getInputStream(ese),
+                        isw = zf.getInputStream(esw),
+                        iss = zf.getInputStream(ess);
+            TILE = ImageIO.read(iti);
+            ROCK = ImageIO.read(irk);
+            PLNT = ImageIO.read(ipl);
+            FOOD = ImageIO.read(ifd);
+            CNN  = ImageIO.read(inn);
+            CNE  = ImageIO.read(ine);
+            CNW  = ImageIO.read(inw);
+            CSE  = ImageIO.read(ise);
+            CSW  = ImageIO.read(isw);
+            CSS  = ImageIO.read(iss);
+        } catch (IOException ex) {
+            System.err.println("Could not load image data!");
+            System.exit(254);
+        } catch (RuntimeException ex) {
+            System.err.println("Could not load image data!");
+            System.exit(253);
+        }
+    }
     
     private Polygon hexen[][];
     //A MULTIPLE OF FOUR
@@ -192,11 +235,21 @@ public class GridPanel extends JPanel {
                 Rectangle bbx = loc.getBounds();
                 Tile t = zaWarudo.at(r, c).contents();
                 if(t != null && t.rock()) 
-                    drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, ROCK_IMG);
-                else if(t != null && t.critter())
-                    drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, CRIT_IMG);
-                else
-                    drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, TILE_IMG);
+                    drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, ROCK);
+                else if(t != null && t.critter()) {
+                    drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, TILE);
+                    Image i = null;
+                    switch(t.getCritter().direction()) {
+                        case N:  i = CNN; break;
+                        case NE: i = CNE; break;
+                        case NW: i = CNW; break;
+                        case S:  i = CSS; break;
+                        case SW: i = CSW; break;
+                        case SE: i = CSE; break;
+                    }
+                    drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, i);
+                } else
+                    drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, TILE);
                 gp.setColor(Color.RED);
                 String s = "("+r+","+c+")";
                 gp.drawChars(s.toCharArray(), 0, s.length(), bbx.x+20, bbx.y+20);
