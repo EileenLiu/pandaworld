@@ -148,12 +148,15 @@ public class Critter /*extends Entity*/ {
     
     public void eat() {
         mem[4] -= mem[3];
-        if (pos.contents().food()) {
-            int ene = pos.contents().foodValue();
-            System.out.println("Ate " + ene + " units of mem[4]");
+        if (pos.contents().food() || pos.contents().plant()) {
+            int ene = pos.contents().foodValue()
+                    +(pos.contents().plant()? Constants.ENERGY_PER_PLANT: 0);
+            System.out.println("Ate " + ene + " units of energy");
+            pos.contents().removePlant();
+            pos.contents().takeFood();
             mem[4] += ene;
             return;
-        } else 
+        } else
             System.out.println("No food there");
         acted = true;
     }
