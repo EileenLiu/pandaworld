@@ -5,6 +5,7 @@
 package student.gui;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Polygon;
@@ -19,7 +20,7 @@ import student.grid.HexGrid.Reference;
 import student.grid.Tile;
 import student.world.World;
 
-public class GridPanel extends JPanel {
+public class GridPanel extends JPanel implements Scrollable{
 
     private static Image TILE, ROCK, PLNT, FOOD, CNN, CNE, CNW, CSE, CSW, CSS;
     static {
@@ -67,14 +68,14 @@ public class GridPanel extends JPanel {
     private Polygon hexen[][];
     //A MULTIPLE OF FOUR
     private int HEXSIZE = 100;
-    public World zaWarudo; 
+    public World world; 
     public GridPanel(World world) {
-        zaWarudo = world;
+        this.world = world;
         //this.setBorder(new LineBorder(Color.MAGENTA, 3));
         hexen = new Polygon[world.height()][world.width()];
-        for (int c = 0; c < zaWarudo.width(); c++) {
+        for (int c = 0; c < this.world.width(); c++) {
             int x = pnX(0, c);
-            for (int r = 0; r < zaWarudo.height(); r++) {
+            for (int r = 0; r < this.world.height(); r++) {
                 int y = pnY(r, c);
                 //System.out.println(""+x+","+y);
                 //gp.fillOval(x, y, 10, 10);
@@ -89,8 +90,8 @@ public class GridPanel extends JPanel {
     public int []hexAt(int x, int y) {
         x -= this.getX();
         y -= this.getY();
-        for(int r = 0; r < zaWarudo.height(); r++)
-            for(int c = 0; c < zaWarudo.width(); c++)
+        for(int r = 0; r < world.height(); r++)
+            for(int c = 0; c < world.width(); c++)
                 if(hexen[r][c].contains(x, y))
                     return new int[]{r,c};
         return null;
@@ -229,11 +230,11 @@ public class GridPanel extends JPanel {
      */
     //@Deprecated
     public void drawGrid(int hexsize, Graphics gp) {//HWHdrawGrid(int hxsz, Graphics gp) {
-        for (int c = 0; c < zaWarudo.width(); c++) {
-            for (int r = 0; r < zaWarudo.height(); r++) {
+        for (int c = 0; c < world.width(); c++) {
+            for (int r = 0; r < world.height(); r++) {
                 Polygon loc = hexen[r][c];
                 Rectangle bbx = loc.getBounds();
-                Tile t = zaWarudo.at(r, c).contents();
+                Tile t = world.at(r, c).contents();
                 if(t != null && t.rock()) 
                     drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, ROCK);
                 else {
@@ -260,5 +261,34 @@ public class GridPanel extends JPanel {
                 gp.drawChars(s.toCharArray(), 0, s.length(), bbx.x+20, bbx.y+20);
             }
         }
+    }
+    @Override
+    public Dimension getPreferredSize()
+    {
+        return new Dimension(world.width()*HEXSIZE - (world.width() - 1)*HEXSIZE/4, (world.height()+1)*HEXSIZE);
+    }
+   @Override
+    public Dimension getPreferredScrollableViewportSize() {
+        return getPreferredSize();
+    }
+
+    @Override
+    public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
+        return 0;
+    }
+
+    @Override
+    public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
+        return 0;
+    }
+
+    @Override
+    public boolean getScrollableTracksViewportWidth() {
+        return false;
+    }
+
+    @Override
+    public boolean getScrollableTracksViewportHeight() {
+        return false;
     }
 }
