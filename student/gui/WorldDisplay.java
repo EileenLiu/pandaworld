@@ -5,6 +5,7 @@
 package student.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -18,7 +19,7 @@ import student.world.World;
 
 public class WorldDisplay extends JPanel{
     public GridPanel gridpane;
-    public JPanel textDisplay;
+    public JPanel infoDisplay;
     public JPanel worldStatusPanel;
     public JTextArea attributes;
     public ControlPanel controls;
@@ -38,15 +39,15 @@ public class WorldDisplay extends JPanel{
         attributes = generateAttributes();
         gridpane = generateGridPanel();
         worldStatusPanel = generateWorldStatusPanel();
-        textDisplay = generateTextDisplayPanel();
+        infoDisplay = generateInfoPanel();
         
         updateWorldStatus();
         updateAttributes();
 
         add(gridpane, BorderLayout.CENTER);
-        add(textDisplay, BorderLayout.EAST);
+        add(infoDisplay, BorderLayout.EAST);
         gridpane.setVisible(true);
-        textDisplay.setVisible(true);
+        infoDisplay.setVisible(true);
         attributes.setVisible(true);
     }
     private final JTextArea generateAttributes(){
@@ -55,6 +56,7 @@ public class WorldDisplay extends JPanel{
         //textArea.setLineWrap(true);
         textArea.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
         textArea.setOpaque(false);
+        textArea.setBackground(new Color(164, 173, 210));
         return textArea;
     }
     private final GridPanel generateGridPanel(){
@@ -87,7 +89,7 @@ public class WorldDisplay extends JPanel{
         rockcount = new JLabel("", JLabel.CENTER);
         rockcount.setFont(new Font("Serif", Font.PLAIN, 12));
         wst.add(rockcount); 
-
+        //wst.setBackground(new Color(68, 82, 138));
         return wst;
     }
     private final void updateWorldStatus(){
@@ -98,14 +100,15 @@ public class WorldDisplay extends JPanel{
         foodcount.setText("\n\tFood: "+population[2]);
         rockcount.setText("\n\tRocks: "+population[3]);
     }
-    private final JPanel generateTextDisplayPanel(){
-        JPanel textDisp = new JPanel();
-        textDisp.setLayout(new BorderLayout());
-        textDisp.add(worldStatusPanel, BorderLayout.NORTH);
-        textDisp.add(attributes, BorderLayout.CENTER);
-        textDisp.add(controls, BorderLayout.SOUTH);
-        textDisp.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-        return textDisp;
+    private final JPanel generateInfoPanel(){
+        JPanel infoDisp = new JPanel();
+        infoDisp.setLayout(new BorderLayout());
+        infoDisp.add(worldStatusPanel, BorderLayout.NORTH);
+        infoDisp.add(attributes, BorderLayout.CENTER);
+        infoDisp.add(controls, BorderLayout.SOUTH);
+        infoDisp.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+        //textDisp.setBackground(new Color(68, 82, 138));
+        return infoDisp;
     }
     public GridPanel grid() {
         return gridpane;

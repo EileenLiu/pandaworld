@@ -27,10 +27,10 @@ public class GridPanel extends JPanel {
     public int ySTART = 0;
     //A MULTIPLE OF FOUR
     private int HEXSIZE = 100;
-    public World zaWarudo; //WRYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY
+    public World zaWarudo; 
     public GridPanel(World world) {
         zaWarudo = world;
-        this.setBorder(new LineBorder(Color.MAGENTA, 3));
+        //this.setBorder(new LineBorder(Color.MAGENTA, 3));
         hexen = new Polygon[world.height()][world.width()];
         for (int c = 0; c < zaWarudo.width(); c++) {
             int x = pnX(0, c);
