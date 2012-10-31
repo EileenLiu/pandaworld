@@ -243,4 +243,8 @@ public class Critter /*extends Entity*/ {
         }
         return direction;
     }
+
+    public Reference<Tile> loc() {
+        return this.pos;
+    }
 }

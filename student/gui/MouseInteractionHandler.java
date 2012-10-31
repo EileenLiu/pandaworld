@@ -32,6 +32,7 @@ public class MouseInteractionHandler extends MouseAdapter {
     public MouseInteractionHandler(final World _model, final WorldFrame _view) {
         model = _model;
         view = _view;
+        ControlPanelInteractionHandler cpih = new ControlPanelInteractionHandler(model, view);
         rock = new LocAxn("put rock") {
             @Override
             public void act() {
@@ -55,15 +56,21 @@ public class MouseInteractionHandler extends MouseAdapter {
         critMenIts[0] = new LocAxn("forward") {
             @Override
             public void act() {
-                if(rclxtar.contents().critter())
-                    rclxtar.contents().getCritter().forward();
+                if(rclxtar.contents().critter()) {
+                    Critter rclxtarcri =  rclxtar.contents().getCritter();
+                    rclxtarcri.forward();
+                    view.display().setCurrentLocation(rclxtarcri.loc());
+                }
             }
         };
         critMenIts[1] = new LocAxn("backward") {
             @Override
             public void act() {
-                if(rclxtar.contents().critter())
-                    rclxtar.contents().getCritter().backward();
+                if(rclxtar.contents().critter()){
+                    Critter rclxtarcri = rclxtar.contents().getCritter();
+                    rclxtarcri.backward();
+                    view.display().setCurrentLocation(rclxtarcri.loc());
+                }
             }
         };
         critMenIts[2] = new LocAxn("left") {

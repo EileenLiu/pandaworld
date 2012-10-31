@@ -91,6 +91,7 @@ public class ControlPanel extends JPanel{
         stepButton = new JButton("Step");
         runButton = new JButton("Run");
         stopButton = new JButton("Stop");
+        stopButton.setEnabled(false);
         add(stepButton);
         add(runButton);
         add(stopButton);

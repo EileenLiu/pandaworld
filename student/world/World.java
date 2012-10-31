@@ -34,7 +34,22 @@ public class World {
     public String getStatus() {
         return "Timesteps: " + timesteps + "\n" + population();
     }
-
+    public boolean isRunning()
+    {
+        return RUNNING;
+    }
+    public boolean shouldWait()
+    {
+        return WAIT;
+    }
+    public void toggleRun()
+    {
+        RUNNING = !RUNNING;
+    }
+    public void toggleWait()
+    {
+        WAIT = !WAIT;
+    }
     public void step() {
         for (Tile e : grid) {
             if (e != null) {
