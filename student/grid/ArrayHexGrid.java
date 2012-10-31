@@ -121,28 +121,60 @@ public class ArrayHexGrid<E> implements HexGrid<E> {
         }
 
         @Override
-        public Reference<E> lin(int dist, HexDir dir) {
-            if(dir == S) {
-                dir = N;
-                dist = -dist;
-            } else if(dir == SW) {
-                dir = NE;
-                dist = -dist;
-            } else if(dir == NW) {
-                dir = SE;
-                dist = -dist;
-            }
+        public Reference<E> adj(HexDir dir) {
             int er = r, ec = c;
-            if(dir == N || dir == NE) 
-                er += dist;
-            if(dir == SE || dir == NE)
-                ec += dist;
-            return data[er][ec];
+            if(c%2==0) {
+                switch(dir) {
+                    case N:
+                        er -= 1; break;
+                    case S:
+                        er += 1; break;
+                    case NE:
+                        ec += 1; break;
+                    case NW:
+                        ec -= 1; break;
+                    case SE:
+                        ec += 1;
+                        er += 1; break;
+                    case SW:
+                        ec -= 1;
+                        er += 1; break;
+                }
+            } else {
+                switch(dir) {
+                    case N:
+                        er -= 1; break;
+                    case S:
+                        er += 1; break;
+                    case NE:
+                        ec += 1;
+                        er -= 1; break;
+                    case NW:
+                        ec -= 1;
+                        er -= 1; break;
+                    case SW:
+                        ec -= 1; break;
+                    case SE:
+                        ec += 1; break;
+                }
+            }
+            System.out.println("("+er+","+ec+")");
+            return data[er]
+                       [ec];
         }
 
         @Override
-        public Reference<E> adj(HexDir dir) {
-            return lin(1, dir);
+        public Reference<E> lin(int dist,HexDir dir) {
+            if(dist == 0)
+                return this;
+            else if(dist < 0)
+                return lin(-dist, dir == N  ?
+                             S  : dir == S  ?
+                             N  : dir == NE ?
+                             SW : dir == SW ?
+                             NE : dir == NW ?
+                             SE : NW); 
+                return adj(dir).lin(dist-1,dir);
         }
     }
 }
