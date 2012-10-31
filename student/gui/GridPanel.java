@@ -84,6 +84,7 @@ public class GridPanel extends JPanel {
                     rt.setContents(new Tile(false, 0));
             }
         }
+        this.setFocusable(true);
     }
     
     public int []hexAt(int x, int y) {

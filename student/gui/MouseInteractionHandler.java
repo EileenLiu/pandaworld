@@ -216,10 +216,10 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
     }
 
     @Override
-    public void keyTyped(KeyEvent e) { keyTyped(e); }
+    public void keyTyped(KeyEvent e) { keyPressed(e); }
 
     @Override
-    public void keyReleased(KeyEvent e) { keyTyped(e); }
+    public void keyReleased(KeyEvent e) { keyPressed(e); }
     
     private abstract class LocAxn extends AbstractAction {
         @Override

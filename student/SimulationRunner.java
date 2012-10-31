@@ -19,7 +19,7 @@ public class SimulationRunner {
         WorldFrame view = new WorldFrame(model);
         MouseInteractionHandler controller = new MouseInteractionHandler(model, view);
         view.addMouseListener(controller);
-        view.addKeyListener(controller);
+        view.worldDisplay.gridpane.addKeyListener(controller);
         view.setVisible(true);
         view.setDefaultCloseOperation(WorldFrame.EXIT_ON_CLOSE);
     }
