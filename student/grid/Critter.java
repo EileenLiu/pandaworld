@@ -27,6 +27,9 @@ public class Critter /*extends Entity*/ {
         wor = _wor;
         pos = _pos;
         mem = new int[memsiz];
+        mem[0] = memsiz;
+        mem[3] = 1;
+        mem[4] = 40;
         dir = HexDir.N;
     }
 
@@ -67,9 +70,7 @@ public class Critter /*extends Entity*/ {
     }
     
     public int[] memory() {
-        int rest[] = new int[mem.length - 9];
-        System.arraycopy(mem, 9, rest, 0, mem.length - 9);
-        return rest;
+        return mem;
     }
     
     public int energy() {
@@ -91,9 +92,31 @@ public class Critter /*extends Entity*/ {
            pos.contents().removeCritter();
         }
     }
-    public void randomAct(){
-        //TODO
+    public void randomAct() {
+        switch ((int) (Math.random() * 6)) {
+            case 0:
+                _wait();
+            case 1:
+                forward();
+                break;
+            case 2:
+                backward();
+                break;
+            case 3:
+                eat();
+                break;
+            case 4:
+                left();
+                break;
+            case 5:
+                right();
+                break;
+            case 6:
+                grow();
+                break;
+        }
     }
+    
     public void _wait() {
         mem[4] -= mem[3];
         acted = true;

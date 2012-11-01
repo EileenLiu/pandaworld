@@ -68,23 +68,21 @@ public class ControlPanel extends JPanel{
         add(speedSlider);
         add(fast);
     }
-    private void addToggleButtons()
-    {
-    JLabel action = new JLabel("Action", JLabel.RIGHT);
-    wait = new JRadioButton("Wait");
-    wait.setMnemonic(KeyEvent.VK_W);
-    wait.setActionCommand("Wait");
-    wait.setSelected(true);
-    random = new JRadioButton("Random");
-    random.setMnemonic(KeyEvent.VK_R);
-    random.setActionCommand("Random");
-    ButtonGroup group = new ButtonGroup();
-    group.add(wait);
-    group.add(random);
-    add(action);
-    add(wait);
-    add(random);
-    
+    private void addToggleButtons() {
+        JLabel action = new JLabel("Action", JLabel.RIGHT);
+        wait = new JRadioButton("Wait");
+        wait.setMnemonic(KeyEvent.VK_W);
+        wait.setActionCommand("Wait");
+        wait.setSelected(true);
+        random = new JRadioButton("Random");
+        random.setMnemonic(KeyEvent.VK_R);
+        random.setActionCommand("Random");
+        ButtonGroup group = new ButtonGroup();
+        group.add(wait);
+        group.add(random);
+        add(action);
+        add(wait);
+        add(random);
     }
         private void addButtons()
     {
