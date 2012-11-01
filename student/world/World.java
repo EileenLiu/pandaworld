@@ -77,7 +77,25 @@ public class World {
                        e.adj(d).contents().putPlant();
             if(t.critter()) {
                 if(random) {
-                    t.getCritter().forward();
+                    switch((int)(Math.random()*6)) {
+                        case 0:
+                            t.getCritter()._wait();
+                        case 1:
+                            t.getCritter().forward();
+                            break;
+                        case 2:
+                            t.getCritter().backward();
+                            break;
+                        case 3:
+                            t.getCritter().eat();
+                            break;
+                        case 4:
+                            t.getCritter().left();
+                            break;
+                        case 5:
+                            t.getCritter().right();
+                            break;
+                    }
                 } else
                     t.getCritter()._wait();
             }
