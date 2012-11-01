@@ -175,8 +175,10 @@ public class ArrayHexGrid<E> implements HexGrid<E> {
                              N  : dir == NE ?
                              SW : dir == SW ?
                              NE : dir == NW ?
-                             SE : NW); 
+                             SE : NW);
+            if(adj(dir)!=null)
                 return adj(dir).lin(dist-1,dir);
+            return null;
         }
     }
 }

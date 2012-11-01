@@ -38,7 +38,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
         model = _model;
         view = _view;
         ControlPanelInteractionHandler cpih = new ControlPanelInteractionHandler(model, view);
-        view.addMouseListener(this);
+        view.worldDisplay.gridpane.addMouseListener(this);
         view.worldDisplay.gridpane.addKeyListener(this);
         view.setVisible(true);
         view.setDefaultCloseOperation(WorldFrame.EXIT_ON_CLOSE);
@@ -212,7 +212,6 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
         }
         men.setLocation(e.getLocationOnScreen());
         men.setVisible(true);
-        System.out.println("MEN");
         view.repaint();//display().update();//repaint();
     }
 
