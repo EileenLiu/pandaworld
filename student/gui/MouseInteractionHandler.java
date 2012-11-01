@@ -163,7 +163,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
          rclxtar.contents().getCritter().tag();
          }
          };*/
-        this.gameLoop();
+        //this.gameLoop();
     }
 
     @Override
@@ -236,15 +236,15 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
         }
     }
     private long systime;
-    public void gameLoop() {
-        while (!EXIT) {
-            long deltaTime = System.currentTimeMillis()-systime;
-            if (model.isRunning() || model.shouldStep()) {
-                model.step();
-            }
-        }
-
-    }
+//    public void gameLoop() {
+//        while (!EXIT) {
+//            long deltaTime = System.currentTimeMillis()-systime;
+//            if (model.isRunning() || model.shouldStep()) {
+//                model.step();
+//            }
+//        }
+//
+//    }
 
     @Override
     public void keyTyped(KeyEvent e) { keyPressed(e); }

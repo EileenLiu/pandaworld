@@ -67,7 +67,7 @@ public class ControlPanelInteractionHandler {
         cp.stepButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                model.step();
+                model.step(true);
                 view.repaint();
             }
         });
@@ -76,7 +76,7 @@ public class ControlPanelInteractionHandler {
     private class TmrTsk extends TimerTask {
         @Override
         public void run() {
-            model.step();
+            model.step(true);
             view.repaint();
         }
     }

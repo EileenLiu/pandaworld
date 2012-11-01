@@ -62,7 +62,7 @@ public class World {
         STEP = true;
      }
     
-    public void step() {
+    public void step(boolean random) {
         int cr = 0;
         for(Reference<Tile> e : grid)
             if(e.contents()!=null && e.contents().critter()) cr++;
@@ -75,6 +75,12 @@ public class World {
                      && !e.adj(d).contents().plant() 
                      && Math.random() < prob)
                        e.adj(d).contents().putPlant();
+            if(t.critter()) {
+                if(random) {
+                    t.getCritter().forward();
+                } else
+                    t.getCritter()._wait();
+            }
         }
         timesteps++;
         System.out.println("-----------------"+timesteps);
