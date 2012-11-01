@@ -22,7 +22,8 @@ public final class Constants {
                              ATTACK_COST = 5,
                              GROW_COST = 1,
                              ABILITY_COST = 25,
-                             ENERGY_PER_PLANT = 100;
+                             ENERGY_PER_PLANT = 100,
+                             PLANTS_CREATED_PER_TURN = 2;
     public static volatile double DAMAGE_INC = 0.2,
                                   PLANT_GROW_PROB = .005;
     
