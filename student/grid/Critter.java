@@ -27,9 +27,12 @@ public class Critter /*extends Entity*/ {
         wor = _wor;
         pos = _pos;
         mem = new int[memsiz];
+        defaultMemory();
         dir = HexDir.N;
     }
-
+    public void defaultMemory(){
+        mem = new int[]{9, 1, 1, 1, 10, 0, 0, 0, 0};
+    }
     public HexDir direction() {
         return dir;
     }
@@ -71,7 +74,10 @@ public class Critter /*extends Entity*/ {
         System.arraycopy(mem, 9, rest, 0, mem.length - 9);
         return rest;
     }
-    
+    public void randomizeMemory()
+    {
+        
+    }
     public int energy() {
         return mem[4];
     }
