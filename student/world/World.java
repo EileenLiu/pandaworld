@@ -118,25 +118,6 @@ public class World {
     public HexGrid.Reference<Tile> defaultLoc() {
         return grid.ref(0, 0);
     }
-
-    /*public String population() {
-     int[] population = new int[4]; //[critters, plants, food, rocks]
-     Iterator<Tile> it = grid.iterator();
-     while (it.hasNext()) {
-     Tile t = it.next();
-     if(t==null)continue;
-     population[0] = population[0] + (t.critter() ? 1 : 0);
-     population[1] = population[1] + (t.plant() ? 1 : 0);
-     population[2] = population[2] + (t.food() ? 1 : 0);
-     population[3] = population[3] + (t.rock() ? 1 : 0);
-     }
-     String pop = "Population\n"
-     + "\n\tCritters: "+population[0]
-     + "\n\tPlants: "+population[1]
-     + "\n\tFood: "+population[2]
-     + "\n\tRocks: "+population[3];
-     return pop;
-     }*/
     public int[] population() {
         int[] population = new int[4]; //[critters, plants, food, rocks]
         Iterator<Reference<Tile>> it = grid.iterator();

@@ -16,21 +16,11 @@ public class WorldFrame extends JFrame {
 
     public WorldFrame(World w) {
         world = w;
-        //worldStatusArea = generateWorldStatusArea();
-        //JPanel worldStatusPanel = new JPanel();
-        //worldStatusPanel.setLayout(new BorderLayout());
-        //worldStatusPanel.add(worldStatusArea, BorderLayout.CENTER);
         worldDisplay = new WorldDisplay(world);
         worldDisplay.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 0));
-        //worldDisplay.setBackground(new Color(112, 126, 185));
-        //this.setBackground(new Color(112, 126, 185));
-        //this.setSize(worldDisplay.getWidth(), worldDisplay.getHeight() + worldStatusArea.getHeight());
         setLayout(new BorderLayout());
-
-        //this.add(worldStatusPanel, BorderLayout.NORTH);
         this.add(worldDisplay, BorderLayout.CENTER);
         this.setFullScreen();
-        //this.setSize(1000, 1000);
     }
 
     public JTextArea generateWorldStatusArea() {
@@ -48,9 +38,6 @@ public class WorldFrame extends JFrame {
     }
 
     public void repaint() {
-        //String status = "World Status\n\n" + world.getStatus();
-        //worldStatusArea.setText(status);
-        //worldStatusArea.update();
         worldDisplay.update();//repaint();
         super.repaint();
     }
