@@ -88,7 +88,7 @@ public class Critter /*extends Entity*/ {
         acted = false;
         if (mem[4] < 0) //if run out of energy then
         {//die
-           pos.contents().addFood(MOVE_COST);
+           pos.contents().addFood(Constants.FOOD_PER_SIZE*size());
            pos.contents().removeCritter();
         }
     }

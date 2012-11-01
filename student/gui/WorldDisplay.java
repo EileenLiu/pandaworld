@@ -128,7 +128,7 @@ public class WorldDisplay extends JPanel{
         if (currentLocation.contents().rock())
             s = s + "\na rock... ";
         if (currentLocation.contents().food())
-            s = s + "\nfood... ";
+            s = s + "\nfood worth " + currentLocation.contents().foodValue() + " units of energy...";
         if (currentLocation.contents().plant())
             s = s + "\na plant... ";
         if (currentLocation.contents().critter()) {

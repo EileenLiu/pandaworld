@@ -17,13 +17,14 @@ import java.util.regex.Pattern;
  */
 public final class Constants {
     private Constants(){}
-    public static volatile int BASE_DAMAGE = 100,
-                             MOVE_COST = 3,
-                             ATTACK_COST = 5,
-                             GROW_COST = 1,
-                             ABILITY_COST = 25,
-                             ENERGY_PER_PLANT = 100,
-                             PLANTS_CREATED_PER_TURN = 2;
+    public static volatile int BASE_DAMAGE            = 100,
+                             MOVE_COST                = 3,
+                             ATTACK_COST              = 5,
+                             GROW_COST                = 1,
+                             ABILITY_COST             = 25,
+                             ENERGY_PER_PLANT         = 100,
+                             FOOD_PER_SIZE            = 200,
+                             PLANTS_CREATED_PER_TURN  = 2;
     public static volatile double DAMAGE_INC = 0.2,
                                   PLANT_GROW_PROB = .005;
     
