@@ -5,6 +5,9 @@
 package student.gui;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -40,6 +43,20 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
         ControlPanelInteractionHandler cpih = new ControlPanelInteractionHandler(model, view);
         view.worldDisplay.gridpane.addMouseListener(this);
         view.worldDisplay.gridpane.addKeyListener(this);
+        
+        view.worldDisplay.scrollpane.getHorizontalScrollBar().addAdjustmentListener(new AdjustmentListener(){
+            @Override
+            public void adjustmentValueChanged(AdjustmentEvent e) {
+                view.repaint();
+            }
+        });
+        view.worldDisplay.scrollpane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener(){
+            @Override
+            public void adjustmentValueChanged(AdjustmentEvent e) {
+                view.repaint();
+            }
+        });
+        
         view.setVisible(true);
         view.setDefaultCloseOperation(WorldFrame.EXIT_ON_CLOSE);
         view.addWindowListener(new ExitHandler());
