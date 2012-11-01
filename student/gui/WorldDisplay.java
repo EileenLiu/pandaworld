@@ -47,6 +47,7 @@ public class WorldDisplay extends JPanel{
         updateAttributes();
         scrollpane = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         scrollpane.setViewportView(gridpane);
+             
         add(scrollpane, BorderLayout.CENTER);
         add(infoDisplay, BorderLayout.EAST);
         gridpane.setVisible(true);
