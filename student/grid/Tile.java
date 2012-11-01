@@ -70,7 +70,14 @@ public class Tile {
     }
 
     public void timeStep(boolean wait) {
-        
+        //TODO: timestep
+        if(this.critter())
+        {
+            if(wait)
+                critter._wait();
+            else
+                critter.randomAct();
+        }
         //throw new UnsupportedOperationException("Not yet implemented");
     }
     

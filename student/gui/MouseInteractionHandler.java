@@ -208,7 +208,8 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
         }
         men.setLocation(e.getLocationOnScreen());
         men.setVisible(true);
-        view.repaint();
+        System.out.println("MEN");
+        view.repaint();//display().update();//repaint();
     }
 
     private Reference<Tile> lookup(MouseEvent e) {
@@ -228,13 +229,19 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
             men.setVisible(false);
         }
     }
-
+    private long systime;
+    private long refreshTime;
     public void gameLoop() {
         while (!EXIT) {
+            long deltaTime = System.currentTimeMillis()-systime;
             if (model.isRunning() || model.shouldStep()) {
                 model.step();
             }
-            view.repaint();//display().update();
+            refreshTime +=deltaTime;
+            if(refreshTime > 16) {
+                refreshTime = refreshTime%16;
+                view.repaint();//display().update();
+            }
         }
 
     }

@@ -67,7 +67,7 @@ public class GridPanel extends JPanel implements Scrollable{
     
     private Polygon hexen[][];
     //A MULTIPLE OF FOUR
-    private int HEXSIZE = 100;
+    private int HEXSIZE = 140;
     public World world; 
     public GridPanel(World world) {
         this.world = world;
@@ -85,6 +85,8 @@ public class GridPanel extends JPanel implements Scrollable{
                     rt.setContents(new Tile(false, 0));
             }
         }
+        this.setFocusable(true);
+        this.requestFocusInWindow();
     }
     
     public int []hexAt(int x, int y) {
