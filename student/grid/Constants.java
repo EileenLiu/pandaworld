@@ -17,14 +17,16 @@ import java.util.regex.Pattern;
  */
 public final class Constants {
     private Constants(){}
-    public static volatile int BASE_DAMAGE            = 100,
-                             MOVE_COST                = 3,
-                             ATTACK_COST              = 5,
-                             GROW_COST                = 1,
-                             ABILITY_COST             = 25,
-                             ENERGY_PER_PLANT         = 100,
-                             FOOD_PER_SIZE            = 200,
-                             PLANTS_CREATED_PER_TURN  = 2;
+    public static volatile int BASE_DAMAGE              = 100000,  //wrong!
+                               MOVE_COST                = 3,
+                               ATTACK_COST              = 5,
+                               GROW_COST                = 1,
+                               ABILITY_COST             = 25,
+                               ENERGY_PER_PLANT         = 100000, //also wrong!
+                               FOOD_PER_SIZE            = 200,
+                               PLANTS_CREATED_PER_TURN  = 2,
+                               INITIAL_ENERGY           = 250,
+                               BUD_COST                 = 9;
     public static volatile double DAMAGE_INC = 0.2,
                                   PLANT_GROW_PROB = .005;
     
@@ -52,7 +54,8 @@ public final class Constants {
             try {
                 Constants.class.getDeclaredField(var).set(null, val);
             } catch (NoSuchFieldException nsfe) {
-                throw new IOException("Not a recognized constant: " +var);
+                //throw new IOException("Not a recognized constant: " +var);
+                System.err.println("Not a recognized constant: "+var);
             } catch (ReflectiveOperationException re) {
                 throw new IOException("Couldn't set value of field: "+var);
             }

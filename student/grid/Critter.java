@@ -93,7 +93,7 @@ public class Critter /*extends Entity*/ {
         }
     }
     public void randomAct() {
-        switch ((int) (Math.random() * 6)) {
+        switch ((int) (Math.random() * 8)) {
             case 0:
                 _wait();
             case 1:
@@ -113,6 +113,9 @@ public class Critter /*extends Entity*/ {
                 break;
             case 6:
                 grow();
+                break;
+            case 7:
+                bud();
                 break;
         }
     }
@@ -212,6 +215,17 @@ public class Critter /*extends Entity*/ {
     public void grow() {
         mem[4] -= mem[3] * complexity() * GROW_COST;
         mem[3]++;
+        acted = true;
+    }
+    
+    public void bud() {
+        Reference<Tile> np = pos.lin(-1, dir);
+        if(np == null || np.contents().rock())
+            return; //we're in a corner, can't put a critter there.
+        Critter baby = new Critter(wor, np, mem[0]);
+        baby.mem[4] = Constants.INITIAL_ENERGY;
+        np.contents().putCritter(baby);
+        mem[4] -= complexity() * Constants.BUD_COST;
         acted = true;
     }
 
