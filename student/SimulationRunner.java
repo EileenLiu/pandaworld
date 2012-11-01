@@ -22,6 +22,6 @@ public class SimulationRunner {
         view.worldDisplay.gridpane.addKeyListener(controller);
         view.setVisible(true);
         view.setDefaultCloseOperation(WorldFrame.EXIT_ON_CLOSE);
-        controller.gameLoop();
+        //controller.gameLoop();
     }
 }   

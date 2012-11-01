@@ -8,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Timer;
 import java.util.TimerTask;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import student.world.World;
 
 /**
@@ -18,13 +20,15 @@ public class ControlPanelInteractionHandler {
 
     private World model;
     private WorldFrame view;
+    ControlPanel cp;
     private Timer rntmr = new Timer("StepTimer",true);
     private TimerTask rntsk;
-    private long period = 100;
+    private int period;
 
-    public ControlPanelInteractionHandler(final World _model, final WorldFrame _view) {
+    public ControlPanelInteractionHandler(final World _model, final WorldFrame _view, ControlPanel _cp) {
         model = _model;
         view = _view;
+        cp = _cp;
         view.worldDisplay.controls.random.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent arg0) {
@@ -41,6 +45,7 @@ public class ControlPanelInteractionHandler {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 rntsk = new TmrTsk();
+                period = cp.speedSlider.getValue();
                 rntmr.schedule(rntsk, 0, period);
                 view.worldDisplay.controls.runButton.setEnabled(false);
                 view.worldDisplay.controls.stopButton.setEnabled(true);
@@ -62,21 +67,16 @@ public class ControlPanelInteractionHandler {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 model.step();
+                view.repaint();
             }
         });
-    }
-    
-    private class RunTask extends TimerTask {
-        @Override
-        public void run() {
-            //put the step code here
-        }
     }
     
     private class TmrTsk extends TimerTask {
         @Override
         public void run() {
             model.step();
+            view.repaint();
         }
     }
 }

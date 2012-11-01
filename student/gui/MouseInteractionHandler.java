@@ -37,7 +37,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
     public MouseInteractionHandler(final World _model, final WorldFrame _view) {
         model = _model;
         view = _view;
-        ControlPanelInteractionHandler cpih = new ControlPanelInteractionHandler(model, view);
+        ControlPanelInteractionHandler cpih = new ControlPanelInteractionHandler(model, view, view.display().controls);
         view.addWindowListener(new ExitHandler());
         rock = new LocAxn("put rock") {
             @Override
@@ -230,17 +230,11 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
         }
     }
     private long systime;
-    private long refreshTime;
     public void gameLoop() {
         while (!EXIT) {
             long deltaTime = System.currentTimeMillis()-systime;
             if (model.isRunning() || model.shouldStep()) {
                 model.step();
-            }
-            refreshTime +=deltaTime;
-            if(refreshTime > 16) {
-                refreshTime = refreshTime%16;
-                view.repaint();//display().update();
             }
         }
 
