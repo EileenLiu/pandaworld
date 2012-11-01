@@ -62,7 +62,7 @@ public class World {
         STEP = true;
      }
     
-    public void step(boolean random) {
+    public void step() {
         for(int i = 0; i < Constants.PLANTS_CREATED_PER_TURN; i++) {
             int r = (int) (grid.nRows()*Math.random());
             int c = (int) (grid.nCols()*Math.random());
@@ -84,7 +84,7 @@ public class World {
                      && Math.random() < prob)
                        e.adj(d).contents().putPlant();
             if(t.critter()) {
-                if(random) {
+                if(!WAIT) {
                     switch((int)(Math.random()*6)) {
                         case 0:
                             t.getCritter()._wait();

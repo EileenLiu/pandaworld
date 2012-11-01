@@ -67,8 +67,19 @@ public class ControlPanelInteractionHandler {
         cp.stepButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                model.step(true);
+                model.step();
                 view.repaint();
+            }
+        });
+        cp.speedSlider.addChangeListener(new ChangeListener(){
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                rntsk.cancel();
+                rntmr.purge();
+                view.worldDisplay.controls.stopButton.setEnabled(false);
+                view.worldDisplay.controls.stepButton.setEnabled(true);
+                view.worldDisplay.controls.runButton.setEnabled(true); 
+                model.toggleRun();
             }
         });
     }
@@ -76,7 +87,7 @@ public class ControlPanelInteractionHandler {
     private class TmrTsk extends TimerTask {
         @Override
         public void run() {
-            model.step(true);
+            model.step();
             view.repaint();
         }
     }
