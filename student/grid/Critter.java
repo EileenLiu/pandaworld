@@ -26,14 +26,11 @@ public class Critter /*extends Entity*/ {
     public Critter(World _wor, Reference<Tile> _pos, int memsiz) {
         wor = _wor;
         pos = _pos;
-        mem = new int[memsiz];
-        mem[0] = memsiz;
-        mem[3] = 1;
-        mem[4] = 40;
+        mem = defaultMemory();
         dir = HexDir.N;
     }
-    public void defaultMemory(){
-        mem = new int[]{9, 1, 1, 1, 10, 0, 0, 0, 0};
+    public int []defaultMemory(){
+        return new int[]{9, 1, 1, 1, 10, 0, 0, 0, 0};
     }
     public HexDir direction() {
         return dir;
