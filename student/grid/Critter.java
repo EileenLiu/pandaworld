@@ -122,9 +122,6 @@ public class Critter /*extends Entity*/ {
     public void backward() {
         Reference<Tile> newPos = pos.lin(-1,dir);
         if(!(newPos==null||newPos.contents().rock())){
-        /*if(newPos.contents().rock())
-            System.out.println("Won't do that; it's a rock");
-        else {*/
             pos.contents().removeCritter();
             newPos.contents().putCritter(this);
             pos = newPos;
@@ -250,7 +247,6 @@ public class Critter /*extends Entity*/ {
                 break;
             case 5:direction = "northwest";
                 break;
-            //throw new RuntimeException("Unreachable code: Invalid direction");
         }
         return direction;
     }
