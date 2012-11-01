@@ -57,11 +57,11 @@ public class ArrayHexGrid<E> implements HexGrid<E> {
     }
 
     @Override
-    public Iterator<E> iterator() {
+    public Iterator<Reference<E>> iterator() {
         return new Itr();
     }
 
-    private class Itr implements Iterator<E> {
+    private class Itr implements Iterator<Reference<E>> {
         int row = -1, col = -1;
         
         @Override
@@ -71,13 +71,13 @@ public class ArrayHexGrid<E> implements HexGrid<E> {
         }
 
         @Override
-        public E next() {
+        public Reference<E> next() {
             col++;
             if(row < 0 || col >= data[row].length) {
                 row ++;
                 col = 0;
             }
-            return data[row][col].contents();
+            return data[row][col];
         }
 
         @Override
@@ -159,6 +159,8 @@ public class ArrayHexGrid<E> implements HexGrid<E> {
                 }
             }
             System.out.println("("+er+","+ec+")");
+            if(er < 0 || er >= data.length || ec < 0 || ec >= data[er].length)
+                return null;
             return data[er]
                        [ec];
         }

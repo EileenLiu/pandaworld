@@ -7,7 +7,9 @@ package student.world;
 import java.util.Iterator;
 import java.util.Set;
 import student.grid.ArrayHexGrid;
+import student.grid.Constants;
 import student.grid.HexGrid;
+import student.grid.HexGrid.HexDir;
 import student.grid.HexGrid.Reference;
 import student.grid.Tile;
 
@@ -51,12 +53,21 @@ public class World {
         WAIT = !WAIT;
     }
     public void step() {
-        for (Tile e : grid) {
-            if (e != null) {
-                e.timeStep();
-            }
+        int cr = 0;
+        for(Reference<Tile> e : grid)
+            if(e.contents()!=null && e.contents().critter()) cr++;
+        double prob = Constants.PLANT_GROW_PROB/ (cr == 0?1:cr);
+        for(Reference<Tile> e : grid) {
+            Tile t = e.contents();
+            if(t.plant())
+                for(HexDir d : HexDir.values())
+                    if (e.adj(d) != null
+                     && !e.adj(d).contents().plant() 
+                     && Math.random() < prob)
+                       e.adj(d).contents().putPlant();
         }
         timesteps++;
+        System.out.println("-----------------"+timesteps);
     }
     public int getTimesteps()
     {
@@ -103,9 +114,9 @@ public class World {
      }*/
     public int[] population() {
         int[] population = new int[4]; //[critters, plants, food, rocks]
-        Iterator<Tile> it = grid.iterator();
+        Iterator<Reference<Tile>> it = grid.iterator();
         while (it.hasNext()) {
-            Tile t = it.next();
+            Tile t = it.next().contents();
             if (t == null) {
                 continue;
             }

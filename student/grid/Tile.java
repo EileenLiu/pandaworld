@@ -68,10 +68,6 @@ public class Tile {
     public void removeCritter() {
         critter = null;
     }
-
-    public void timeStep() {
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
     
     public static class Rock extends Tile {
         public Rock() {

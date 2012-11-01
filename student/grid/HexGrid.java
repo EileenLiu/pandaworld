@@ -10,7 +10,7 @@ import java.util.Iterator;
  *
  * @author haro
  */
-public interface HexGrid<E> extends Iterable<E> {
+public interface HexGrid<E> extends Iterable<HexGrid.Reference<E>> {
 
     /**
      * Returns the item at the given location, given as column and row.
@@ -33,14 +33,6 @@ public interface HexGrid<E> extends Iterable<E> {
 
     public int nRows();
     public int nCols();
-    /**
-     * Returns an iterator over its contents.
-     * 
-     * The iterator does not visit the items in any specific order, but does 
-     * so once and only once.
-     * @return 
-     */
-    public Iterator<E> iterator();
     
     /**
      * Returns a reference to the given location, given as column and row.

@@ -63,9 +63,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
         crit = new LocAxn("add critter") {
             @Override
             protected void act() {
-                Tile t = new Tile(false, 0);
-                t.putCritter(new Critter(model, rclxtar, 9));
-                rclxtar.setContents(t);
+                rclxtar.contents().putCritter(new Critter(model, rclxtar, 9));
             }
         };
         critMenIts[0] = new LocAxn("forward") {
@@ -201,6 +199,8 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
         int x = e.getX();
         int y = e.getY();
         int ret[] = view.display().grid().hexAt(x, y);
+        if(ret == null)
+            return null;
         int r = ret[0];
         int c = ret[1];
         return model.at(r, c);
