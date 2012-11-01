@@ -218,6 +218,8 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
     private Reference<Tile> lookup(MouseEvent e) {
         int x = e.getX();
         int y = e.getY();
+        x -= view.worldDisplay.scrollpane.getHorizontalScrollBar().getValue();
+        y -= view.worldDisplay.scrollpane.getVerticalScrollBar().getValue();
         int ret[] = view.display().grid().hexAt(x, y);
         if(ret == null)
             return null;

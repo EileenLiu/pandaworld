@@ -24,6 +24,7 @@ public class WorldDisplay extends JPanel{
     public JPanel worldStatusPanel;
     public JTextArea attributes;
     public ControlPanel controls;
+    public JScrollPane scrollpane;
     public JLabel timestep, crittercount, plantcount, foodcount, rockcount;
     
     public World WORLD;
@@ -44,7 +45,7 @@ public class WorldDisplay extends JPanel{
         
         updateWorldStatus();
         updateAttributes();
-        JScrollPane scrollpane = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        scrollpane = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         scrollpane.setViewportView(gridpane);
         add(scrollpane, BorderLayout.CENTER);
         add(infoDisplay, BorderLayout.EAST);
