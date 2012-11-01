@@ -32,7 +32,9 @@ public class Critter /*extends Entity*/ {
         mem[4] = 40;
         dir = HexDir.N;
     }
-
+    public void defaultMemory(){
+        mem = new int[]{9, 1, 1, 1, 10, 0, 0, 0, 0};
+    }
     public HexDir direction() {
         return dir;
     }
@@ -72,7 +74,10 @@ public class Critter /*extends Entity*/ {
     public int[] memory() {
         return mem;
     }
-    
+    public void randomizeMemory()
+    {
+        
+    }
     public int energy() {
         return mem[4];
     }
@@ -142,9 +147,6 @@ public class Critter /*extends Entity*/ {
     public void backward() {
         Reference<Tile> newPos = pos.lin(-1,dir);
         if(!(newPos==null||newPos.contents().rock())){
-        /*if(newPos.contents().rock())
-            System.out.println("Won't do that; it's a rock");
-        else {*/
             pos.contents().removeCritter();
             newPos.contents().putCritter(this);
             pos = newPos;
@@ -281,7 +283,6 @@ public class Critter /*extends Entity*/ {
                 break;
             case 5:direction = "northwest";
                 break;
-            //throw new RuntimeException("Unreachable code: Invalid direction");
         }
         return direction;
     }

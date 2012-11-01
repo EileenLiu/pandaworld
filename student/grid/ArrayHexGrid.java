@@ -52,7 +52,7 @@ public class ArrayHexGrid<E> implements HexGrid<E> {
     @Override
     public Reference<E> ref(int c, int r) {
         if(r < 0 || c < 0 || r >= rs || c >= cs)
-            return null;//throw new HexIndexOutOfBoundsException(r, c);
+            return null;
         return data[r][c];
     }
 

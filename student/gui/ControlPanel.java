@@ -30,31 +30,14 @@ public class ControlPanel extends JPanel{
             + (MAX_DELAY_MSECS - MIN_DELAY_MSECS) / 2;
 
     public ControlPanel(){
-        //setLayout(new BorderLayout());
+        
         setLayout(new GridLayout(3,3));
-        /*JLabel slow = new JLabel("Slow", JLabel.RIGHT);
-        speedSlider = generateSlider();
-        JLabel fast = new JLabel("Fast", JLabel.LEFT);*
-        add(slow);
-        add(speedSlider);
-        add(fast);*/
+        
         addSlider();
         addToggleButtons();
         addButtons();
-        //JPanel buttonPane = generateButtonPanel();
-        //add(buttonPane, BorderLayout.CENTER);
-        //add(speedSlider, BorderLayout.SOUTH);
+        
     }
-    
-    /*private JSlider generateSlider()
-    {
-       JSlider slide = new JSlider(MIN_DELAY_MSECS, MAX_DELAY_MSECS,
-                INITIAL_DELAY);
-        slide.setInverted(true);
-        slide.setPreferredSize(new Dimension(100, slide.getPreferredSize().height));
-        slide.setMaximumSize(slide.getPreferredSize()); 
-        return slide;
-    }*/
     private void addSlider()
     {
         speedSlider = new JSlider(MIN_DELAY_MSECS, MAX_DELAY_MSECS,

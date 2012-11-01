@@ -106,21 +106,7 @@ public class GridPanel extends JPanel implements Scrollable{
      * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
      */
     public void paintComponent(Graphics g) {
-        /*
-         * HEXSIZE = 
-         * xSTART = 
-         * ySTART =
-         */
-        /*        
-         *   
-         *
-         //IMAGEWIDTH = (int)(this.getSize().getWidth()*9.0/10.0); //calculates the width of the images being displayed
-         //IMAGEHEIGHT= (int)(this.getSize().getHeight()*9.0/10.0);
-         
-         //STARTX=(int)(this.getSize().getWidth()-IMAGEWIDTH)/2;
-         //STARTY=(int)(this.getSize().getHeight()-IMAGEHEIGHT)/2;*/
-
-        update(g);
+     update(g);
     }
 
     /**
@@ -131,7 +117,6 @@ public class GridPanel extends JPanel implements Scrollable{
     public void update(Graphics g)//overrides update method to prevent continuous uneccessary repainting
     {
         g.setColor(Color.BLACK);
-        //g.fillRect(0, 0, this.getWidth(), this.getHeight());
         drawGrid(HEXSIZE, g);
     }
 
@@ -142,29 +127,6 @@ public class GridPanel extends JPanel implements Scrollable{
      * hexagon grid
      * @param hexsize the size of each hexagon
      */
-   /* public void drawGrid(int length, int hexsize, Graphics g) {
-        int numrows = length * 2 - 1;
-        int numcols = length;
-        int medianrow = length - 1;
-        int[] rowstartpoint = new int[]{(hexsize - 1) * (length - 1), 0};
-        for (int i = 0; i < numrows; i++) {
-            for (int j = 0; j < numcols; j++) {
-                //int[] point = point(i, j, rowstartpoint, hexsize);
-                drawHexagon(hexCoordinates(pnX(i, j) + xSTART, pnY(i, j) + ySTART, hexsize), g);
-                //drawHexagon(hexCoordinates(point[0]+xSTART, point[1]+ySTART, hexsize));
-            }
-            if (i > medianrow) {
-                rowstartpoint[0] = 0;
-                rowstartpoint[1] = rowstartpoint[1] + hexsize;
-                numcols--;
-            } else {
-                rowstartpoint[0] = 0;
-                rowstartpoint[1] = rowstartpoint[1] + hexsize;
-                numcols++;
-            }
-
-        }
-    }*/
 
     /**
      * Draws a hexagon of the given coordinates
@@ -172,15 +134,7 @@ public class GridPanel extends JPanel implements Scrollable{
      * @param hexCoordinates the given coordinates
      * @param g graphics
      */
-    public void drawHexagon(int x, int y, int r, int c, int hexsize, Graphics g, Image i) {
-        /*int [][]hexCoordinates = hexCoordinates(x, y, hexsize);
-        for (int i = 0; i < hexCoordinates.length - 1; i++) {
-            g.setColor(Color.GREEN);
-            g.drawLine(hexCoordinates[i][0], hexCoordinates[i][1], hexCoordinates[i + 1][0], hexCoordinates[i + 1][1]);
-        }
-        g.drawLine(hexCoordinates[hexCoordinates.length - 1][0], hexCoordinates[hexCoordinates.length - 1][1], hexCoordinates[0][0], hexCoordinates[0][1]);
-        */
-        
+    public void drawHexagon(int x, int y, int r, int c, int hexsize, Graphics g, Image i) {       
         g.drawImage(i, x, y, hexsize, hexsize, this);
     }
 
@@ -219,12 +173,6 @@ public class GridPanel extends JPanel implements Scrollable{
             ys[4] = size+ startY;
         xs[5] = startX;
             ys[5] = size / 2+ startY;
-        /*hexCoord[0] = new int[]{startX, B};
-         hexCoord[1] = new int[]{sidelength/2, startY};
-         hexCoord[2] = new int[]{A+sidelength, startY};
-         hexCoord[3] = new int[]{2*sidelength, B};
-         hexCoord[4] = new int[]{A+sidelength, 2*B};
-         hexCoord[5] = new int[]{A, 2*B};*/
         return new Polygon(xs, ys, 6);
     }
    /**
