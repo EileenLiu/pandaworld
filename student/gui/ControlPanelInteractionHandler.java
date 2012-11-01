@@ -56,6 +56,7 @@ public class ControlPanelInteractionHandler {
                 view.worldDisplay.controls.stopButton.setEnabled(false);
                 view.worldDisplay.controls.stepButton.setEnabled(true);
                 view.worldDisplay.controls.runButton.setEnabled(true); 
+                model.toggleRun();
             }
         });
         view.worldDisplay.controls.stepButton.addActionListener(new ActionListener(){

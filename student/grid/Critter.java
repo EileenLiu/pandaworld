@@ -102,9 +102,10 @@ public class Critter /*extends Entity*/ {
     public void forward() {
         mem[4] -= mem[3] * MOVE_COST;
         Reference<Tile> newPos = pos.adj(dir);
-        if(newPos.contents().rock())
+        if(!(newPos==null||newPos.contents().rock())){
+        /*if(newPos.contents().rock())
             System.out.println("Won't do that; it's a rock");
-        else {
+        else {*/
             pos.contents().removeCritter();
             newPos.contents().putCritter(this);
             pos = newPos;
@@ -114,9 +115,10 @@ public class Critter /*extends Entity*/ {
     
     public void backward() {
         Reference<Tile> newPos = pos.lin(-1,dir);
-        if(newPos.contents().rock())
+        if(!(newPos==null||newPos.contents().rock())){
+        /*if(newPos.contents().rock())
             System.out.println("Won't do that; it's a rock");
-        else {
+        else {*/
             pos.contents().removeCritter();
             newPos.contents().putCritter(this);
             pos = newPos;
