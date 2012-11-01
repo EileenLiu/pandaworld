@@ -19,6 +19,7 @@ import student.world.World;
 
 public class WorldDisplay extends JPanel{
     public GridPanel gridpane;
+    //public JScrollPane 
     public JPanel infoDisplay;
     public JPanel worldStatusPanel;
     public JTextArea attributes;
@@ -43,8 +44,9 @@ public class WorldDisplay extends JPanel{
         
         updateWorldStatus();
         updateAttributes();
-
-        add(gridpane, BorderLayout.CENTER);
+        JScrollPane scrollpane = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        scrollpane.setViewportView(gridpane);
+        add(scrollpane, BorderLayout.CENTER);
         add(infoDisplay, BorderLayout.EAST);
         gridpane.setVisible(true);
         infoDisplay.setVisible(true);

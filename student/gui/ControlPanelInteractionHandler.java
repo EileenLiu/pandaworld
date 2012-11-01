@@ -44,7 +44,8 @@ public class ControlPanelInteractionHandler {
                 rntmr.schedule(rntsk, 0, period);
                 view.worldDisplay.controls.runButton.setEnabled(false);
                 view.worldDisplay.controls.stopButton.setEnabled(true);
-                view.worldDisplay.controls.stepButton.setEnabled(false);            
+                view.worldDisplay.controls.stepButton.setEnabled(false);  
+                model.toggleRun();
             }
         });
         view.worldDisplay.controls.stopButton.addActionListener(new ActionListener(){
@@ -63,8 +64,13 @@ public class ControlPanelInteractionHandler {
                 model.step();
             }
         });
-        //view.worldDisplay.controls.runButton
-        //                             view.worldDisplay.controls.random
+    }
+    
+    private class RunTask extends TimerTask {
+        @Override
+        public void run() {
+            //put the step code here
+        }
     }
     
     private class TmrTsk extends TimerTask {

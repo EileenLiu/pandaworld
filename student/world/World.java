@@ -24,6 +24,7 @@ public class World {
     HexGrid<Tile> grid;
     private int timesteps = 0;
     private boolean RUNNING = false;
+    private boolean STEP = false;
     private boolean WAIT = true; //if false, random action
     public World() {
         this(DEFAULT_ROWS, DEFAULT_COLS);
@@ -32,13 +33,17 @@ public class World {
     public World(int _r, int _c) {
         grid = new ArrayHexGrid<Tile>(_r, _c);
     }
-
+    
     public String getStatus() {
         return "Timesteps: " + timesteps + "\n" + population();
     }
     public boolean isRunning()
     {
         return RUNNING;
+    }
+    public boolean shouldStep()
+    {
+        return STEP;
     }
     public boolean shouldWait()
     {
@@ -52,6 +57,11 @@ public class World {
     {
         WAIT = !WAIT;
     }
+
+    public void doStep() {
+        STEP = true;
+     }
+    
     public void step() {
         int cr = 0;
         for(Reference<Tile> e : grid)
@@ -69,6 +79,7 @@ public class World {
         timesteps++;
         System.out.println("-----------------"+timesteps);
     }
+    
     public int getTimesteps()
     {
         return timesteps;
