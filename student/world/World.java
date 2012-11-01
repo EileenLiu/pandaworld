@@ -63,6 +63,14 @@ public class World {
      }
     
     public void step(boolean random) {
+        for(int i = 0; i < Constants.PLANTS_CREATED_PER_TURN; i++) {
+            int r = (int) (grid.nRows()*Math.random());
+            int c = (int) (grid.nCols()*Math.random());
+            if(!grid.get(c, r).plant() && !grid.get(c, r).rock())
+                grid.get(c, r).putPlant();
+            else
+                i--;
+        }
         int cr = 0;
         for(Reference<Tile> e : grid)
             if(e.contents()!=null && e.contents().critter()) cr++;
