@@ -25,23 +25,23 @@ public class ControlPanelInteractionHandler {
     private TimerTask rntsk;
     private int period;
 
-    public ControlPanelInteractionHandler(final World _model, final WorldFrame _view, ControlPanel _cp) {
+    public ControlPanelInteractionHandler(final World _model, final WorldFrame _view) {
         model = _model;
         view = _view;
-        cp = _cp;
-        view.worldDisplay.controls.random.addActionListener(new ActionListener(){
+        cp = view.worldDisplay.controls;;
+        cp.random.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 model.toggleWait();
             }
         });
-        view.worldDisplay.controls.wait.addActionListener(new ActionListener(){
+        cp.wait.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 model.toggleWait();
             }
         });
-        view.worldDisplay.controls.runButton.addActionListener(new ActionListener(){
+        cp.runButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 rntsk = new TmrTsk();
@@ -53,7 +53,7 @@ public class ControlPanelInteractionHandler {
                 model.toggleRun();
             }
         });
-        view.worldDisplay.controls.stopButton.addActionListener(new ActionListener(){
+        cp.stopButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 rntsk.cancel();
@@ -61,9 +61,10 @@ public class ControlPanelInteractionHandler {
                 view.worldDisplay.controls.stopButton.setEnabled(false);
                 view.worldDisplay.controls.stepButton.setEnabled(true);
                 view.worldDisplay.controls.runButton.setEnabled(true); 
+                model.toggleRun();
             }
         });
-        view.worldDisplay.controls.stepButton.addActionListener(new ActionListener(){
+        cp.stepButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 model.step();

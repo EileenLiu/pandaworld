@@ -37,8 +37,13 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
     public MouseInteractionHandler(final World _model, final WorldFrame _view) {
         model = _model;
         view = _view;
-        ControlPanelInteractionHandler cpih = new ControlPanelInteractionHandler(model, view, view.display().controls);
+        ControlPanelInteractionHandler cpih = new ControlPanelInteractionHandler(model, view);
+        view.addMouseListener(this);
+        view.worldDisplay.gridpane.addKeyListener(this);
+        view.setVisible(true);
+        view.setDefaultCloseOperation(WorldFrame.EXIT_ON_CLOSE);
         view.addWindowListener(new ExitHandler());
+        
         rock = new LocAxn("put rock") {
             @Override
             public void act() {
@@ -158,6 +163,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
          rclxtar.contents().getCritter().tag();
          }
          };*/
+        this.gameLoop();
     }
 
     @Override
