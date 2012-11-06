@@ -32,7 +32,7 @@ public class CritterFileParser {
      * @param _pos the given location
      * @return
      */
-    public static Critter generateCritter(String filename, World world, HexGrid.Reference<Tile> pos) {
+    public static Critter generateCritter(String filename, World world, HexGrid.Reference<Tile> pos, int direction) {
         Critter c = null;
         try {
                 BufferedReader inStreamReader= new BufferedReader(new InputStreamReader(new FileInputStream(new File(filename))));
@@ -48,8 +48,7 @@ public class CritterFileParser {
                 c.setSize(Integer.parseInt(arr[3]));
                 c.setEnergy(Integer.parseInt(arr[4]));
                 c.setApperance(arr[5]);
-                Program program = ParserFactory.getParser().parse(inStreamReader);
-                
+                Program program = ParserFactory.getParser().parse(inStreamReader);               
                 //System.out.println(program.prettyPrint());
             } catch (FileNotFoundException e) {
                 System.out.println("The given file was not found.");

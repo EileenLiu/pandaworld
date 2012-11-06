@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.Set;
 import student.grid.ArrayHexGrid;
 import student.grid.Constants;
+import student.grid.Critter;
 import student.grid.HexGrid;
 import student.grid.HexGrid.HexDir;
 import student.grid.HexGrid.Reference;
@@ -109,7 +110,20 @@ public class World {
     public Reference<Tile> at(int r, int c) {
         return grid.ref(c, r);
     }
-
+    public void addCritter(Critter c, int row, int col)
+    {
+        grid.ref(col, row).contents().putCritter(c);
+    }
+    public void add(String type, int row, int col) throws InvalidWorldAdditionException
+    {
+        if(type.equals("plant"))
+            grid.ref(col, row).contents().putPlant();
+        else if(type.equals("rock"))
+            grid.ref(col, row).setContents(new Tile.Rock());
+        else
+            throw new InvalidWorldAdditionException();
+            //TODO: Throw some kind of exception
+    }
     /**
      * Retrieves the default reference at 0, 0
      *
@@ -132,5 +146,11 @@ public class World {
             population[3] = population[3] + (t.rock() ? 1 : 0);
         }
         return population;
+    }
+
+    public static class InvalidWorldAdditionException extends Exception {
+
+        public InvalidWorldAdditionException() {
+        }
     }
 }
