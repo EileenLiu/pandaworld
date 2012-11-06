@@ -4,6 +4,8 @@
  */
 package student.parse;
 
+import student.grid.Critter;
+
 /**
  *
  * @author haro
@@ -18,7 +20,7 @@ class Tag extends Action {
     }
 
     @Override
-    public void execute() {
+    public void execute(Critter c) {
         throw new Error("Can't execute yet!");
     }
 

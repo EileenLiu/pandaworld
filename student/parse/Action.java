@@ -2,6 +2,7 @@ package student.parse;
 
 import java.util.Collections;
 import java.util.LinkedList;
+import student.grid.Critter;
 import student.parse.ParserImpl.HistObj;
 import student.parse.util.Functions;
 import static student.parse.util.Functions.forName;
@@ -42,7 +43,7 @@ public class Action extends Node<Expression<?>> {
      * Executes the action, by which I mean it throws an error.
      * This method's signature is expected to change.
      */
-    public void execute() {
+    public void execute(Critter c) {
         act.exec();
     }
 

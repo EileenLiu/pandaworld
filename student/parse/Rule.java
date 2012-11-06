@@ -3,6 +3,7 @@ package student.parse;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import student.grid.CritterState;
 import student.parse.ParserImpl.HistObj;
 
 /**
@@ -94,4 +95,11 @@ public class Rule extends Node<Update> {
             list = action.buildList(list);
         return list;
     }
+    
+    public boolean sat (CritterState s) {
+        throw new UnsupportedOperationException("Do this later.");
+    }
+    public Action ap (CritterState s) {
+        throw new UnsupportedOperationException("Do this later.");
+    } 
 }

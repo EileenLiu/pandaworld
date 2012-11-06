@@ -3,6 +3,7 @@ package student.parse;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import student.grid.CritterState;
 import student.parse.ParserImpl.HistObj;
 
 /**
@@ -37,5 +38,16 @@ public class Program extends Node<Rule> {
         for(Rule r : children)
             sb = r.toString(sb);
         return sb;
+    }
+    
+    public Action run(CritterState s) {
+        int i = 0; a:
+        do for(Rule r : children) 
+            if(r.sat(s))
+        {       Action a = r.ap(s);
+                if(a != null) return a;
+                else continue a;
+        } while (i++ < 1000);
+        return new Action("wait");
     }
 }

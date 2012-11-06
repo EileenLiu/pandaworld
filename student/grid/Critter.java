@@ -9,21 +9,24 @@ import static student.grid.Constants.*;
 import student.grid.HexGrid.HexDir;
 import static student.grid.HexGrid.HexDir.*;
 import student.grid.HexGrid.Reference;
+import student.parse.Action;
+import student.parse.Program;
 import student.world.World;
 
 /**
  *
  * @author haro
  */
-public class Critter /*extends Entity*/ {
+public class Critter /*extends Entity*/ implements CritterState {
 
     private World wor;
     private Reference<Tile> pos;
     private HexDir dir;
     private int mem[];
     private boolean acted;
+    private Program prog;
 
-    public Critter(World _wor, Reference<Tile> _pos, int memsiz) {
+    public Critter(World _wor, Reference<Tile> _pos, Program p) {
         wor = _wor;
         pos = _pos;
         mem = defaultMemory();
@@ -94,6 +97,11 @@ public class Critter /*extends Entity*/ {
            pos.contents().removeCritter();
         }
     }
+    
+    public void act() {
+        prog.run(this).execute(this);
+    }
+    
     public void randomAct() {
         switch ((int) (Math.random() * 8)) {
             case 0:
@@ -221,7 +229,7 @@ public class Critter /*extends Entity*/ {
         Reference<Tile> np = pos.lin(-1, dir);
         if(np == null || np.contents().rock())
             return; //we're in a corner, can't put a critter there.
-        Critter baby = new Critter(wor, np, mem[0]);
+        Critter baby = new Critter(wor, np, prog);
         baby.mem[4] = Constants.INITIAL_ENERGY;
         np.contents().putCritter(baby);
         mem[4] -= complexity() * Constants.BUD_COST;
@@ -286,5 +294,17 @@ public class Critter /*extends Entity*/ {
 
     public Reference<Tile> loc() {
         return this.pos;
+    }
+
+    @Override
+    public int getMem(int i) {
+        return (i < 0 || i >= mem.length)?0
+                : mem[i];
+    }
+
+    @Override
+    public void setMem(int i, int v) {
+        boolean b = (i < 0 || i >= mem.length) || (mem[i] = v)
+          >3;
     }
 }
