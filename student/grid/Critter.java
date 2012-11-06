@@ -70,9 +70,7 @@ public class Critter /*extends Entity*/ {
     }
     
     public int[] memory() {
-        int rest[] = new int[mem.length - 9];
-        System.arraycopy(mem, 9, rest, 0, mem.length - 9);
-        return rest;
+        return mem;
     }
     public void randomizeMemory()
     {
@@ -93,13 +91,38 @@ public class Critter /*extends Entity*/ {
         acted = false;
         if (mem[4] < 0) //if run out of energy then
         {//die
-           pos.contents().addFood(MOVE_COST);
+           pos.contents().addFood(Constants.FOOD_PER_SIZE*size());
            pos.contents().removeCritter();
         }
     }
-    public void randomAct(){
-        //TODO
+    public void randomAct() {
+        switch ((int) (Math.random() * 8)) {
+            case 0:
+                _wait();
+            case 1:
+                forward();
+                break;
+            case 2:
+                backward();
+                break;
+            case 3:
+                eat();
+                break;
+            case 4:
+                left();
+                break;
+            case 5:
+                right();
+                break;
+            case 6:
+                grow();
+                break;
+            case 7:
+                bud();
+                break;
+        }
     }
+    
     public void _wait() {
         mem[4] -= mem[3];
         acted = true;
@@ -192,6 +215,17 @@ public class Critter /*extends Entity*/ {
     public void grow() {
         mem[4] -= mem[3] * complexity() * GROW_COST;
         mem[3]++;
+        acted = true;
+    }
+    
+    public void bud() {
+        Reference<Tile> np = pos.lin(-1, dir);
+        if(np == null || np.contents().rock())
+            return; //we're in a corner, can't put a critter there.
+        Critter baby = new Critter(wor, np, mem[0]);
+        baby.mem[4] = Constants.INITIAL_ENERGY;
+        np.contents().putCritter(baby);
+        mem[4] -= complexity() * Constants.BUD_COST;
         acted = true;
     }
 

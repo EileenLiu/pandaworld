@@ -206,9 +206,11 @@ public class GridPanel extends JPanel implements Scrollable{
                         drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, i);
                     }
                 }
+                /*/
                 gp.setColor(Color.RED);
                 String s = "("+r+","+c+")";
                 gp.drawChars(s.toCharArray(), 0, s.length(), bbx.x+20, bbx.y+20);
+                /*/
             }
         }
     }

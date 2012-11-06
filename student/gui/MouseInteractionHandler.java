@@ -34,7 +34,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
     private JPopupMenu men;
     private Action rock, unrock,
             plant, unplant;
-    private Action crit, critMenIts[] = new Action[8];
+    private Action crit, critMenIts[] = new Action[9];
     private boolean EXIT = false;
 
     public MouseInteractionHandler(final World _model, final WorldFrame _view) {
@@ -159,13 +159,13 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
                 }
             }
         };
-        /*criMenIts[0] = new LocAxn("bud") {
+        critMenIts[8] = new LocAxn("bud") {
          @Override
          public void act() {
          if(rclxtar.contents().critter())
          rclxtar.contents().getCritter().bud();
          }
-         };*/
+         };
         /*criMenIts[0] = new LocAxn("mate") {
          @Override
          public void act() {
@@ -253,16 +253,6 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
             men.setVisible(false);
         }
     }
-    private long systime;
-//    public void gameLoop() {
-//        while (!EXIT) {
-//            long deltaTime = System.currentTimeMillis()-systime;
-//            if (model.isRunning() || model.shouldStep()) {
-//                model.step();
-//            }
-//        }
-//
-//    }
 
     @Override
     public void keyTyped(KeyEvent e) { keyPressed(e); }
