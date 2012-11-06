@@ -4,6 +4,7 @@
  */
 package student.grid;
 
+import java.io.File;
 import java.util.Set;
 import static student.grid.Constants.*;
 import student.grid.HexGrid.HexDir;
@@ -25,6 +26,7 @@ public class Critter /*extends Entity*/ implements CritterState {
     private int mem[];
     private boolean acted;
     private Program prog;
+    private File appearance; //an image filename
 
     public Critter(World _wor, Reference<Tile> _pos, Program p) {
         wor = _wor;
@@ -85,7 +87,26 @@ public class Critter /*extends Entity*/ implements CritterState {
     public int read() {
         return 100000 * tag() + 1000 * size() + posture();
     }   
-    
+    public void setDefense(int i)
+    {
+        mem[1] = i;
+    }
+    public void setOffense(int i)
+    {
+        mem[2] = i;
+    }
+    public void setSize(int i)
+    {
+        mem[3] = i;
+    }
+    public void setEnergy(int i)
+    {
+        mem[4] = i;
+    }
+    public void setAppearance(File filename)
+    {
+        appearance = filename;
+    }
     public void timeStep() {
         if (!acted) {
             _wait();
