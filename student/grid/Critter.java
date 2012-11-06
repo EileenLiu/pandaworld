@@ -22,6 +22,7 @@ public class Critter /*extends Entity*/ {
     private HexDir dir;
     private int mem[];
     private boolean acted;
+    private String apperance; //an image filename
 
     public Critter(World _wor, Reference<Tile> _pos, int memsiz) {
         wor = _wor;
@@ -82,7 +83,26 @@ public class Critter /*extends Entity*/ {
     public int read() {
         return 100000 * tag() + 1000 * size() + posture();
     }   
-    
+    public void setDefense(int i)
+    {
+        mem[1] = i;
+    }
+    public void setOffense(int i)
+    {
+        mem[2] = i;
+    }
+    public void setSize(int i)
+    {
+        mem[3] = i;
+    }
+    public void setEnergy(int i)
+    {
+        mem[4] = i;
+    }
+    public void setApperance(String filename)
+    {
+        apperance = filename;
+    }
     public void timeStep() {
         if (!acted) {
             _wait();
