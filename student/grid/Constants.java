@@ -26,7 +26,9 @@ public final class Constants {
                                FOOD_PER_SIZE            = 200,
                                PLANTS_CREATED_PER_TURN  = 2,
                                INITIAL_ENERGY           = 250,
-                               BUD_COST                 = 9;
+                               BUD_COST                 = 9,
+                               MAX_COLUMN               = 49,
+                               MAX_ROW                  = 69;
     public static volatile double DAMAGE_INC = 0.2,
                                   PLANT_GROW_PROB = .005;
     

@@ -18,19 +18,38 @@ public class WorldFrame extends JFrame {
         world = w;
         worldDisplay = new WorldDisplay(world);
         worldDisplay.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 0));
+        setJMenuBar(createMenuBar());
         setLayout(new BorderLayout());
         this.add(worldDisplay, BorderLayout.CENTER);
         this.setFullScreen();
     }
+    public JMenuBar createMenuBar() {
+        JMenuBar menuBar;
+        JMenu filemenu, viewmenu, helpmenu;
+        JMenuItem menuItem;
+        JCheckBoxMenuItem cbMenuItemGraphs, cbMenuItemData, cbMenuItemTextbox, cbMenuItemSensor;
 
-    public JTextArea generateWorldStatusArea() {
-        JTextArea tA = new JTextArea();
-        tA.setLayout(new BorderLayout());
-        tA.setEditable(false);
-        tA.setLineWrap(true);
-        tA.setOpaque(false);
-        tA.setText("World Status\n\n" + world.getStatus());
-        return tA;
+        //Create the menu bar.
+        menuBar = new JMenuBar();
+        filemenu = new JMenu("File");
+        menuBar.add(filemenu);
+        menuItem = new JMenuItem("Settings");
+        filemenu.add(menuItem);
+        menuItem = new JMenuItem("Exit");
+        filemenu.add(menuItem);
+        viewmenu = new JMenu("View");
+        menuBar.add(viewmenu);
+        cbMenuItemGraphs = new JCheckBoxMenuItem("Display Graphs");
+        viewmenu.add(cbMenuItemGraphs);
+        cbMenuItemData = new JCheckBoxMenuItem("Display Data");
+        viewmenu.add(cbMenuItemData);
+        cbMenuItemTextbox = new JCheckBoxMenuItem("Laymen's Text Box");
+        viewmenu.add(cbMenuItemTextbox);
+        cbMenuItemSensor = new JCheckBoxMenuItem("Sensor Display");
+        viewmenu.add(cbMenuItemSensor);
+        helpmenu = new JMenu("Help");
+        menuBar.add(helpmenu);
+        return menuBar;
     }
 
     public WorldDisplay display() {
