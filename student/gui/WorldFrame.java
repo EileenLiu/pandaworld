@@ -14,9 +14,9 @@ public class WorldFrame extends JFrame {
     public WorldDisplay worldDisplay; //- made up of two JPanels, one is the grid, one is the current attributes
 
     public WorldFrame(World w) {
-        initMenubar();
-        loadWorld(w);
         setLayout(new BorderLayout());
+        loadWorld(w);
+        initMenubar();
         this.setFullScreen();
     }
 
@@ -29,7 +29,6 @@ public class WorldFrame extends JFrame {
         worldDisplay = new WorldDisplay(world);
         worldDisplay.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 0));
         this.add(worldDisplay, BorderLayout.CENTER);
-        worldDisplay.setVisible(true);
         System.out.println("Loaded world");
     }
 
