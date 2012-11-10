@@ -117,7 +117,17 @@ public class World {
     public void add(String type, int row, int col) throws InvalidWorldAdditionException
     {
         if(type.equals("plant"))
-            grid.ref(col, row).contents().putPlant();
+        {
+            System.out.println(grid);
+            System.out.println(grid.ref(col, row));
+            System.out.println(grid.ref(col, row).contents());
+            HexGrid.Reference<Tile> loc = grid.ref(col, row);
+            if(loc.contents()!=null)
+                loc.contents().putPlant();
+            else
+                loc.setContents(new Tile(true, 0));
+        }
+        //TODO: fix null pointer exception
         else if(type.equals("rock"))
             grid.ref(col, row).setContents(new Tile.Rock());
         else

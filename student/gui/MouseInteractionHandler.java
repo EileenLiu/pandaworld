@@ -16,6 +16,7 @@ import java.awt.event.WindowEvent;
 import java.security.Key;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JFrame;
 import javax.swing.JPopupMenu;
 import student.grid.Critter;
 import student.grid.HexGrid.Reference;
@@ -41,6 +42,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
         model = _model;
         view = _view;
         ControlPanelInteractionHandler cpih = new ControlPanelInteractionHandler(model, view);
+        MenuInteractionHandler mih = new MenuInteractionHandler(model, view);
         view.worldDisplay.gridpane.addMouseListener(this);
         view.worldDisplay.gridpane.addKeyListener(this);
         

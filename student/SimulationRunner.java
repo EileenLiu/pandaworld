@@ -29,7 +29,7 @@ public class SimulationRunner {
             return;
         }
         World model = null;
-        if (!args[0].isEmpty()) {
+        if (args.length>0) {
             model = WorldFileParser.generateWorld(args[0], Constants.MAX_ROW, Constants.MAX_COLUMN);
         }
         model = new World(Constants.MAX_ROW,Constants.MAX_COLUMN);
