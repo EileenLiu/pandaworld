@@ -14,9 +14,9 @@ public class WorldFrame extends JFrame {
     public WorldDisplay worldDisplay; //- made up of two JPanels, one is the grid, one is the current attributes
 
     public WorldFrame(World w) {
-        initMenubar();
-        loadWorld(w);
         setLayout(new BorderLayout());
+        loadWorld(w);
+        initMenubar();
         this.setFullScreen();
     }
     public final void loadWorld(World w){
@@ -29,46 +29,7 @@ public class WorldFrame extends JFrame {
         worldDisplay = new WorldDisplay(world);
         worldDisplay.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 0));
         this.add(worldDisplay, BorderLayout.CENTER);
-        worldDisplay.setVisible(true);
         System.out.println("Loaded world");
-    }
-    public JMenuBar createMenuBar() {
-        JMenuBar menuBar;
-        JMenu worldmenu, addmenu, settingsmenu, viewmenu, helpmenu;
-        JMenuItem menuItem;
-        JCheckBoxMenuItem cbMenuItemGraphs, cbMenuItemData, cbMenuItemTextbox, cbMenuItemSensor;
-
-        //Create the menu bar.
-        menuBar = new JMenuBar();
-        worldmenu = new JMenu("World");
-        menuBar.add(worldmenu);
-        menuItem = new JMenuItem("Create new world");
-        worldmenu.add(menuItem);
-        menuItem = new JMenuItem("Load world from file");
-        worldmenu.add(menuItem);
-        addmenu = new JMenu("Add");
-        menuBar.add(addmenu);
-        menuItem = new JMenuItem("Create new critter");
-        addmenu.add(menuItem);
-        menuItem = new JMenuItem("Create new rock");
-        addmenu.add(menuItem);
-        menuItem = new JMenuItem("Create new rock");
-        addmenu.add(menuItem);
-        settingsmenu = new JMenu("Settings");
-        menuBar.add(settingsmenu);
-        viewmenu = new JMenu("View");
-        menuBar.add(viewmenu);
-        cbMenuItemGraphs = new JCheckBoxMenuItem("Display Graphs");
-        viewmenu.add(cbMenuItemGraphs);
-        cbMenuItemData = new JCheckBoxMenuItem("Display Data");
-        viewmenu.add(cbMenuItemData);
-        cbMenuItemTextbox = new JCheckBoxMenuItem("Laymen's Text Box");
-        viewmenu.add(cbMenuItemTextbox);
-        cbMenuItemSensor = new JCheckBoxMenuItem("Sensor Display");
-        viewmenu.add(cbMenuItemSensor);
-        helpmenu = new JMenu("Help");
-        menuBar.add(helpmenu);
-        return menuBar;
     }
     private void initMenubar() {
 

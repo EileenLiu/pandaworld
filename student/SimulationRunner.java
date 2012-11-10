@@ -32,6 +32,7 @@ public class SimulationRunner {
         World model = null;
         if (args.length>0) {
             model = WorldFileParser.generateWorld(args[0], Constants.MAX_ROW, Constants.MAX_COLUMN);
+            System.out.println("Generate world from file");
         }
         model = new World(Constants.MAX_ROW,Constants.MAX_COLUMN);
         WorldFrame view = new WorldFrame(model);
