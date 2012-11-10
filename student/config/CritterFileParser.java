@@ -32,7 +32,7 @@ public class CritterFileParser {
      * @param _pos the given location
      * @return
      */
-    public static Critter generateCritter(String filename, World world, HexGrid.Reference<Tile> pos) {
+    public static Critter generateCritter(String filename, World world, HexGrid.Reference<Tile> pos, int direction) {
         Critter c = null;
         try {
                 BufferedReader inStreamReader= new BufferedReader(new InputStreamReader(new FileInputStream(new File(filename))));

@@ -117,6 +117,7 @@ public class GridPanel extends JPanel implements Scrollable{
     public void update(Graphics g)//overrides update method to prevent continuous uneccessary repainting
     {
         g.setColor(Color.BLACK);
+        g.fillRect(0, 0, this.WIDTH, this.HEIGHT);
         drawGrid(HEXSIZE, g);
     }
 
