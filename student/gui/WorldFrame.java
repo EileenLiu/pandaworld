@@ -19,10 +19,10 @@ public class WorldFrame extends JFrame {
         setLayout(new BorderLayout());
         this.setFullScreen();
     }
-    public final void loadWorld(World w){
+
+    public final void loadWorld(World w) {
         world = w;
-        if(worldDisplay!=null)
-        {
+        if (worldDisplay != null) {
             this.remove(worldDisplay);
             System.out.println("Attempted remove of worldDisplay");
         }
@@ -32,44 +32,7 @@ public class WorldFrame extends JFrame {
         worldDisplay.setVisible(true);
         System.out.println("Loaded world");
     }
-    public JMenuBar createMenuBar() {
-        JMenuBar menuBar;
-        JMenu worldmenu, addmenu, settingsmenu, viewmenu, helpmenu;
-        JMenuItem menuItem;
-        JCheckBoxMenuItem cbMenuItemGraphs, cbMenuItemData, cbMenuItemTextbox, cbMenuItemSensor;
 
-        //Create the menu bar.
-        menuBar = new JMenuBar();
-        worldmenu = new JMenu("World");
-        menuBar.add(worldmenu);
-        menuItem = new JMenuItem("Create new world");
-        worldmenu.add(menuItem);
-        menuItem = new JMenuItem("Load world from file");
-        worldmenu.add(menuItem);
-        addmenu = new JMenu("Add");
-        menuBar.add(addmenu);
-        menuItem = new JMenuItem("Create new critter");
-        addmenu.add(menuItem);
-        menuItem = new JMenuItem("Create new rock");
-        addmenu.add(menuItem);
-        menuItem = new JMenuItem("Create new rock");
-        addmenu.add(menuItem);
-        settingsmenu = new JMenu("Settings");
-        menuBar.add(settingsmenu);
-        viewmenu = new JMenu("View");
-        menuBar.add(viewmenu);
-        cbMenuItemGraphs = new JCheckBoxMenuItem("Display Graphs");
-        viewmenu.add(cbMenuItemGraphs);
-        cbMenuItemData = new JCheckBoxMenuItem("Display Data");
-        viewmenu.add(cbMenuItemData);
-        cbMenuItemTextbox = new JCheckBoxMenuItem("Laymen's Text Box");
-        viewmenu.add(cbMenuItemTextbox);
-        cbMenuItemSensor = new JCheckBoxMenuItem("Sensor Display");
-        viewmenu.add(cbMenuItemSensor);
-        helpmenu = new JMenu("Help");
-        menuBar.add(helpmenu);
-        return menuBar;
-    }
     private void initMenubar() {
 
         MENUBAR = new javax.swing.JMenuBar();
@@ -98,10 +61,10 @@ public class WorldFrame extends JFrame {
 
         importWorld.setText("World");
         /*importWorld.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                importWorldActionPerformed(evt);
-            }
-        });*/
+         public void actionPerformed(java.awt.event.ActionEvent evt) {
+         importWorldActionPerformed(evt);
+         }
+         });*/
         importMenu.add(importWorld);
 
         importCritter.setText("Critter");
@@ -109,10 +72,10 @@ public class WorldFrame extends JFrame {
 
         importSettings.setText("Settings");
         /*importSettings.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                importSettingsActionPerformed(evt);
-            }
-        });*/
+         public void actionPerformed(java.awt.event.ActionEvent evt) {
+         importSettingsActionPerformed(evt);
+         }
+         });*/
         importMenu.add(importSettings);
 
         MENUBAR.add(importMenu);
@@ -121,18 +84,18 @@ public class WorldFrame extends JFrame {
 
         createWorld.setText("World");
         /*createWorld.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                createWorldActionPerformed(evt);
-            }
-        });*/
+         public void actionPerformed(java.awt.event.ActionEvent evt) {
+         createWorldActionPerformed(evt);
+         }
+         });*/
         createMenu.add(createWorld);
 
         createCritter.setText("Critter");
         /*createCritter.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                createCritterActionPerformed(evt);
-            }
-        });*/
+         public void actionPerformed(java.awt.event.ActionEvent evt) {
+         createCritterActionPerformed(evt);
+         }
+         });*/
         createMenu.add(createCritter);
 
         createPlant.setText("Plant");
@@ -140,10 +103,10 @@ public class WorldFrame extends JFrame {
 
         createFood.setText("Food");
         /*createFood.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                createFoodActionPerformed(evt);
-            }
-        });*/
+         public void actionPerformed(java.awt.event.ActionEvent evt) {
+         createFoodActionPerformed(evt);
+         }
+         });*/
         createMenu.add(createFood);
 
         createRock.setText("Rock");
@@ -178,11 +141,12 @@ public class WorldFrame extends JFrame {
         MENUBAR.add(helpMenu);
 
         setJMenuBar(MENUBAR);
-        
+
         fileSelector = new javax.swing.JFileChooser();
         fileSelector.setDialogTitle("Import");
-        
+
     }
+
     public WorldDisplay display() {
         return worldDisplay;
     }
@@ -191,16 +155,18 @@ public class WorldFrame extends JFrame {
         worldDisplay.update();//repaint();
         super.repaint();
     }
+
     /**
      * Sets the WorldFrame to fullscreen.
+     *
      * @param	frame	the JFrame to set to fullscreen
      */
     private void setFullScreen() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int taskBarSize = Toolkit.getDefaultToolkit().getScreenInsets(getGraphicsConfiguration()).bottom;
-        this.setSize(screenSize.width, screenSize.height-taskBarSize);
+        this.setSize(screenSize.width, screenSize.height - taskBarSize);
     }
-        // Variables declaration - do not modify
+    // Variables declaration - do not modify
     public javax.swing.JFileChooser fileSelector;
     private javax.swing.JMenuBar MENUBAR;
     public javax.swing.JMenuItem aboutCredits;

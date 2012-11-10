@@ -30,7 +30,7 @@ public class CritterFileParser {
      * @param filename the given file
      * @param world the given world
      * @param _pos the given location
-     * @return
+     * @return null
      */
     public static Critter generateCritter(String filename, World world, HexGrid.Reference<Tile> pos, int direction) {
         Critter c = null;
@@ -42,22 +42,22 @@ public class CritterFileParser {
                 arr[i] = inStreamReader.readLine();
                 arr[i] = arr[i].substring(arr[i].indexOf(':')+2);
                 }
+                Program program = ParserFactory.getParser().parse(inStreamReader);
+                c = new Critter(world, pos, program);
                 c.setDefense(Integer.parseInt(arr[1]));
                 c.setOffense(Integer.parseInt(arr[2]));
                 c.setSize(Integer.parseInt(arr[3]));
                 c.setEnergy(Integer.parseInt(arr[4]));
                 c.setAppearance(new File(arr[5]));
-                Program program = ParserFactory.getParser().parse(inStreamReader);
-                c = new Critter(world, pos, program);
                 //System.out.println(program.prettyPrint());
             } catch (FileNotFoundException e) {
-                System.out.println("The given file was not found.");
+                System.out.println("CritterFileParser: The given file was not found.");
             }
             catch (IOException ex) {
-                System.out.println("The given file is invalid.");
+                System.out.println("CritterFileParser: The given file is invalid.");
             }
             catch(NumberFormatException e) {
-                System.out.println("The given file has invalid data: Integer expected.");
+                System.out.println("CritterFileParser: The given file has invalid data: Integer expected.");
             }
         return c;
     }

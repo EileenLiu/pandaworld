@@ -33,7 +33,7 @@ public class SimulationRunner {
         if (args.length>0) {
             model = WorldFileParser.generateWorld(args[0], Constants.MAX_ROW, Constants.MAX_COLUMN);
         }
-        model = new World(Constants.MAX_ROW,Constants.MAX_COLUMN);
+        else model = new World(Constants.MAX_ROW,Constants.MAX_COLUMN);
         WorldFrame view = new WorldFrame(model);
         InteractionHandler controller = new InteractionHandler(model, view);
     }

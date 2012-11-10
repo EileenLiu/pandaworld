@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import student.grid.Critter;
 import student.world.World;
 import student.world.World.InvalidWorldAdditionException;
@@ -19,17 +20,17 @@ import student.world.World.InvalidWorldAdditionException;
  * @author haro
  */
 public class WorldFileParser {
-
+    private static Pattern comment = Pattern.compile("//");
     public static World generateWorld(String filename, int MAX_ROW, int MAX_COLUMN) {
         World world = null;
         try {
             Scanner infile = new Scanner(new File(filename));
             world = new World(MAX_ROW, MAX_COLUMN);
             while (infile.hasNext()) {
-                String s = infile.nextLine();
+                String s = comment.split(infile.nextLine(), 2)[0];
 //                System.out.println(s + s.startsWith("//"));
-                if (!s.isEmpty()&&!s.startsWith("//")) //ignore empty lines or lines beginning with "//"
-                {
+                if (!s.isEmpty()) //ignore empty lines or lines beginning with "//"
+                {   
                     String arr[] = s.split(" ");
                     System.out.println(Arrays.asList(arr));
                     if (s.startsWith("critter ")) {
@@ -44,11 +45,11 @@ public class WorldFileParser {
             }
 
         } catch (FileNotFoundException e) {
-            System.out.println("The given file was not found.");
+            System.out.println("WorldFileParser: The given file was not found.");
         } catch (NumberFormatException e) {
-            System.out.println("The given file has invalid data: Integer expected.");
+            System.out.println("WorldFileParser: The given file has invalid data: Integer expected.");
         } catch (InvalidWorldAdditionException ex) {
-            System.out.println("The given file has invalid data: Item(s) could not be added to the world.");
+            System.out.println("WorldFileParser: The given file has invalid data: Item(s) could not be added to the world.");
         }
         return world;
     }
