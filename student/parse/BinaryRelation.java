@@ -1,5 +1,6 @@
 package student.parse;
 
+import student.grid.CritterState;
 import student.parse.util.Functions;
 
 public class BinaryRelation extends Condition<Expression<?>> {
@@ -41,8 +42,8 @@ public class BinaryRelation extends Condition<Expression<?>> {
     }
 
     @Override
-    public boolean eval() {
-        return relation.apply(children.get(0).eval(), children.get(1).eval());
+    public boolean eval(CritterState s) {
+        return relation.apply(children.get(0).eval(s), children.get(1).eval(s));
     }
 
     @Override
@@ -84,12 +85,11 @@ public class BinaryRelation extends Condition<Expression<?>> {
         right().toString(sb);
         return sb;
     }
-    
+
     @Override
-        public boolean randomize()
-    {
-    	relation = Functions.randEnum(Rel.class);
-    	return true;
+    public boolean randomize() {
+        relation = Functions.randEnum(Rel.class);
+       	return true;
     }
     /**
      * An enumeration of all possible binary operators.

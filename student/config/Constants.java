@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package student.grid;
+package student.config;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -30,12 +30,12 @@ public final class Constants {
     public static volatile double DAMAGE_INC = 0.2,
                                   PLANT_GROW_PROB = .005;
     
-    private static final Pattern constant = Pattern.compile("\\{[^\\}]*\\}");
+    private static final Pattern comment = Pattern.compile("\\{[^\\}]*\\}");
     public static void loadFromFile(File f) throws IOException {
         BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(f)));
         String inlin = ""; int line = 0;
         while((inlin = in.readLine()) != null) {
-            String lin = constant.matcher(inlin).replaceAll("");
+            String lin = comment.matcher(inlin).replaceAll("");
             String spl[] = lin.split(" ");
             if(spl.length != 2) 
                 throw new IOException("Invalid line format on line "+line);

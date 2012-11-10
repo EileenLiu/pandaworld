@@ -4,6 +4,8 @@
  */
 package student.parse;
 
+import student.grid.CritterState;
+
 public class Constant extends Expression<Constant> {
     private int value;
 
@@ -43,7 +45,7 @@ public class Constant extends Expression<Constant> {
     }
     
     @Override
-    public int eval() {
+    public int eval(CritterState s) {
         return value;
     }
     

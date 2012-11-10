@@ -97,9 +97,11 @@ public class Rule extends Node<Update> {
     }
     
     public boolean sat (CritterState s) {
-        throw new UnsupportedOperationException("Do this later.");
+        return condition.eval(s);
     }
     public Action ap (CritterState s) {
-        throw new UnsupportedOperationException("Do this later.");
+        for(Update u : children)
+            u.apply(s);
+        return action;
     } 
 }

@@ -3,6 +3,7 @@ package student.parse;
 // A critter program expression that has an integer value.
 import java.util.LinkedList;
 import java.util.List;
+import student.grid.CritterState;
 import static student.parse.ParserImpl.*;
 import student.parse.ParserImpl.HistObj;
 import static student.parse.util.PrettyPrint.*;
@@ -62,7 +63,7 @@ public abstract class Expression<SubNodeType extends Expression<?>> extends Node
         super(subs);
     }
     
-    public abstract int eval();
+    public abstract int eval(CritterState s);
     
     @Override
     public StringBuffer toString(StringBuffer sb) {

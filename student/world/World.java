@@ -7,7 +7,7 @@ package student.world;
 import java.util.Iterator;
 import java.util.Set;
 import student.grid.ArrayHexGrid;
-import student.grid.Constants;
+import student.config.Constants;
 import student.grid.HexGrid;
 import student.grid.HexGrid.HexDir;
 import student.grid.HexGrid.Reference;

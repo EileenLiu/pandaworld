@@ -11,4 +11,6 @@ package student.grid;
 public interface CritterState {
     public int getMem(int i);
     public void setMem(int i, int v);
+    public int ahead(int i);
+    public int nearby(int i);
 }

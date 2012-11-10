@@ -42,11 +42,10 @@ public class Program extends Node<Rule> {
     
     public Action run(CritterState s) {
         int i = 0; a:
-        do for(Rule r : children) 
-            if(r.sat(s))
-        {       Action a = r.ap(s);
-                if(a != null) return a;
-                else continue a;
+        do for(Rule r : children) if(r.sat(s)) {
+            Action a = r.ap(s);
+            if(a != null) return   a;
+            else          continue a;
         } while (i++ < 1000);
         return new Action("wait");
     }

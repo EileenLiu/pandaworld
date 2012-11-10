@@ -1,5 +1,6 @@
 package student.parse;
 
+import student.grid.CritterState;
 import student.parse.util.Functions;
 import static student.parse.util.Functions.*;
 
@@ -34,8 +35,8 @@ public class BinaryBooleanOperator extends Condition<Condition<?>> {
     }
 
     @Override
-    public boolean eval() {
-        return op.apply(left().eval(), right().eval());
+    public boolean eval(CritterState s) {
+        return op.apply(left().eval(s), right().eval(s));
     }
 
     @Override

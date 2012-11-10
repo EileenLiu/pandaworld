@@ -3,6 +3,7 @@ package student.parse;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import student.grid.CritterState;
 import student.parse.util.Functions;
 
 /**
@@ -66,8 +67,8 @@ public class BinaryArithmeticOperator extends Expression<Expression<?>> { // nee
      * Evaluates the BinaryOp to update its value
      */
     @Override
-    public int eval() {
-        return op.apply(children.get(0).eval(), children.get(1).eval());
+    public int eval(CritterState s) {
+        return op.apply(children.get(0).eval(s), children.get(1).eval(s));
     }
 
     @Override

@@ -3,6 +3,7 @@ package student.parse;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import student.grid.CritterState;
 import student.parse.ParserImpl.HistObj;
 import static student.parse.util.PrettyPrint.*;
 
@@ -72,7 +73,7 @@ public abstract class Condition<SubNodeType extends Node<?>> extends Node<SubNod
      * Evaluates the Condition
      * @return the boolean evaluation of the condition
      */
-    public abstract boolean eval();
+    public abstract boolean eval(CritterState s);
 
     @Override
     public StringBuffer toString(StringBuffer sb) {

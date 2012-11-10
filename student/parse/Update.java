@@ -5,6 +5,7 @@
 package student.parse;
 
 import java.util.LinkedList;
+import student.grid.CritterState;
 import student.parse.ParserImpl.HistObj;
 
 /**
@@ -35,17 +36,17 @@ public class Update extends Node<Expression<?>> {
         return children.get(1);
     }
     
-    public int oldValue() {
-        throw new Error("No state yet");
+    public int oldValue(CritterState s) {
+        return s.getMem(index().eval(s));
     }
     
-    public void apply() {
-        throw new Error("No state yet");
+    public void apply(CritterState s) {
+        s.setMem(index().eval(s), newValue().eval(s));
     }
 
     @Override
     public boolean deleteChild(Expression<?> n) {
-            return false;
+        return false;
     }
 
     @Override

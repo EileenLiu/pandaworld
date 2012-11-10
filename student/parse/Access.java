@@ -1,6 +1,7 @@
 package student.parse;
 
 import java.util.LinkedList;
+import student.grid.CritterState;
 import student.parse.ParserImpl.HistObj;
 import student.parse.util.Functions;
 import static student.parse.util.Functions.forName;
@@ -40,8 +41,8 @@ public class Access extends Expression<Expression<?>> {
      * Returns the value of the specified memory/sensor.
      */
     @Override
-    public int eval() {
-        return sen.val(ind().eval());
+    public int eval(CritterState s) {
+        return sen.val(ind().eval(s),s);
     }
     
     /**
@@ -71,26 +72,26 @@ public class Access extends Expression<Expression<?>> {
     
     public static enum Sen {
         MEM {
-            @Override public int val(int par) {
-                throw new Error("Can't do that yet...");
+            @Override public int val(int par, CritterState s) {
+                return s.getMem(par);
             }
         },
         RANDOM {
-            @Override public int val(int par) {
+            @Override public int val(int par, CritterState s) {
                 return (int)(par*Math.random());
             }            
         },
         AHEAD {
-            @Override public int val(int par) {
-                throw new Error("Can't do that yet...");
+            @Override public int val(int par, CritterState s) {
+                return s.ahead(par);
             }            
         },
         NEARBY {
-            @Override public int val(int par) {
-                throw new Error("Can't do that yet...");
+            @Override public int val(int par, CritterState s) {
+                return s.nearby(par);
             }            
         };
         
-        public abstract int val(int par);
+        public abstract int val(int par, CritterState s);
     }
 }

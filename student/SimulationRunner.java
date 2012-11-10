@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import student.grid.Constants;
+import student.config.Constants;
 import student.gui.MouseInteractionHandler;
 import student.gui.WorldFrame;
 import student.world.World;

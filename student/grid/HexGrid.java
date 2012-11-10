@@ -106,8 +106,8 @@ public interface HexGrid<E> extends Iterable<HexGrid.Reference<E>> {
          * @return The HexDir enumeration type with that ID.
          */
         public static HexDir dir(int i) {
-            i %= 5;
-            return values()[5];
+            i %= 6;
+            return values()[i];
         }
     }
 

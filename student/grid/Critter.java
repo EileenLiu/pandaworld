@@ -4,9 +4,10 @@
  */
 package student.grid;
 
+import student.config.Constants;
 import java.io.File;
 import java.util.Set;
-import static student.grid.Constants.*;
+import static student.config.Constants.*;
 import student.grid.HexGrid.HexDir;
 import static student.grid.HexGrid.HexDir.*;
 import student.grid.HexGrid.Reference;
@@ -294,7 +295,7 @@ public class Critter /*extends Entity*/ implements CritterState {
         return eventLog;
     }
 
-    private final String direction(int d) {
+    private String direction(int d) {
         String direction = "";
         switch (d) {
             case 0:direction = "north";
@@ -327,5 +328,26 @@ public class Critter /*extends Entity*/ implements CritterState {
     public void setMem(int i, int v) {
         boolean b = (i < 0 || i >= mem.length) || (mem[i] = v)
           >3;
+    }
+
+    @Override
+    public int ahead(int i) {
+        return encodeTile(pos.lin(i, dir).contents());
+        
+    }
+
+    @Override
+    public int nearby(int i) {
+        return encodeTile(pos.adj(HexDir.dir(i)).contents());
+    }
+    
+    private int encodeTile(Tile t) {
+        if(t.rock())
+            return -1;
+        if(t.critter())
+            return t.getCritter().read();
+        if(t.food() || t.plant())
+            return -t.foodValue() + (t.plant()?-Constants.ENERGY_PER_PLANT:0);
+        return 0;
     }
 }
