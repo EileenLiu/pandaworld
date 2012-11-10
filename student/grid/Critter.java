@@ -13,20 +13,21 @@ import static student.grid.HexGrid.HexDir.*;
 import student.grid.HexGrid.Reference;
 import student.parse.Action;
 import student.parse.Program;
+import student.parse.Rule;
 import student.world.World;
 
 /**
  *
  * @author haro
  */
-public class Critter /*extends Entity*/ implements CritterState {
+public final class Critter /*extends Entity*/ implements CritterState {
 
     private World wor;
     private Reference<Tile> pos;
     private HexDir dir;
     private int mem[];
-    private boolean acted;
-    private Program prog;
+    private boolean acted, amorous;
+    /*/private/*/public Program prog;
     private File appearance; //an image filename
 
     public Critter(World _wor, Reference<Tile> _pos, Program p) {
@@ -34,9 +35,10 @@ public class Critter /*extends Entity*/ implements CritterState {
         pos = _pos;
         mem = defaultMemory();
         dir = HexDir.N;
+        prog = p;
     }
-    public int []defaultMemory(){
-        return new int[]{9, 1, 1, 1, 10, 0, 0, 0, 0};
+    private int []defaultMemory(){
+        return new int[]{9, 1, 1, 1, Constants.INITIAL_ENERGY, 0, 0, 0, 0};
     }
     public HexDir direction() {
         return dir;
@@ -121,6 +123,7 @@ public class Critter /*extends Entity*/ implements CritterState {
     }
     
     public void act() {
+        amorous = false;
         prog.run(this).execute(this);
     }
     
@@ -251,11 +254,31 @@ public class Critter /*extends Entity*/ implements CritterState {
         Reference<Tile> np = pos.lin(-1, dir);
         if(np == null || np.contents().rock())
             return; //we're in a corner, can't put a critter there.
-        Critter baby = new Critter(wor, np, prog);
+        Critter baby = new Critter(wor, np, prog.mutate());
+        baby.mem = new int[mem.length];
+        System.arraycopy(mem, 0, baby.mem, 0, 9);
+        baby.mem[3] = 1;
         baby.mem[4] = Constants.INITIAL_ENERGY;
+        baby.mem[7] = 0;
+        baby.mem[8] = 1;
         np.contents().putCritter(baby);
         mem[4] -= complexity() * Constants.BUD_COST;
         acted = true;
+    }
+    
+    public void mate() {
+        Tile t = pos.adj(dir).contents();
+        if(t.critter() && t.getCritter().amorous) {
+            Critter c = t.getCritter();
+            int nrules = (Math.random()>.5?this:c).prog.numChildren(), 
+                    tr = prog.numChildren(), 
+                    cr = c.prog.numChildren();
+            Rule r[] = new Rule[nrules];
+            for(int i = 0; i < nrules; i++) {
+                r[i] = (i<tr?i<cr?Math.random()<.5?this:c:this:c).prog.rules().get(i);
+            }
+        }
+        else amorous = true;
     }
 
     private static double lgs(double x) {
@@ -350,4 +373,5 @@ public class Critter /*extends Entity*/ implements CritterState {
             return -t.foodValue() + (t.plant()?-Constants.ENERGY_PER_PLANT:0);
         return 0;
     }
+
 }

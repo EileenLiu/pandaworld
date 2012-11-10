@@ -21,6 +21,7 @@ import javax.swing.JPopupMenu;
 import student.grid.Critter;
 import student.grid.HexGrid.Reference;
 import student.grid.Tile;
+import student.parse.Program;
 import student.world.World;
 
 /**
@@ -85,7 +86,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
         crit = new LocAxn("add critter") {
             @Override
             protected void act() {
-                rclxtar.contents().putCritter(new Critter(masterController.getModel(), rclxtar, null));
+                rclxtar.contents().putCritter(new Critter(masterController.getModel(), rclxtar, new Program()));
             }
         };
         critMenIts[0] = new LocAxn("forward") {

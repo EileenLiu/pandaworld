@@ -29,6 +29,10 @@ public class Program extends Node<Rule> {
         super(new LinkedList<Rule>());
     }
     
+    public Program(Rule...s) {
+        super(s);
+    }
+    
     public List<Rule> rules() {
         return Collections.unmodifiableList(children);
     }
@@ -38,6 +42,10 @@ public class Program extends Node<Rule> {
         for(Rule r : children)
             sb = r.toString(sb);
         return sb;
+    }
+    
+    public Program mutate() {
+        return (Program)this.copy().mutate(this);
     }
     
     public Action run(CritterState s) {
