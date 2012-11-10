@@ -29,8 +29,8 @@ import student.world.World;
  */
 public class MouseInteractionHandler extends MouseAdapter implements java.awt.event.KeyListener {
 
-    private World model;
-    private WorldFrame view;
+    private final WorldFrame view;
+    private InteractionHandler masterController;
     private Reference<Tile> rclxtar = null;
     private JPopupMenu men;
     private Action rock, unrock,
@@ -38,11 +38,9 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
     private Action crit, critMenIts[] = new Action[9];
     private boolean EXIT = false;
 
-    public MouseInteractionHandler(final World _model, final WorldFrame _view) {
-        model = _model;
-        view = _view;
-        ControlPanelInteractionHandler cpih = new ControlPanelInteractionHandler(model, view);
-        MenuInteractionHandler mih = new MenuInteractionHandler(model, view);
+    public MouseInteractionHandler(final InteractionHandler _parent){//final World _model, final WorldFrame _view) {
+        masterController = _parent;
+        view = masterController.getView();
         view.worldDisplay.gridpane.addMouseListener(this);
         view.worldDisplay.gridpane.addKeyListener(this);
         
@@ -57,10 +55,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
             public void adjustmentValueChanged(AdjustmentEvent e) {
                 view.repaint();
             }
-        });
-        
-        view.setVisible(true);
-        view.setDefaultCloseOperation(WorldFrame.EXIT_ON_CLOSE);
+        });       
         view.addWindowListener(new ExitHandler());
         
         rock = new LocAxn("put rock") {
@@ -90,7 +85,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
         crit = new LocAxn("add critter") {
             @Override
             protected void act() {
-                rclxtar.contents().putCritter(new Critter(model, rclxtar, 9));
+                rclxtar.contents().putCritter(new Critter(masterController.getModel(), rclxtar, 9));
             }
         };
         critMenIts[0] = new LocAxn("forward") {
@@ -244,7 +239,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
             return null;
         int r = ret[0];
         int c = ret[1];
-        return model.at(r, c);
+        return masterController.getModel().at(r, c);
     }
 
     @Override

@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import student.config.WorldFileParser;
 import student.grid.Constants;
+import student.gui.InteractionHandler;
 import student.gui.MouseInteractionHandler;
 import student.gui.WorldFrame;
 import student.world.World;
@@ -34,6 +35,6 @@ public class SimulationRunner {
         }
         model = new World(Constants.MAX_ROW,Constants.MAX_COLUMN);
         WorldFrame view = new WorldFrame(model);
-        MouseInteractionHandler controller = new MouseInteractionHandler(model, view);
+        InteractionHandler controller = new InteractionHandler(model, view);
     }
 }   

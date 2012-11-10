@@ -14,14 +14,23 @@ public class WorldFrame extends JFrame {
     public WorldDisplay worldDisplay; //- made up of two JPanels, one is the grid, one is the current attributes
 
     public WorldFrame(World w) {
+        initMenubar();
+        loadWorld(w);
+        setLayout(new BorderLayout());
+        this.setFullScreen();
+    }
+    public final void loadWorld(World w){
         world = w;
+        if(worldDisplay!=null)
+        {
+            this.remove(worldDisplay);
+            System.out.println("Attempted remove of worldDisplay");
+        }
         worldDisplay = new WorldDisplay(world);
         worldDisplay.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 0));
-        initMenubar();
-        //setJMenuBar(createMenuBar());
-        setLayout(new BorderLayout());
         this.add(worldDisplay, BorderLayout.CENTER);
-        this.setFullScreen();
+        worldDisplay.setVisible(true);
+        System.out.println("Loaded world");
     }
     public JMenuBar createMenuBar() {
         JMenuBar menuBar;

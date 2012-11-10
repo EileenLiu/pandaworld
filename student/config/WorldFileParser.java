@@ -6,6 +6,7 @@ package student.config;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,9 +27,11 @@ public class WorldFileParser {
             world = new World(MAX_ROW, MAX_COLUMN);
             while (infile.hasNext()) {
                 String s = infile.nextLine();
-                if (!s.isEmpty() || s.startsWith("//")) //ignore empty lines or lines beginning with "//"
+//                System.out.println(s + s.startsWith("//"));
+                if (!s.isEmpty()&&!s.startsWith("//")) //ignore empty lines or lines beginning with "//"
                 {
                     String arr[] = s.split(" ");
+                    System.out.println(Arrays.asList(arr));
                     if (s.startsWith("critter ")) {
                         int row = Integer.parseInt(arr[2]);
                         int col = Integer.parseInt(arr[3]);

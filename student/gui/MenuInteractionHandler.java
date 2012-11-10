@@ -14,18 +14,18 @@ import student.world.World;
  * @author Eileen Liu <el544@cornell.edu>
  */
 public class MenuInteractionHandler {
-    private World model;
     private WorldFrame view;
-
-    public MenuInteractionHandler(final World _model, final WorldFrame _view) {
-        model = _model;
-        view = _view;
+    private InteractionHandler masterController;
+    public MenuInteractionHandler(final InteractionHandler _parent){
+        masterController = _parent; 
+        view = masterController.getView();
         view.importWorld.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 int returnVal = view.fileSelector.showOpenDialog(view);
                 if(returnVal == JFileChooser.APPROVE_OPTION) {
                     String filename = view.fileSelector.getSelectedFile().getName();
-                    WorldFileParser.generateWorld(filename, Constants.MAX_ROW , Constants.MAX_COLUMN);
+                    World newImportedWorld = WorldFileParser.generateWorld(filename, Constants.MAX_ROW , Constants.MAX_COLUMN);
+                    masterController.setModel(newImportedWorld);
                 }
             }
         });
