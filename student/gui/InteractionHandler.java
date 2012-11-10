@@ -17,6 +17,10 @@ public class InteractionHandler {
     {
         model = _model;
         view = _view;
+        load();
+    }
+    private void load()
+    {
         MouseInteractionHandler controller = new MouseInteractionHandler(this);
         ControlPanelInteractionHandler cpih = new ControlPanelInteractionHandler(this);
         MenuInteractionHandler mih = new MenuInteractionHandler(this);
@@ -30,12 +34,13 @@ public class InteractionHandler {
     public void setModel(World newWorld)
     {
         view.setVisible(false);
-        //view.dispose();
+        view.dispose();
         model = newWorld;
-        view.loadWorld(newWorld);
-        view.setVisible(true);
+        view = new WorldFrame(model);
+        load();
+        //view.loadWorld(newWorld);
+        //view.setVisible(true);
         view.repaint();
-
     }
     public WorldFrame getView()
     {

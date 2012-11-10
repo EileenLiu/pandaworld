@@ -29,7 +29,7 @@ import student.world.World;
  */
 public class MouseInteractionHandler extends MouseAdapter implements java.awt.event.KeyListener {
 
-    private final WorldFrame view;
+    //private final WorldFrame view;
     private InteractionHandler masterController;
     private Reference<Tile> rclxtar = null;
     private JPopupMenu men;
@@ -40,23 +40,23 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
 
     public MouseInteractionHandler(final InteractionHandler _parent){//final World _model, final WorldFrame _view) {
         masterController = _parent;
-        view = masterController.getView();
-        view.worldDisplay.gridpane.addMouseListener(this);
-        view.worldDisplay.gridpane.addKeyListener(this);
+        //view = masterController.getView();
+        masterController.getView().worldDisplay.gridpane.addMouseListener(this);
+        masterController.getView().worldDisplay.gridpane.addKeyListener(this);
         
-        view.worldDisplay.scrollpane.getHorizontalScrollBar().addAdjustmentListener(new AdjustmentListener(){
+        masterController.getView().worldDisplay.scrollpane.getHorizontalScrollBar().addAdjustmentListener(new AdjustmentListener(){
             @Override
             public void adjustmentValueChanged(AdjustmentEvent e) {
-                view.repaint();
+                masterController.getView().repaint();
             }
         });
-        view.worldDisplay.scrollpane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener(){
+        masterController.getView().worldDisplay.scrollpane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener(){
             @Override
             public void adjustmentValueChanged(AdjustmentEvent e) {
-                view.repaint();
+                masterController.getView().repaint();
             }
         });       
-        view.addWindowListener(new ExitHandler());
+        masterController.getView().addWindowListener(new ExitHandler());
         
         rock = new LocAxn("put rock") {
             @Override
@@ -94,7 +94,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
                 if (rclxtar.contents().critter()) {
                     Critter rclxtarcri = rclxtar.contents().getCritter();
                     rclxtarcri.forward();
-                    view.display().setCurrentLocation(rclxtarcri.loc());
+                    masterController.getView().display().setCurrentLocation(rclxtarcri.loc());
                 }
             }
         };
@@ -104,7 +104,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
                 if (rclxtar.contents().critter()) {
                     Critter rclxtarcri = rclxtar.contents().getCritter();
                     rclxtarcri.backward();
-                    view.display().setCurrentLocation(rclxtarcri.loc());
+                    masterController.getView().display().setCurrentLocation(rclxtarcri.loc());
                 }
             }
         };
@@ -194,8 +194,8 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
 
     private void leftClick(MouseEvent e) {
         Reference<Tile> at = lookup(e);
-        view.display().setCurrentLocation(at);
-        view.repaint();
+        masterController.getView().display().setCurrentLocation(at);
+        masterController.getView().repaint();
     }
 
     private void rightClick(MouseEvent e) {
@@ -203,7 +203,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
             men.setVisible(false);
         }
         rclxtar = lookup(e);
-        view.display().setCurrentLocation(rclxtar);
+        masterController.getView().display().setCurrentLocation(rclxtar);
         if (rclxtar.contents() == null) {
             rclxtar.setContents(new Tile(false, 0));
         }
@@ -226,15 +226,15 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
         }
         men.setLocation(e.getLocationOnScreen());
         men.setVisible(true);
-        view.repaint();//display().update();//repaint();
+        masterController.getView().repaint();//display().update();//repaint();
     }
 
     private Reference<Tile> lookup(MouseEvent e) {
         int x = e.getX();
         int y = e.getY();
-        x -= view.worldDisplay.scrollpane.getHorizontalScrollBar().getValue();
-        y -= view.worldDisplay.scrollpane.getVerticalScrollBar().getValue();
-        int ret[] = view.display().grid().hexAt(x, y);
+        x -= masterController.getView().worldDisplay.scrollpane.getHorizontalScrollBar().getValue();
+        y -= masterController.getView().worldDisplay.scrollpane.getVerticalScrollBar().getValue();
+        int ret[] = masterController.getView().display().grid().hexAt(x, y);
         if(ret == null)
             return null;
         int r = ret[0];
@@ -262,7 +262,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
         public final void actionPerformed(ActionEvent e) {
             act();
             men.setVisible(false);
-            view.repaint();
+            masterController.getView().repaint();
         }
 
         protected abstract void act();
