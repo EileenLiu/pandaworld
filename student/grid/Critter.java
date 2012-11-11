@@ -9,7 +9,6 @@ import static student.config.Constants.*;
 import student.grid.HexGrid.HexDir;
 import static student.grid.HexGrid.HexDir.*;
 import student.grid.HexGrid.Reference;
-import student.parse.Action;
 import student.parse.Program;
 import student.parse.Rule;
 import student.world.World;
@@ -188,10 +187,7 @@ public final class Critter /*extends Entity*/ implements CritterState {
     public void forward() {
         mem[4] -= mem[3] * MOVE_COST;
         Reference<Tile> newPos = pos.adj(dir);
-        if(!(newPos==null||newPos.contents().rock())){
-        /*if(newPos.contents().rock())
-            System.out.println("Won't do that; it's a rock");
-        else {*/
+        if(!(newPos==null||newPos.contents().rock()||newPos.contents().critter())){
             pos.contents().removeCritter();
             newPos.contents().putCritter(this);
             pos = newPos;
@@ -201,7 +197,7 @@ public final class Critter /*extends Entity*/ implements CritterState {
     
     public void backward() {
         Reference<Tile> newPos = pos.lin(-1,dir);
-        if(!(newPos==null||newPos.contents().rock())){
+        if(!(newPos==null||newPos.contents().rock()||newPos.contents().critter())){
             pos.contents().removeCritter();
             newPos.contents().putCritter(this);
             pos = newPos;

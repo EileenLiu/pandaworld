@@ -165,7 +165,9 @@ public class World {
     public HexGrid.Reference<Tile> defaultLoc() {
         return grid.ref(0, 0);
     }
-
+    public HexGrid.Reference<Tile> randomLoc() {
+        return grid.ref((int)(Math.random()*height()), (int)(Math.random()*height()));
+    }
     public int[] population() {
         int[] population = new int[4]; //[critters, plants, food, rocks]
         Iterator<Reference<Tile>> it = grid.iterator();
