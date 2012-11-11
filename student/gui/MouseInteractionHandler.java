@@ -4,6 +4,7 @@
  */
 package student.gui;
 
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
@@ -17,6 +18,7 @@ import java.security.Key;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import student.grid.Critter;
 import student.grid.HexGrid.Reference;
@@ -36,7 +38,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
     private JPopupMenu men;
     private Action rock, unrock,
             plant, unplant;
-    private Action crit, critMenIts[] = new Action[10];
+    private Action crit, critMenIts[] = new Action[11];
     private boolean EXIT = false;
 
     public MouseInteractionHandler(final InteractionHandler _parent){//final World _model, final WorldFrame _view) {
@@ -158,26 +160,34 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
             }
         };
         critMenIts[8] = new LocAxn("bud") {
-         @Override
-         public void act() {
-         if(rclxtar.contents().critter())
-         rclxtar.contents().getCritter().bud();
-         }
-         };
+            @Override
+            public void act() {
+                if (rclxtar.contents().critter()) {
+                    rclxtar.contents().getCritter().bud();
+                }
+            }
+        };
         critMenIts[9] = new LocAxn("mate") {
-         @Override
-         public void act() {
-         if(rclxtar.contents().critter())
-         rclxtar.contents().getCritter().mate();
-         }
-         };
-        /*criMenIts[0] = new LocAxn("tag") {
-         @Override
-         public void act() {
-         if(rclxtar.contents().critter())
-         rclxtar.contents().getCritter().tag();
-         }
-         };*/
+            @Override
+            public void act() {
+                if (rclxtar.contents().critter()) {
+                    rclxtar.contents().getCritter().mate();
+                }
+            }
+        };
+        critMenIts[10] = new LocAxn("tag") {
+            @Override
+            public void act() {
+                if (rclxtar.contents().critter()) {
+                    men.setVisible(false);
+                    do try {
+                            rclxtar.contents().getCritter()._tag(Integer.parseInt(JOptionPane.showInputDialog(view, "New tag value:", "Tagging ahead critter", JOptionPane.QUESTION_MESSAGE)));
+                            return;
+                        } catch (NumberFormatException nfe) { continue; }
+                    while(Math.random()>.01); //give up after some time.
+                }
+            }
+        };
         //this.gameLoop();
     }
 

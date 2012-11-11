@@ -145,7 +145,7 @@ public class WorldDisplay extends JPanel{
                     + "\n\tRule Counter: " + memory[5]
                     + "\n\tEvent Log: " + memory[6]
                     + "\n\tTag: " + memory[7]
-                    + "\nPosture: " + memory[8]
+                    + "\n\tPosture: " + memory[8]
                     + "\nProgram: " + (p!=null?p.toString():p);
         }
         }

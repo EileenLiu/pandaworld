@@ -306,6 +306,14 @@ public final class Critter /*extends Entity*/ implements CritterState {
         acted = true;
     }
 
+    public void _tag(int i) {
+        Critter c = pos.adj(dir).contents().getCritter();
+        if(c != null)
+            c.mem[7] = i;
+        else
+            System.err.println("Tag on non-existant critter");
+    } 
+    
     private <T >T ch(T a, T b) {
         return (Math.random()>.5?a:b);
     }
