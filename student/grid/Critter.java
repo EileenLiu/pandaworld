@@ -4,12 +4,7 @@
  */
 package student.grid;
 
-import java.awt.Image;
 import student.config.Constants;
-import java.io.File;
-import java.util.Set;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 import static student.config.Constants.*;
 import student.grid.HexGrid.HexDir;
 import static student.grid.HexGrid.HexDir.*;
@@ -148,11 +143,7 @@ public final class Critter /*extends Entity*/ implements CritterState {
             _wait();
         }
         acted = false;
-        if (mem[4] < 0) //if run out of energy then
-        {//die
-            pos.contents().addFood(Constants.FOOD_PER_SIZE * size());
-            pos.contents().removeCritter();
-        }
+        checkDeath();
     }
     
     public void act() {
@@ -437,6 +428,14 @@ public final class Critter /*extends Entity*/ implements CritterState {
         if(t.food() || t.plant())
             return -t.foodValue() + (t.plant()?-Constants.ENERGY_PER_PLANT:0);
         return 0;
+    }
+
+    public void checkDeath() {
+        if (mem[4] < 0) //if run out of energy then
+        {//die
+            pos.contents().addFood(Constants.FOOD_PER_SIZE * size());
+            pos.contents().removeCritter();
+        }
     }
 
 }

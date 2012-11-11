@@ -298,6 +298,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
         public void actionPerformed(ActionEvent e) {
             rclxtar.contents().getCritter().recentAction = a;
             super.actionPerformed(e);
+            rclxtar.contents().getCritter().checkDeath();
         }
     }
 
