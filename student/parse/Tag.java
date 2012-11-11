@@ -21,7 +21,7 @@ class Tag extends Action {
 
     @Override
     public void execute(Critter c) {
-        throw new Error("Can't execute yet!");
+        c._tag(ind().eval(c));
     }
 
     @Override
