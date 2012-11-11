@@ -46,7 +46,7 @@ public class CritterFileParser {
                 c.setOffense(Integer.parseInt(arr[2]));
                 c.setSize(Integer.parseInt(arr[3]));
                 c.setEnergy(Integer.parseInt(arr[4]));
-                c.setAppearance(new File(arr[5]));
+                c.setAppearance(arr[5]);
                 Program program = ParserFactory.getParser().parse(inStreamReader);
                 c = new Critter(world, pos, program);
                 //System.out.println(program.prettyPrint());

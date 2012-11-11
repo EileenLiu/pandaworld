@@ -4,9 +4,12 @@
  */
 package student.grid;
 
+import java.awt.Image;
 import student.config.Constants;
 import java.io.File;
 import java.util.Set;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import static student.config.Constants.*;
 import student.grid.HexGrid.HexDir;
 import static student.grid.HexGrid.HexDir.*;
@@ -25,10 +28,21 @@ public class Critter /*extends Entity*/ implements CritterState {
     private Reference<Tile> pos;
     private HexDir dir;
     private int mem[];
+                /* mem[0]   Memory
+                *  mem[1]   Defense
+                *  mem[2]   Offense
+                *  mem[3]   Size
+                *  mem[4]   Energy
+                *  mem[5]   Rule Counter
+                *  mem[6]   Event Log
+                *  mem[7]   Tag 
+                *  mem[8]   Posture*/
     private boolean acted;
     private Program prog;
-    private File appearance; //an image filename
-
+    //private ZipFile appearance; //an image filename
+    private String appearance;
+    private Image ne, nn, nw, se, ss, sw;
+    
     public Critter(World _wor, Reference<Tile> _pos, Program p) {
         wor = _wor;
         pos = _pos;
@@ -104,9 +118,28 @@ public class Critter /*extends Entity*/ implements CritterState {
     {
         mem[4] = i;
     }
-    public void setAppearance(File filename)
+    /**
+     * Sets the critter's appearance to the given critter appearance file
+     * (which must be a zip file zip file with files named 
+     * nn.png, ne.png, nw.png, se.png, sw.png, ss.png 
+     * as images of the critter facing in different directions)
+     * if it is valid
+     * @param filename the given critter appearance file 
+     */
+    public void setAppearance(String filename)
     {
+        /*ZipFile zf = file;
+            ZipEntry enn = zf.getEntry("nn.png"),
+                     ene = zf.getEntry("ne.png"),
+                     enw = zf.getEntry("nw.png"),
+                     ese = zf.getEntry("se.png"),
+                     esw = zf.getEntry("sw.png"),
+                     ess = zf.getEntry("ss.png");*/
         appearance = filename;
+    }
+    public String getApperance()
+    {
+        return appearance;
     }
     public void timeStep() {
         if (!acted) {

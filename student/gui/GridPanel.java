@@ -12,6 +12,7 @@ import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import javax.imageio.ImageIO;
@@ -21,50 +22,69 @@ import student.grid.Tile;
 import student.world.World;
 
 public class GridPanel extends JPanel implements Scrollable{
+    private static final PNGImagePack defaultImagepack;
+    private static final Image TILE, ROCK, PLNT, FOOD, CNN, CNE, CNW, CSE, CSW, CSS;
 
-    private static Image TILE, ROCK, PLNT, FOOD, CNN, CNE, CNW, CSE, CSW, CSS;
     static {
-        try {
-            ZipFile zf = new ZipFile("data.zip");
-            ZipEntry eti = zf.getEntry("tile.png"),
-                     erk = zf.getEntry("rock.png"),
-                     epl = zf.getEntry("plnt.png"),
-                     efd = zf.getEntry("food.png"),
-                     enn = zf.getEntry("nn.png"),
-                     ene = zf.getEntry("ne.png"),
-                     enw = zf.getEntry("nw.png"),
-                     ese = zf.getEntry("se.png"),
-                     esw = zf.getEntry("sw.png"),
-                     ess = zf.getEntry("ss.png");
-            InputStream iti = zf.getInputStream(eti),
-                        irk = zf.getInputStream(erk),
-                        ipl = zf.getInputStream(epl),
-                        ifd = zf.getInputStream(efd),
-                        inn = zf.getInputStream(enn),
-                        ine = zf.getInputStream(ene),
-                        inw = zf.getInputStream(enw),
-                        ise = zf.getInputStream(ese),
-                        isw = zf.getInputStream(esw),
-                        iss = zf.getInputStream(ess);
-            TILE = ImageIO.read(iti);
-            ROCK = ImageIO.read(irk);
-            PLNT = ImageIO.read(ipl);
-            FOOD = ImageIO.read(ifd);
-            CNN  = ImageIO.read(inn);
-            CNE  = ImageIO.read(ine);
-            CNW  = ImageIO.read(inw);
-            CSE  = ImageIO.read(ise);
-            CSW  = ImageIO.read(isw);
-            CSS  = ImageIO.read(iss);
-        } catch (IOException ex) {
+        //try {
+        final String[] imgs = new String[]{"tile", "rock", "plnt", "food", "nn", "ne", "nw", "se", "sw", "ss"};
+        defaultImagepack = new PNGImagePack("data.zip", imgs);
+
+        TILE = defaultImagepack.get(imgs[0]);
+        ROCK = defaultImagepack.get(imgs[1]);
+        PLNT = defaultImagepack.get(imgs[2]);
+        FOOD = defaultImagepack.get(imgs[3]);
+        CNN = defaultImagepack.get(imgs[4]);
+        CNE = defaultImagepack.get(imgs[5]);
+        CNW = defaultImagepack.get(imgs[6]);
+        CSE = defaultImagepack.get(imgs[7]);
+        CSW = defaultImagepack.get(imgs[8]);
+        CSS = defaultImagepack.get(imgs[9]);
+        if (!defaultImagepack.isValid()) {
             System.err.println("Could not load image data!");
             System.exit(254);
-        } catch (RuntimeException ex) {
-            System.err.println("Could not load image data!");
-            System.exit(253);
         }
+
+        /*ZipFile zf = new ZipFile("data.zip");
+         ZipEntry eti = zf.getEntry("tile.png"),
+         erk = zf.getEntry("rock.png"),
+         epl = zf.getEntry("plnt.png"),
+         efd = zf.getEntry("food.png"),
+         enn = zf.getEntry("nn.png"),
+         ene = zf.getEntry("ne.png"),
+         enw = zf.getEntry("nw.png"),
+         ese = zf.getEntry("se.png"),
+         esw = zf.getEntry("sw.png"),
+         ess = zf.getEntry("ss.png");
+         InputStream iti = zf.getInputStream(eti),
+         irk = zf.getInputStream(erk),
+         ipl = zf.getInputStream(epl),
+         ifd = zf.getInputStream(efd),
+         inn = zf.getInputStream(enn),
+         ine = zf.getInputStream(ene),
+         inw = zf.getInputStream(enw),
+         ise = zf.getInputStream(ese),
+         isw = zf.getInputStream(esw),
+         iss = zf.getInputStream(ess);
+         TILE = ImageIO.read(iti);
+         ROCK = ImageIO.read(irk);
+         PLNT = ImageIO.read(ipl);
+         FOOD = ImageIO.read(ifd);
+         CNN  = ImageIO.read(inn);
+         CNE  = ImageIO.read(ine);
+         CNW  = ImageIO.read(inw);
+         CSE  = ImageIO.read(ise);
+         CSW  = ImageIO.read(isw);
+         CSS  = ImageIO.read(iss);
+         } catch (IOException ex) {
+         System.err.println("Could not load image data!");
+         System.exit(254);
+         } catch (RuntimeException ex) {
+         System.err.println("Could not load image data!");
+         System.exit(253);
+         }*/
     }
-    
+    private HashMap<String, PNGImagePack> imagepackages;
     private Polygon hexen[][];
     //A MULTIPLE OF FOUR
     private int HEXSIZE = 140;
@@ -88,7 +108,6 @@ public class GridPanel extends JPanel implements Scrollable{
         this.setFocusable(true);
         this.requestFocusInWindow();
     }
-    
     public int []hexAt(int x, int y) {
         x -= this.getX();
         y -= this.getY();
@@ -177,9 +196,8 @@ public class GridPanel extends JPanel implements Scrollable{
         return new Polygon(xs, ys, 6);
     }
    /**
-     * Draws the entire grid of hexagons
+     * Draws the entire grid
      */
-    //@Deprecated
     public void drawGrid(int hexsize, Graphics gp) {//HWHdrawGrid(int hxsz, Graphics gp) {
         for (int c = 0; c < world.width(); c++) {
             for (int r = 0; r < world.height(); r++) {
@@ -196,13 +214,19 @@ public class GridPanel extends JPanel implements Scrollable{
                         drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, PLNT);
                     if(t.critter()) {
                         Image i = null;
-                        switch (t.getCritter().direction()) {
+                        if(t.getCritter().getApperance()==null){
+                            switch (t.getCritter().direction()) {
                              case N:  i = CNN; break;
                              case NE: i = CNE; break;
                              case NW: i = CNW; break;
                              case S:  i = CSS; break;
                              case SW: i = CSW; break;
                              case SE: i = CSE; break;
+                            }    
+                        }
+                        else
+                        {
+                            
                         }
                         drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, i);
                     }
@@ -215,6 +239,16 @@ public class GridPanel extends JPanel implements Scrollable{
             }
         }
     }
+    /*public Image findImage(Tile t){
+        switch (t.getCritter().direction()) {
+                             case N:  i = CNN; break;
+                             case NE: i = CNE; break;
+                             case NW: i = CNW; break;
+                             case S:  i = CSS; break;
+                             case SW: i = CSW; break;
+                             case SE: i = CSE; break;
+        return null;
+    }*/
     @Override
     public Dimension getPreferredSize()
     {
