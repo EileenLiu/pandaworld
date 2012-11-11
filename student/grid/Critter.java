@@ -4,9 +4,12 @@
  */
 package student.grid;
 
+import java.awt.Image;
 import student.config.Constants;
 import java.io.File;
 import java.util.Set;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import static student.config.Constants.*;
 import student.grid.HexGrid.HexDir;
 import static student.grid.HexGrid.HexDir.*;
@@ -28,8 +31,8 @@ public final class Critter /*extends Entity*/ implements CritterState {
     private int mem[];
     private boolean acted, amorous;
     /*/private/*/public Program prog;
-    private File appearance; //an image filename
-
+    private String appearance;
+    
     public Critter(World _wor, Reference<Tile> _pos, Program _p) {
         this(_wor, _pos, _p, defaultMemory());
     }
@@ -116,9 +119,28 @@ public final class Critter /*extends Entity*/ implements CritterState {
     {
         mem[4] = i;
     }
-    public void setAppearance(File filename)
+    /**
+     * Sets the critter's appearance to the given critter appearance file
+     * (which must be a zip file zip file with files named 
+     * nn.png, ne.png, nw.png, se.png, sw.png, ss.png 
+     * as images of the critter facing in different directions)
+     * if it is valid
+     * @param filename the given critter appearance file 
+     */
+    public void setAppearance(String filename)
     {
+        /*ZipFile zf = file;
+            ZipEntry enn = zf.getEntry("nn.png"),
+                     ene = zf.getEntry("ne.png"),
+                     enw = zf.getEntry("nw.png"),
+                     ese = zf.getEntry("se.png"),
+                     esw = zf.getEntry("sw.png"),
+                     ess = zf.getEntry("ss.png");*/
         appearance = filename;
+    }
+    public String getAppearance()
+    {
+        return appearance;
     }
     public void timeStep() {
         if (!acted) {

@@ -14,30 +14,30 @@ import student.world.World;
  * @author Eileen Liu <el544@cornell.edu>
  */
 public class MenuInteractionHandler {
-    private WorldFrame view;
+    //private WorldFrame view;
     private InteractionHandler masterController;
     public MenuInteractionHandler(final InteractionHandler _parent){
         masterController = _parent; 
-        view = masterController.getView();
-        view.importWorld.addActionListener(new java.awt.event.ActionListener() {
+        //view = masterController.getView();
+        masterController.getView().importWorld.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                int returnVal = view.fileSelector.showOpenDialog(view);
+                int returnVal = masterController.getView().fileSelector.showOpenDialog(masterController.getView());
                 if(returnVal == JFileChooser.APPROVE_OPTION) {
-                    String filename = view.fileSelector.getSelectedFile().getName();
+                    String filename = masterController.getView().fileSelector.getSelectedFile().getName();
                     World newImportedWorld = WorldFileParser.generateWorld(filename, Constants.MAX_ROW , Constants.MAX_COLUMN);
                     masterController.setModel(newImportedWorld);
                 }
             }
         });
         
-        view.importCritter.addActionListener(new java.awt.event.ActionListener() {
+        masterController.getView().importCritter.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                view.fileSelector.showOpenDialog(view);
+                masterController.getView().fileSelector.showOpenDialog(masterController.getView());
             }
         });
-        view.importSettings.addActionListener(new java.awt.event.ActionListener() {
+        masterController.getView().importSettings.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                view.fileSelector.showOpenDialog(view);
+                masterController.getView().fileSelector.showOpenDialog(masterController.getView());
             }
         });
     }

@@ -22,10 +22,11 @@ public class WorldFrame extends JFrame {
 
     public final void loadWorld(World w) {
         world = w;
-        if (worldDisplay != null) {
+        /*if(worldDisplay!=null)
+        {
             this.remove(worldDisplay);
             System.out.println("Attempted remove of worldDisplay");
-        }
+        }*/
         worldDisplay = new WorldDisplay(world);
         worldDisplay.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 0));
         this.add(worldDisplay, BorderLayout.CENTER);
