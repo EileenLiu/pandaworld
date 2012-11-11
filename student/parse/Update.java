@@ -41,14 +41,9 @@ public class Update extends Node<Expression<?>> {
     }
     
     public void apply(CritterState s) {
-        try {
-            int i = index().eval(s),
-                j = (i-7)*i,
-                k = j*(j*(j*(j+28)+252)+720);
-            s.setMem(i+k/k-1,newValue().eval(s));
-        } catch (ArithmeticException ae) {
-            System.err.println("Couldn't set value");
-        }
+        int i = index().eval(s);
+        if(i<8) return;
+        s.setMem(i, newValue().eval(s));
     }
 
     @Override
