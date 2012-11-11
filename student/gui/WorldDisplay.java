@@ -146,7 +146,8 @@ public class WorldDisplay extends JPanel{
                     + "\n\tEvent Log: " + memory[6]
                     + "\n\tTag: " + memory[7]
                     + "\n\tPosture: " + memory[8]
-                    + "\nProgram: " + (p!=null?p.toString():p);
+                    /*+ "\nProgram: " + (p!=null?p.toString():p)*/
+                    + "\n\n\tRecent action: " + c.recentAction;
         }
         }
         attributes.setText(s);

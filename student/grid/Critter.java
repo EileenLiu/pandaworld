@@ -32,6 +32,7 @@ public final class Critter /*extends Entity*/ implements CritterState {
     private boolean acted, amorous;
     /*/private/*/public Program prog;
     private String appearance;
+    public Action recentAction = new Action("wait");
     
     public Critter(World _wor, Reference<Tile> _pos, Program _p) {
         this(_wor, _pos, _p, defaultMemory());
@@ -156,7 +157,7 @@ public final class Critter /*extends Entity*/ implements CritterState {
     
     public void act() {
         amorous = false;
-        prog.run(this).execute(this);
+        (recentAction = prog.run(this)).execute(this);
     }
     
     public void randomAct() {

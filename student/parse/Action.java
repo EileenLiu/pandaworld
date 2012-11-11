@@ -26,7 +26,7 @@ public class Action extends Node<Expression<?>> {
             return new Action(type);
     }
 
-    protected Action(String type) {
+    public Action(String type) {
         super(Collections.EMPTY_LIST);
         this.act = forName(Act.class,type);
     }

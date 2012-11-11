@@ -10,7 +10,7 @@ import student.grid.Critter;
  *
  * @author haro
  */
-class Tag extends Action {
+public class Tag extends Action {
     public Tag(Expression ind) {
         super(ind);
     }
