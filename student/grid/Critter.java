@@ -38,6 +38,7 @@ public final class Critter /*extends Entity*/ implements CritterState {
         mem = _mem;
         dir = HexDir.N;
         prog = _p;
+        System.err.println("\tMade critter: program is"+prog);
     }
     private static final int []defaultMemory = {MIN_MEMORY, 1, 1, 1, INITIAL_ENERGY};
     private static int []defaultMemory(){
@@ -253,7 +254,14 @@ public final class Critter /*extends Entity*/ implements CritterState {
             Critter c = ahead.getCritter();
             double damage = BASE_DAMAGE * mem[3]
                     * lgs(DAMAGE_INC * (mem[3] * mem[2] - c.mem[3] * c.mem[1]));
+            int perc =(int) (100 * damage) / c.mem[4];
             c.mem[4] -= (int) damage;
+            mem[6] *= 1000;
+            c.mem[6] *= 1000;
+            mem[6] += 300 + perc;
+            c.mem[6] += 100 + (dir.ordinal() - c.dir.ordinal() + 6) % 6;
+            mem[6] %= 1000000;
+            c.mem[6] %= 1000000;
             return;
         }
         acted = true;
@@ -265,6 +273,9 @@ public final class Critter /*extends Entity*/ implements CritterState {
         if (ahead.critter()) {
             Critter c = ahead.getCritter();
             c.mem[7] = t;
+            c.mem[6] *= 1000;
+            c.mem[6] += 200 + (dir.ordinal() - c.dir.ordinal() + 6) % 6;
+            c.mem[6] %= 1000000;
         }
         acted = true;
     }
