@@ -40,8 +40,11 @@ public final class Critter /*extends Entity*/ implements CritterState {
         dir = HexDir.N;
         prog = _p;
     }
+    private static final int []defaultMemory = {MIN_MEMORY, 1, 1, 1, INITIAL_ENERGY};
     private static int []defaultMemory(){
-        return new int[]{9, 1, 1, 1, Constants.INITIAL_ENERGY, 0, 0, 0, 0};
+        int mem[] = new int[MIN_MEMORY];
+        System.arraycopy(defaultMemory, 0, mem, 0, defaultMemory.length);
+        return mem;
     }
     public HexDir direction() {
         return dir;
@@ -124,8 +127,8 @@ public final class Critter /*extends Entity*/ implements CritterState {
         acted = false;
         if (mem[4] < 0) //if run out of energy then
         {//die
-           pos.contents().addFood(Constants.FOOD_PER_SIZE*size());
-           pos.contents().removeCritter();
+            pos.contents().addFood(Constants.FOOD_PER_SIZE * size());
+            pos.contents().removeCritter();
         }
     }
     
@@ -221,7 +224,8 @@ public final class Critter /*extends Entity*/ implements CritterState {
             System.out.println("Ate " + ene + " units of energy");
             pos.contents().removePlant();
             pos.contents().takeFood();
-            mem[4] += ene;
+            if((mem[4] += ene) > mem[3] * Constants.ENERGY_PER_SIZE)
+                mem[4] = Constants.ENERGY_PER_SIZE * mem[3];
             return;
         } else
             System.out.println("No food there");
@@ -263,7 +267,7 @@ public final class Critter /*extends Entity*/ implements CritterState {
             return; //we're in a corner, can't put a critter there.
         Critter baby = new Critter(wor, np, prog.mutate());
         baby.mem = new int[mem.length];
-        System.arraycopy(mem, 0, baby.mem, 0, 9);
+        System.arraycopy(mem, 0, baby.mem, 0, MIN_MEMORY);
         baby.mem[3] = 1;
         baby.mem[4] = Constants.INITIAL_ENERGY;
         baby.mem[7] = 0;
@@ -380,7 +384,12 @@ public final class Critter /*extends Entity*/ implements CritterState {
 
     @Override
     public int ahead(int i) {
-        return encodeTile(pos.lin(i, dir).contents());
+        if((i>0?i:-i)>Constants.MAX_SMELL_DISTANCE)
+            return 0;
+        if(i>0)
+            return encodeTile(pos.lin(i, dir).contents());
+        else
+            return encodeTile(pos.lin(-i, dir).contents().ignoringCritter());
         
     }
 
@@ -391,7 +400,7 @@ public final class Critter /*extends Entity*/ implements CritterState {
     
     private int encodeTile(Tile t) {
         if(t.rock())
-            return -1;
+            return Constants.ROCK_VALUE;
         if(t.critter())
             return t.getCritter().read();
         if(t.food() || t.plant())

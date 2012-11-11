@@ -16,6 +16,11 @@ public class Tile {
     public Tile(boolean _plant, int _food) {
         plant = _plant; food = _food;
     }
+    protected Tile(Tile t) {
+        plant = t.plant;
+        food = t.food;
+        critter = t.critter;
+    }
     public boolean isEmpty(){
         return !(rock()||food()||plant()||critter());
     }
@@ -67,6 +72,20 @@ public class Tile {
 
     public void removeCritter() {
         critter = null;
+    }
+    
+    public Tile ignoringCritter() {
+        return new Tile(this) {
+            @Override public boolean critter   () { return false; }
+            @Override public Critter getCritter() { return null;  }
+            @Override public void    putPlant  () { throw new RuntimeException("Please don't do that"); }
+            @Override public void    takeFood  () { throw new RuntimeException("Please don't do that"); }
+            
+            @Override public void addFood   (int f) 
+                { throw new RuntimeException("Please don't do that"); }
+            @Override public void putCritter(Critter c) 
+                { throw new RuntimeException("Please don't do that"); }
+        };
     }
     
     public static class Rock extends Tile {

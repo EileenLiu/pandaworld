@@ -60,7 +60,7 @@ public class World {
         WAIT = !WAIT;
     }
 
-    public void doStep() {
+    public void doStep() { //TODO: eileen: what the **** does this do?
         STEP = true;
     }
 

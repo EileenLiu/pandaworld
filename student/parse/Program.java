@@ -3,6 +3,7 @@ package student.parse;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import student.config.Constants;
 import student.grid.CritterState;
 import student.parse.ParserImpl.HistObj;
 
@@ -54,7 +55,7 @@ public class Program extends Node<Rule> {
             Action a = r.ap(s);
             if(a != null) return   a;
             else          continue a;
-        } while (i++ < 1000);
+        } while (i++ < Constants.MAX_RULES_PER_TURN);
         return new Action("wait");
     }
 }
