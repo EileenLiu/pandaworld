@@ -40,6 +40,8 @@ public class CritterFileParser {
                 arr[i] = arr[i].substring(arr[i].indexOf(':')+2);
                 }
                 Program program = ParserFactory.getParser().parse(inStreamReader);
+                if(pos==null)
+                    pos = world.randomLoc();
                 c = new Critter(world, pos, program);
                 c.setDefense(Integer.parseInt(arr[1]));
                 c.setOffense(Integer.parseInt(arr[2]));
