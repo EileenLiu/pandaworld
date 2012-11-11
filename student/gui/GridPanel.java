@@ -12,6 +12,7 @@ import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -22,25 +23,25 @@ import student.grid.Tile;
 import student.world.World;
 
 public class GridPanel extends JPanel implements Scrollable{
-    private static final PNGImagePack defaultImagepack;
+    private static final PNGImagePack defaultImgs;
+    private static final String[] imgnames = new String[]{"tile", "rock", "plnt", "food", "nn", "ne", "nw", "se", "sw", "ss"};
     private static final Image TILE, ROCK, PLNT, FOOD, CNN, CNE, CNW, CSE, CSW, CSS;
-
+    
     static {
         //try {
-        final String[] imgs = new String[]{"tile", "rock", "plnt", "food", "nn", "ne", "nw", "se", "sw", "ss"};
-        defaultImagepack = new PNGImagePack("data.zip", imgs);
-
-        TILE = defaultImagepack.get(imgs[0]);
-        ROCK = defaultImagepack.get(imgs[1]);
-        PLNT = defaultImagepack.get(imgs[2]);
-        FOOD = defaultImagepack.get(imgs[3]);
-        CNN = defaultImagepack.get(imgs[4]);
-        CNE = defaultImagepack.get(imgs[5]);
-        CNW = defaultImagepack.get(imgs[6]);
-        CSE = defaultImagepack.get(imgs[7]);
-        CSW = defaultImagepack.get(imgs[8]);
-        CSS = defaultImagepack.get(imgs[9]);
-        if (!defaultImagepack.isValid()) {
+        
+        defaultImgs = new PNGImagePack("data.zip", imgnames);
+        TILE = defaultImgs.get(imgnames[0]);
+        ROCK = defaultImgs.get(imgnames[1]);
+        PLNT = defaultImgs.get(imgnames[2]);
+        FOOD = defaultImgs.get(imgnames[3]);
+        CNN = defaultImgs.get(imgnames[4]);
+        CNE = defaultImgs.get(imgnames[5]);
+        CNW = defaultImgs.get(imgnames[6]);
+        CSE = defaultImgs.get(imgnames[7]);
+        CSW = defaultImgs.get(imgnames[8]);
+        CSS = defaultImgs.get(imgnames[9]);
+        if (!defaultImgs.isValid()) {
             System.err.println("Could not load image data!");
             System.exit(254);
         }
@@ -204,17 +205,44 @@ public class GridPanel extends JPanel implements Scrollable{
                 Polygon loc = hexen[r][c];
                 Rectangle bbx = loc.getBounds();
                 Tile t = world.at(r, c).contents();
+                PNGImagePack imagepack = defaultImgs;
                 if(t != null && t.rock()) 
-                    drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, ROCK);
+                    drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, imagepack.get(imgnames[2]));//ROCK);
                 else {
-                    drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, TILE);
+                    drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, TILE); 
                     if(t.food())
-                        drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, FOOD);
+                        drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, FOOD); 
                     if(t.plant())
-                        drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, PLNT);
+                        drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, PLNT); 
                     if(t.critter()) {
                         Image i = null;
-                        if(t.getCritter().getApperance()==null){
+                        String s = t.getCritter().getApperance();
+                        
+                        if (s != null) {
+                            if (imagepackages == null) {
+                                imagepackages = new HashMap<String, PNGImagePack>();
+                            }
+                            if (imagepackages.containsKey(s)) {
+                                imagepack = imagepackages.get(s);
+                            } else {
+                                imagepack = new PNGImagePack(s, Arrays.copyOfRange(imgnames, 5, imgnames.length));
+                                imagepackages.put(s, imagepack);
+                            }
+                        }
+                        //"tile", "rock", "plnt", "food", "nn", "ne", "nw", "se", "sw", "ss"
+                        switch (t.getCritter().direction()) {
+                             case N:  i = CNN; break;
+                             case NE: i = CNE; break;
+                             case NW: i = CNW; break;
+                             case S:  i = CSS; break;
+                             case SW: i = CSW; break;
+                             case SE: i = CSE; break;
+                            } 
+                        /*else
+                        {
+                            if(imagepackages!=null&&imagepackages.containsKey(t.getCritter().getApperance())){
+                                
+                            }
                             switch (t.getCritter().direction()) {
                              case N:  i = CNN; break;
                              case NE: i = CNE; break;
@@ -222,12 +250,9 @@ public class GridPanel extends JPanel implements Scrollable{
                              case S:  i = CSS; break;
                              case SW: i = CSW; break;
                              case SE: i = CSE; break;
-                            }    
-                        }
-                        else
-                        {
-                            
-                        }
+                            }
+                            //PNGImagePack critternew PNGImagePack("data.zip", imgs);
+                        }*/
                         drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, i);
                     }
                 }
