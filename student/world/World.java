@@ -87,6 +87,7 @@ public class World {
                 for (HexDir d : HexDir.values()) {
                     if (e.adj(d) != null
                             && !e.adj(d).contents().plant()
+                            && !e.adj(d).contents().rock()
                             && Math.random() < prob) {
                         e.adj(d).contents().putPlant();
                     }
