@@ -36,6 +36,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
     private InteractionHandler masterController;
     private Reference<Tile> rclxtar = null;
     private JPopupMenu men;
+    private String msg;
     private Action rock, unrock,
             plant, unplant;
     private Action crit, critMenIts[] = new Action[11];
@@ -181,10 +182,10 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
                 if (rclxtar.contents().critter()) {
                     men.setVisible(false);
                     do try {
-                            rclxtar.contents().getCritter()._tag(Integer.parseInt(JOptionPane.showInputDialog(view, "New tag value:", "Tagging ahead critter", JOptionPane.QUESTION_MESSAGE)));
+                            rclxtar.contents().getCritter()._tag(Integer.parseInt((msg=JOptionPane.showInputDialog(view, "New tag value:", "Tagging ahead critter", JOptionPane.QUESTION_MESSAGE))));
                             return;
-                        } catch (NumberFormatException nfe) { continue; }
-                    while(Math.random()>.01); //give up after some time.
+                        } catch (NumberFormatException nfe) { if(!"".equals(msg)) continue; }
+                    while(false); //just give up...
                 }
             }
         };
