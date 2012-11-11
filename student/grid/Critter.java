@@ -300,7 +300,7 @@ public final class Critter /*extends Entity*/ implements CritterState {
                     cr = c.prog.numChildren();
             Rule r[] = new Rule[nrules];
             for(int i = 0; i < nrules; i++) 
-                r[i] = (i<tr?i<cr?ch(this,c):this:c).prog.rules().get(i);
+                r[i] = (i<tr?i<cr?Math.random()>.5?c:this:this:c).prog.rules().get(i);
             int msiz = ch(this,c).mem[0];
             int []bmem = new int[msiz];
             bmem[0] = msiz;
