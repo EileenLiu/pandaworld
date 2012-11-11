@@ -132,9 +132,9 @@ public class WorldDisplay extends JPanel{
         if (currentLocation.contents().plant())
             s = s + "\na plant... ";
         if (currentLocation.contents().critter()) {
-            s = s + "\na critter with ";
-            int[] memory = currentLocation.contents().getCritter().memory();
-            s = s + "\n\tMemory: " + memory[0]
+            s = s + "\na ";
+            //int[] memory = currentLocation.contents().getCritter().memory();
+            s = s + currentLocation.contents().getCritter().toString();/*//.state();/*"\n\tMemory: " + memory[0]
                     + "\n\tDefense: " + memory[1]
                     + "\n\tOffense: " + memory[2]
                     + "\n\tSize: " + memory[3]
@@ -142,7 +142,7 @@ public class WorldDisplay extends JPanel{
                     + "\n\tRule Counter: " + memory[5]
                     + "\n\tEvent Log: " + memory[6]
                     + "\n\tTag: " + memory[7]
-                    + "\nPosture: " + memory[8];
+                    + "\n\tPosture: " + memory[8];*/
         }
         }
         attributes.setText(s);
