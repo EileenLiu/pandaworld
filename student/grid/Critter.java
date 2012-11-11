@@ -311,7 +311,7 @@ public final class Critter /*extends Entity*/ implements CritterState {
     }
 
     private int complexity() {
-        return /*rules * RULE_COST +*/ (mem[1] + mem[2]) * ABILITY_COST;
+        return prog.numChildren() * Constants.RULE_COST + (mem[1] + mem[2]) * ABILITY_COST;
     }
 
     public String state() {
