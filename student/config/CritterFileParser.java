@@ -10,9 +10,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.Reader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import student.grid.Critter;
 import student.grid.HexGrid;
 import student.grid.Tile;
@@ -42,13 +39,14 @@ public class CritterFileParser {
                 arr[i] = inStreamReader.readLine();
                 arr[i] = arr[i].substring(arr[i].indexOf(':')+2);
                 }
+                Program program = ParserFactory.getParser().parse(inStreamReader);
+                c = new Critter(world, pos, program);
                 c.setDefense(Integer.parseInt(arr[1]));
                 c.setOffense(Integer.parseInt(arr[2]));
                 c.setSize(Integer.parseInt(arr[3]));
                 c.setEnergy(Integer.parseInt(arr[4]));
                 c.setAppearance(arr[5]);
-                Program program = ParserFactory.getParser().parse(inStreamReader);
-                c = new Critter(world, pos, program);
+
                 //System.out.println(program.prettyPrint());
             } catch (FileNotFoundException e) {
                 System.out.println("The given file was not found.");
