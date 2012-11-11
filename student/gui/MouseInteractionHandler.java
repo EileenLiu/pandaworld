@@ -36,7 +36,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
     private JPopupMenu men;
     private Action rock, unrock,
             plant, unplant;
-    private Action crit, critMenIts[] = new Action[9];
+    private Action crit, critMenIts[] = new Action[10];
     private boolean EXIT = false;
 
     public MouseInteractionHandler(final InteractionHandler _parent){//final World _model, final WorldFrame _view) {
@@ -164,13 +164,13 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
          rclxtar.contents().getCritter().bud();
          }
          };
-        /*criMenIts[0] = new LocAxn("mate") {
+        critMenIts[9] = new LocAxn("mate") {
          @Override
          public void act() {
          if(rclxtar.contents().critter())
          rclxtar.contents().getCritter().mate();
          }
-         };*/
+         };
         /*criMenIts[0] = new LocAxn("tag") {
          @Override
          public void act() {

@@ -28,7 +28,8 @@ public final class Constants {
                                INITIAL_ENERGY           = 250,
                                BUD_COST                 = 9,
                                MAX_COLUMN               = 49,
-                               MAX_ROW                  = 69;
+                               MAX_ROW                  = 69,
+                               MATE_COST                = 5;
     public static volatile double DAMAGE_INC = 0.2,
                                   PLANT_GROW_PROB = .005;
     

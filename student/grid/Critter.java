@@ -30,14 +30,17 @@ public final class Critter /*extends Entity*/ implements CritterState {
     /*/private/*/public Program prog;
     private File appearance; //an image filename
 
-    public Critter(World _wor, Reference<Tile> _pos, Program p) {
+    public Critter(World _wor, Reference<Tile> _pos, Program _p) {
+        this(_wor, _pos, _p, defaultMemory());
+    }
+    private Critter(World _wor, Reference<Tile> _pos, Program _p, int []_mem) {
         wor = _wor;
         pos = _pos;
-        mem = defaultMemory();
+        mem = _mem;
         dir = HexDir.N;
-        prog = p;
+        prog = _p;
     }
-    private int []defaultMemory(){
+    private static int []defaultMemory(){
         return new int[]{9, 1, 1, 1, Constants.INITIAL_ENERGY, 0, 0, 0, 0};
     }
     public HexDir direction() {
@@ -74,6 +77,10 @@ public final class Critter /*extends Entity*/ implements CritterState {
     
     public int posture() {
         return mem[8];
+    }
+    
+    public boolean amorous() {
+        return amorous;
     }
     
     public int[] memory() {
@@ -270,17 +277,35 @@ public final class Critter /*extends Entity*/ implements CritterState {
         Tile t = pos.adj(dir).contents();
         if(t.critter() && t.getCritter().amorous) {
             Critter c = t.getCritter();
-            int nrules = (Math.random()>.5?this:c).prog.numChildren(), 
+            int nrules = ch(this,c).prog.numChildren(), 
                     tr = prog.numChildren(), 
                     cr = c.prog.numChildren();
             Rule r[] = new Rule[nrules];
-            for(int i = 0; i < nrules; i++) {
-                r[i] = (i<tr?i<cr?Math.random()<.5?this:c:this:c).prog.rules().get(i);
-            }
+            for(int i = 0; i < nrules; i++) 
+                r[i] = (i<tr?i<cr?ch(this,c):this:c).prog.rules().get(i);
+            int msiz = ch(this,c).mem[0];
+            int []bmem = new int[msiz];
+            bmem[0] = msiz;
+            bmem[1] = ch(this,c).mem[1];
+            bmem[2] = ch(this,c).mem[2];
+            bmem[3] = 1;
+            bmem[4] = Constants.INITIAL_ENERGY;
+            bmem[8] = 1;
+            Critter cpos = ch(this,c);
+            Reference<Tile> np = cpos.pos.lin(-1, cpos.dir);
+            Critter baby = new Critter(wor, np, prog, bmem);
+            np.contents().putCritter(baby);
+            mem[4] -= Constants.MATE_COST * complexity();
+            c.mem[4] -= Constants.MATE_COST * c.complexity();
         }
         else amorous = true;
+        acted = true;
     }
 
+    private <T >T ch(T a, T b) {
+        return (Math.random()>.5?a:b);
+    }
+    
     private static double lgs(double x) {
         return 1 / (1 + Math.exp(-x));
     }
