@@ -10,11 +10,15 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Polygon;
 import java.awt.Rectangle;
+import java.awt.image.FilteredImageSource;
+import java.awt.image.ImageFilter;
 import java.util.Arrays;
 import java.util.HashMap;
 import javax.swing.*;
 import student.grid.HexGrid.Reference;
 import student.grid.Tile;
+import student.gui.render.PNGImagePack;
+import student.gui.render.TintFilter;
 import student.world.World;
 
 public class GridPanel extends JPanel implements Scrollable{
@@ -248,7 +252,20 @@ public class GridPanel extends JPanel implements Scrollable{
             }
         }
     }
-    
+
+    /**
+     * Changes the color of the specified image to the specified color and
+     * returns the result.
+     *
+     * @param cl the Color to change the image to.
+     * @param untinted	the image to change the color of.
+     * @return the tinted image
+     */
+    public Image changeColor(Color cl, Image untinted) {
+        ImageFilter colorfilter = new TintFilter(cl); //creates a ImageFilter that will filter an image to the specified color
+        return createImage(new FilteredImageSource(untinted.getSource(), colorfilter)); //returns the colored changed version of the image
+    }
+
     @Override
     public Dimension getPreferredSize()
     {

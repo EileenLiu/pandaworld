@@ -349,15 +349,15 @@ public final class Critter /*extends Entity*/ implements CritterState {
     }
 
     public String state() {
-        String s = "/nMemory: " + mem[0]
-                + "/nDefense: " + mem[1]
-                + "/nOffense: " + mem[2]
-                + "/nSize: " + mem[3]
-                + "/nEnergy: " + mem[4]
-                + "/nRule Counter: " + mem[5]
-                + "/nEvent Log: /n" + eventLog()//mem[6]
-                + "/nTag: " + mem[7]
-                + "/nPosture: " + mem[8];
+        String s = "\n\tMemory: " + mem[0]
+                + "\n\tDefense: " + mem[1]
+                + "\n\tOffense: " + mem[2]
+                + "\n\tSize: " + mem[3]
+                + "\n\tEnergy: " + mem[4]
+                + "\n\tRule Counter: " + mem[5]
+                + "\n\tEvent Log:" + eventLog()//mem[6]
+                + "\n\tTag: " + mem[7]
+                + "\n\tPosture: " + mem[8];
         return s;
     }
     /**
@@ -370,7 +370,7 @@ public final class Critter /*extends Entity*/ implements CritterState {
         while (events > 99) {
             int e = events % 1000;
             if (e < 300) {
-                eventLog = eventLog + "/tThis critter was " + ((e < 200) ? "attacked" : "tagged") + " from direction "+direction(e%100);
+                eventLog = "\n"+eventLog + "\tThis critter was " + ((e < 200) ? "attacked" : "tagged") + " from direction "+direction(e%100);
             }
             events = events / 1000;
         }
@@ -446,4 +446,28 @@ public final class Critter /*extends Entity*/ implements CritterState {
         }
     }
 
+    @Override
+    public int hashCode() {
+        int[] h = new int[]{mem[0], mem[1], mem[2], prog.hashCode()};
+        return h.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        return (this.hashCode()== ((Critter)obj).hashCode());
+    }
+
+    @Override
+    public String toString() {
+        /* mem[0]   Memory
+                *  mem[1]   Defense
+                *  mem[2]   Offense*/
+        return "critter with \nState:\n" + state()+"\nRuleset:\n" + prog;
+    }
 }

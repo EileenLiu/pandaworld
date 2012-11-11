@@ -133,21 +133,9 @@ public class WorldDisplay extends JPanel{
         if (currentLocation.contents().plant())
             s = s + "\na plant... ";
         if (currentLocation.contents().critter()) {
-            Critter c = currentLocation.contents().getCritter();
-            s = s + "\na"+(c.amorous()?"n amorous":"")+" critter with ";
-            int[] memory = c.memory();
-            Program p = c.prog;
-            s = s + "\n\tMemory: " + memory[0]
-                    + "\n\tDefense: " + memory[1]
-                    + "\n\tOffense: " + memory[2]
-                    + "\n\tSize: " + memory[3]
-                    + "\n\tEnergy: " + memory[4]
-                    + "\n\tRule Counter: " + memory[5]
-                    + "\n\tEvent Log: " + memory[6]
-                    + "\n\tTag: " + memory[7]
-                    + "\n\tPosture: " + memory[8]
-                    /*+ "\nProgram: " + (p!=null?p.toString():p)*/
-                    + "\n\n\tRecent action: " + c.recentAction;
+            s = s + "\na ";
+            //int[] memory = currentLocation.contents().getCritter().memory();
+            s = s + currentLocation.contents().getCritter().toString();
         }
         }
         attributes.setText(s);
