@@ -120,9 +120,17 @@ public class World {
     public Reference<Tile> at(int r, int c) {
         return grid.ref(c, r);
     }
-
-    public void addCritter(Critter c, int row, int col) {
-        grid.ref(col, row).contents().putCritter(c);
+    
+    public void addCritter(Critter c, int row, int col) throws InvalidWorldAdditionException {
+        HexGrid.Reference<Tile> loc = grid.ref(col, row);
+        if (loc != null) {
+            if (loc.contents() == null) {
+                loc.setContents(new Tile(false, 0));
+            }
+            grid.ref(col, row).contents().putCritter(c);
+        }else {
+            throw new InvalidWorldAdditionException();
+        }
     }
 
     public void add(String type, int row, int col) throws InvalidWorldAdditionException {

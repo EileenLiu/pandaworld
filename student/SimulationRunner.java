@@ -1,14 +1,10 @@
 package student;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import student.config.Constants;
 import student.config.WorldFileParser;
 import student.gui.InteractionHandler;
-import student.gui.MouseInteractionHandler;
 import student.gui.WorldFrame;
 import student.world.World;
 
