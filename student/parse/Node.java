@@ -301,6 +301,5 @@ public abstract class Node<SubNodeType extends Node<?>> implements Cloneable {
             nc.add((SubNodeType)sn.clone());
         n.children = nc;
         return n;
-    }
-    
+    }   
 }
