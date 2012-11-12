@@ -41,18 +41,20 @@ public class MenuInteractionHandler {
         masterController.getView().importCritter.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                masterController.getView().fileSelector.showOpenDialog(masterController.getView());
+                int returnVal = masterController.getView().fileSelector.showOpenDialog(masterController.getView());
                 /*String[] possibilities = {"North", "Northeast", "Southeast", "South", "Southwest", "Northwest"};
-                    String s = (String)JOptionPane.showInputDialog(
-                    masterController.getView(),"Which direction should the critter face?","Putting new critter in random location",JOptionPane.QUESTION_MESSAGE,
-                    null,possibilities,"North");
-                    int i = Arrays.asList(possibilities).indexOf(s);*/
+                 String s = (String)JOptionPane.showInputDialog(
+                 masterController.getView(),"Which direction should the critter face?","Putting new critter in random location",JOptionPane.QUESTION_MESSAGE,
+                 null,possibilities,"North");
+                 int i = Arrays.asList(possibilities).indexOf(s);*/
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
                     String filename = masterController.getView().fileSelector.getSelectedFile().getName();
-                    Critter newImportedCritter = CritterFileParser.generateCritter(filename, masterController.getModel(),null, -1);
-                try {
-                    masterController.getModel().addCritter(newImportedCritter);
-                } catch (InvalidWorldAdditionException ex) {
-                    System.out.println("Failed to import: Critter import file is invalid");
+                    Critter newImportedCritter = CritterFileParser.generateCritter(filename, masterController.getModel(), null, -1);
+                    try {
+                        masterController.getModel().addCritter(newImportedCritter);
+                    } catch (InvalidWorldAdditionException ex) {
+                        System.out.println("Failed to import: Critter import file is invalid");
+                    }
                 }
                 /*Object[] options = {"Click on a location", "Anywhere", "Cancel"};
                 int n = JOptionPane.showOptionDialog(masterController.getView(), "How do you want to put the Critter?",
@@ -82,6 +84,7 @@ public class MenuInteractionHandler {
                 Object[] options = {"OK", "Cancel"};
                 int n = JOptionPane.showOptionDialog(masterController.getView(), "Add a critter to a random location?",
                         "Create critter", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+                System.out.println("N IS = "+n);
                 if (n == 0) {
                     Critter newCritter = CritterFileParser.generateCritter(masterController.getModel(),null, -1);
                 }
