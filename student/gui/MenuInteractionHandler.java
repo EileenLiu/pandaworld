@@ -51,7 +51,7 @@ public class MenuInteractionHandler {
                     String filename = masterController.getView().fileSelector.getSelectedFile().getName();
                     Critter newImportedCritter = CritterFileParser.generateCritter(filename, masterController.getModel(), null, -1);
                     try {
-                        masterController.getModel().addCritter(newImportedCritter);
+                        masterController.getModel().add(newImportedCritter, null);
                     } catch (InvalidWorldAdditionException ex) {
                         System.out.println("Failed to import: Critter import file is invalid");
                     }
@@ -84,9 +84,14 @@ public class MenuInteractionHandler {
                 Object[] options = {"OK", "Cancel"};
                 int n = JOptionPane.showOptionDialog(masterController.getView(), "Add a critter to a random location?",
                         "Create critter", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
-                System.out.println("N IS = "+n);
                 if (n == 0) {
-                    Critter newCritter = CritterFileParser.generateCritter(masterController.getModel(),null, -1);
+                    Critter newCritter = new Critter(masterController.getModel(), null, null);
+                    try {
+                        masterController.getView().display().setCurrentLocation(masterController.getModel().add(newCritter, newCritter.loc()));
+                        masterController.getView().repaint();
+                    } catch (InvalidWorldAdditionException ex) {
+                        System.out.println("Unreachable code");
+                    }
                 }
             }
         });
@@ -97,7 +102,28 @@ public class MenuInteractionHandler {
                 int n = JOptionPane.showOptionDialog(masterController.getView(), "Add a plant to a random location?",
                         "Create plant", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
                 if (n == 0) {
-                   masterController.getModel().add("plant");
+                    try {
+                        masterController.getView().display().setCurrentLocation(masterController.getModel().add("plant", null));
+                        masterController.getView().repaint();
+                    } catch (InvalidWorldAdditionException ex) {
+                        System.out.println("Unreachable code");
+                    }
+                }
+            }
+        });
+        masterController.getView().createRock.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Object[] options = {"OK", "Cancel"};
+                int n = JOptionPane.showOptionDialog(masterController.getView(), "Add a rock to a random location?",
+                        "Create rock", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+                if (n == 0) {
+                    try {
+                        masterController.getView().display().setCurrentLocation(masterController.getModel().add("rock", null));
+                        masterController.getView().repaint();
+                    } catch (InvalidWorldAdditionException ex) {
+                        System.out.println("Unreachable code");
+                    }
                 }
             }
         });

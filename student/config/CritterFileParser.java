@@ -23,7 +23,7 @@ import student.world.World;
  */
 public class CritterFileParser {
 
-    public static Critter generateCritter(World world, HexGrid.Reference<Tile> pos, int direction) {
+    /*public static Critter generateCritter(World world, HexGrid.Reference<Tile> pos, int direction) {
         Critter c = null;
         if (pos == null) {
             pos = world.randomLoc();
@@ -34,7 +34,7 @@ public class CritterFileParser {
             //c = new Critter(world, pos, program, direction);
         }
         return c;
-    }
+    }*/
     /**
      * Generates a critter from the specified file, in the given world and location
      * @param filename the given file

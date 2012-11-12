@@ -146,7 +146,7 @@ public class World {
      * @param loc the location to add it, if null, picks a random location
      * @throws student.world.World.InvalidWorldAdditionException 
      */
-    public void add(Object what, HexGrid.Reference<Tile> loc) throws InvalidWorldAdditionException{
+    public HexGrid.Reference<Tile> add(Object what, HexGrid.Reference<Tile> loc) throws InvalidWorldAdditionException{
             if (loc==null){
                 loc = this.randomLoc();
             }
@@ -165,6 +165,7 @@ public class World {
             else { //not a valid option to add
                 throw new InvalidWorldAdditionException();
             }
+            return loc;
     }
     /**
      * Retrieves the default reference at 0, 0

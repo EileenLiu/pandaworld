@@ -40,6 +40,8 @@ public final class Critter /*extends Entity*/ implements CritterState {
             _wor.randomLoc();
         mem = _mem;
         dir = HexDir.N;
+        if(_p==null)
+            _p = new Program();
         prog = _p;
         System.err.println("\tMade critter: program is"+prog);
     }
@@ -56,7 +58,6 @@ public final class Critter /*extends Entity*/ implements CritterState {
     public HexDir direction() {
         return dir;
     }
-
     public int size() {
         return mem[3];
     }

@@ -37,7 +37,7 @@ public class WorldFileParser {
                         int row = Integer.parseInt(arr[2]);
                         int col = Integer.parseInt(arr[3]);
                         Critter crit = CritterFileParser.generateCritter(arr[1], world, world.at(row, col), Integer.parseInt(arr[4]));
-                        world.addCritter(crit, row, col);
+                        world.add(crit, row, col);
                     } else {
                         world.add(arr[0], Integer.parseInt(arr[1]), Integer.parseInt(arr[2]));
                     }
