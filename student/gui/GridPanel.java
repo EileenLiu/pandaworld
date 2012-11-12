@@ -29,7 +29,7 @@ public class GridPanel extends JPanel implements Scrollable{
     static {
         //try {
         
-        defaultImgs = new PNGImagePack("data.zip", imgnames);
+        defaultImgs = new PNGImagePack("data.zip", imgnames, null);
         /*TILE = defaultImgs.get(imgnames[0]);
         ROCK = defaultImgs.get(imgnames[1]);
         PLNT = defaultImgs.get(imgnames[2]);
@@ -216,20 +216,22 @@ public class GridPanel extends JPanel implements Scrollable{
                     if(t.critter()) {
                         Image i = null;
                         String s = t.getCritter().getAppearance();
-                        
-                        if (s != null) {
-                            if (imagepackages == null) {
-                                imagepackages = new HashMap<String, PNGImagePack>();
-                            }
-                            if (imagepackages.containsKey(s)) {
-                                imagepack = imagepackages.get(s);
-                            }
-                            else {
-                                imagepack = new PNGImagePack(s, Arrays.copyOfRange(imgnames, 4, imgnames.length));
-                                if(imagepack.isValid())
-                                    imagepackages.put(s, imagepack);
-                                else
-                                    imagepack = defaultImgs;
+                        Color species = t.getCritter().getSpecies();
+                        System.out.println(s + species);
+                        if (s == null) {
+                            s = "data.zip";
+                        }
+                        if (imagepackages == null) {
+                            imagepackages = new HashMap<String, PNGImagePack>();
+                        }
+                        if (imagepackages.containsKey(s + species)) {
+                            imagepack = imagepackages.get(s + species);
+                        } else {
+                            imagepack = new PNGImagePack(s, Arrays.copyOfRange(imgnames, 4, imgnames.length), species);
+                            if (imagepack.isValid()) {
+                                imagepackages.put(s + species, imagepack);
+                            } else {
+                                imagepack = defaultImgs;
                             }
                         }
                         switch (t.getCritter().direction()) {
@@ -251,19 +253,6 @@ public class GridPanel extends JPanel implements Scrollable{
                 /*/
             }
         }
-    }
-
-    /**
-     * Changes the color of the specified image to the specified color and
-     * returns the result.
-     *
-     * @param cl the Color to change the image to.
-     * @param untinted	the image to change the color of.
-     * @return the tinted image
-     */
-    public Image changeColor(Color cl, Image untinted) {
-        ImageFilter colorfilter = new TintFilter(cl); //creates a ImageFilter that will filter an image to the specified color
-        return createImage(new FilteredImageSource(untinted.getSource(), colorfilter)); //returns the colored changed version of the image
     }
 
     @Override

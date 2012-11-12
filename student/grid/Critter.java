@@ -4,6 +4,8 @@
  */
 package student.grid;
 
+import java.awt.Color;
+import java.util.Arrays;
 import student.config.Constants;
 import static student.config.Constants.*;
 import student.grid.HexGrid.HexDir;
@@ -27,6 +29,7 @@ public final class Critter /*extends Entity*/ implements CritterState {
     private boolean acted, amorous;
     /*/private/*/public Program prog;
     private String appearance;
+    private Color species;
     public Action recentAction = new Action("wait");
     
     public Critter(World _wor, Reference<Tile> _pos, Program _p) {
@@ -43,6 +46,11 @@ public final class Critter /*extends Entity*/ implements CritterState {
         if(_p==null)
             _p = new Program();
         prog = _p;
+        int h = this.hashCode();
+        int rc = Math.abs(h % 256);
+        int gc = Math.abs(h * h % 256);
+        int bc = Math.abs(h * h * h % 256);
+        species = new Color(rc, gc, bc); //Guarantees same species of same appearance have the same color
         System.err.println("\tMade critter: program is"+prog);
     }
     public Critter(World _wor, Reference<Tile> _pos, Program p, int d) {
@@ -146,6 +154,9 @@ public final class Critter /*extends Entity*/ implements CritterState {
     public String getAppearance()
     {
         return appearance;
+    }
+    public Color getSpecies(){
+        return species;
     }
     public void timeStep() {
         if (!acted) {
@@ -464,7 +475,7 @@ public final class Critter /*extends Entity*/ implements CritterState {
     @Override
     public int hashCode() {
         int[] h = new int[]{mem[0], mem[1], mem[2], prog.hashCode()};
-        return h.hashCode();
+        return Arrays.hashCode(h);
     }
 
     @Override

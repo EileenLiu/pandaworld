@@ -45,6 +45,12 @@ public class Program extends Node<Rule> {
         return sb;
     }
     
+    @Override
+    public int hashCode() {
+        //return toString(new StringBuffer).hashCode();
+        //TODO: use the hashcode of toString
+        return toString().hashCode();
+    }
     public Program mutate() {
         return (Program)this.copy().mutate(this);
     }
