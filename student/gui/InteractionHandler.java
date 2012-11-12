@@ -25,6 +25,7 @@ public class InteractionHandler {
         ControlPanelInteractionHandler cpih = new ControlPanelInteractionHandler(this);
         MenuInteractionHandler mih = new MenuInteractionHandler(this);
         view.setVisible(true);
+        view.repaint();
         view.setDefaultCloseOperation(WorldFrame.EXIT_ON_CLOSE);
     }
     public World getModel()

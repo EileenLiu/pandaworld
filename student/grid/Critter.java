@@ -4,52 +4,54 @@
  */
 package student.grid;
 
-import java.awt.Image;
 import student.config.Constants;
 import static student.config.Constants.*;
 import student.grid.HexGrid.HexDir;
 import static student.grid.HexGrid.HexDir.*;
 import student.grid.HexGrid.Reference;
+import student.parse.Action;
 import student.parse.Program;
+import student.parse.Rule;
 import student.world.World;
 
 /**
  *
  * @author haro
  */
-public class Critter /*extends Entity*/ implements CritterState {
+public final class Critter /*extends Entity*/ implements CritterState {
 
     private World wor;
     private Reference<Tile> pos;
     private HexDir dir;
     private int mem[];
-                /* mem[0]   Memory
-                *  mem[1]   Defense
-                *  mem[2]   Offense
-                *  mem[3]   Size
-                *  mem[4]   Energy
-                *  mem[5]   Rule Counter
-                *  mem[6]   Event Log
-                *  mem[7]   Tag 
-                *  mem[8]   Posture*/
-    private boolean acted;
-    private Program prog;
-    //private ZipFile appearance; //an image filename
+    private boolean acted, amorous;
+    /*/private/*/public Program prog;
     private String appearance;
-    private Image ne, nn, nw, se, ss, sw;
+    public Action recentAction = new Action("wait");
     
-    public Critter(World _wor, Reference<Tile> _pos, Program p) {
+    public Critter(World _wor, Reference<Tile> _pos, Program _p) {
+        this(_wor, _pos, _p, defaultMemory());
+    }
+    private Critter(World _wor, Reference<Tile> _pos, Program _p, int []_mem) {
         wor = _wor;
-        pos = _pos;
-        mem = defaultMemory();
+        if(pos!=null)
+            pos = _pos;
+        else
+            _wor.randomLoc();
+        mem = _mem;
         dir = HexDir.N;
+        prog = _p;
+        System.err.println("\tMade critter: program is"+prog);
     }
     public Critter(World _wor, Reference<Tile> _pos, Program p, int d) {
         this(_wor, _pos, p);
         dir = HexDir.dir(d);
     }
-    public int []defaultMemory(){
-        return new int[]{9, 1, 1, 1, 10, 0, 0, 0, 0};
+    private static final int []defaultMemory = {MIN_MEMORY, 1, 1, 1, INITIAL_ENERGY};
+    private static int []defaultMemory(){
+        int mem[] = new int[MIN_MEMORY];
+        System.arraycopy(defaultMemory, 0, mem, 0, defaultMemory.length);
+        return mem;
     }
     public HexDir direction() {
         return dir;
@@ -85,6 +87,10 @@ public class Critter /*extends Entity*/ implements CritterState {
     
     public int posture() {
         return mem[8];
+    }
+    
+    public boolean amorous() {
+        return amorous;
     }
     
     public int[] memory() {
@@ -136,7 +142,7 @@ public class Critter /*extends Entity*/ implements CritterState {
                      ess = zf.getEntry("ss.png");*/
         appearance = filename;
     }
-    public String getApperance()
+    public String getAppearance()
     {
         return appearance;
     }
@@ -145,15 +151,12 @@ public class Critter /*extends Entity*/ implements CritterState {
             _wait();
         }
         acted = false;
-        if (mem[4] < 0) //if run out of energy then
-        {//die
-           pos.contents().addFood(Constants.FOOD_PER_SIZE*size());
-           pos.contents().removeCritter();
-        }
+        checkDeath();
     }
     
     public void act() {
-        prog.run(this).execute(this);
+        amorous = false;
+        (recentAction = prog.run(this)).execute(this);
     }
     
     public void randomAct() {
@@ -240,7 +243,8 @@ public class Critter /*extends Entity*/ implements CritterState {
             System.out.println("Ate " + ene + " units of energy");
             pos.contents().removePlant();
             pos.contents().takeFood();
-            mem[4] += ene;
+            if((mem[4] += ene) > mem[3] * Constants.ENERGY_PER_SIZE)
+                mem[4] = Constants.ENERGY_PER_SIZE * mem[3];
             return;
         } else
             System.out.println("No food there");
@@ -254,7 +258,14 @@ public class Critter /*extends Entity*/ implements CritterState {
             Critter c = ahead.getCritter();
             double damage = BASE_DAMAGE * mem[3]
                     * lgs(DAMAGE_INC * (mem[3] * mem[2] - c.mem[3] * c.mem[1]));
+            int perc =(int) (100 * damage) / c.mem[4];
             c.mem[4] -= (int) damage;
+            mem[6] *= 1000;
+            c.mem[6] *= 1000;
+            mem[6] += 300 + perc;
+            c.mem[6] += 100 + (dir.ordinal() - c.dir.ordinal() + 6) % 6;
+            mem[6] %= 1000000;
+            c.mem[6] %= 1000000;
             return;
         }
         acted = true;
@@ -266,6 +277,9 @@ public class Critter /*extends Entity*/ implements CritterState {
         if (ahead.critter()) {
             Critter c = ahead.getCritter();
             c.mem[7] = t;
+            c.mem[6] *= 1000;
+            c.mem[6] += 200 + (dir.ordinal() - c.dir.ordinal() + 6) % 6;
+            c.mem[6] %= 1000000;
         }
         acted = true;
     }
@@ -280,19 +294,65 @@ public class Critter /*extends Entity*/ implements CritterState {
         Reference<Tile> np = pos.lin(-1, dir);
         if(np == null || np.contents().rock())
             return; //we're in a corner, can't put a critter there.
-        Critter baby = new Critter(wor, np, prog);
+        Critter baby = new Critter(wor, np, prog.mutate());
+        baby.mem = new int[mem.length];
+        System.arraycopy(mem, 0, baby.mem, 0, MIN_MEMORY);
+        baby.mem[3] = 1;
         baby.mem[4] = Constants.INITIAL_ENERGY;
+        baby.mem[7] = 0;
+        baby.mem[8] = 1;
         np.contents().putCritter(baby);
         mem[4] -= complexity() * Constants.BUD_COST;
         acted = true;
     }
+    
+    public void mate() {
+        Tile t = pos.adj(dir).contents();
+        if(t.critter() && t.getCritter().amorous) {
+            Critter c = t.getCritter();
+            int nrules = ch(this,c).prog.numChildren(), 
+                    tr = prog.numChildren(), 
+                    cr = c.prog.numChildren();
+            Rule r[] = new Rule[nrules];
+            for(int i = 0; i < nrules; i++) 
+                r[i] = (i<tr?i<cr?Math.random()>.5?c:this:this:c).prog.rules().get(i);
+            int msiz = ch(this,c).mem[0];
+            int []bmem = new int[msiz];
+            bmem[0] = msiz;
+            bmem[1] = ch(this,c).mem[1];
+            bmem[2] = ch(this,c).mem[2];
+            bmem[3] = 1;
+            bmem[4] = Constants.INITIAL_ENERGY;
+            bmem[8] = 1;
+            Critter cpos = ch(this,c);
+            Reference<Tile> np = cpos.pos.lin(-1, cpos.dir);
+            Critter baby = new Critter(wor, np, prog, bmem);
+            np.contents().putCritter(baby);
+            mem[4] -= Constants.MATE_COST * complexity();
+            c.mem[4] -= Constants.MATE_COST * c.complexity();
+        }
+        else amorous = true;
+        acted = true;
+    }
 
+    public void _tag(int i) {
+        Critter c = pos.adj(dir).contents().getCritter();
+        if(c != null)
+            c.mem[7] = i;
+        else
+            System.err.println("Tag on non-existant critter");
+    } 
+    
+    private <T >T ch(T a, T b) {
+        return (Math.random()>.5?a:b);
+    }
+    
     private static double lgs(double x) {
         return 1 / (1 + Math.exp(-x));
     }
 
     private int complexity() {
-        return /*rules * RULE_COST +*/ (mem[1] + mem[2]) * ABILITY_COST;
+        return prog.numChildren() * Constants.RULE_COST + (mem[1] + mem[2]) * ABILITY_COST;
     }
 
     public String state() {
@@ -304,7 +364,8 @@ public class Critter /*extends Entity*/ implements CritterState {
                 + "\n\tRule Counter: " + mem[5]
                 + "\n\tEvent Log:" + eventLog()//mem[6]
                 + "\n\tTag: " + mem[7]
-                + "\n\tPosture: " + mem[8];
+                + "\n\tPosture: " + mem[8]
+                + "\n\tLatest action: " + recentAction;
         return s;
     }
     /**
@@ -361,7 +422,12 @@ public class Critter /*extends Entity*/ implements CritterState {
 
     @Override
     public int ahead(int i) {
-        return encodeTile(pos.lin(i, dir).contents());
+        if((i>0?i:-i)>Constants.MAX_SMELL_DISTANCE)
+            return 0;
+        if(i>0)
+            return encodeTile(pos.lin(i, dir).contents());
+        else
+            return encodeTile(pos.lin(-i, dir).contents().ignoringCritter());
         
     }
 
@@ -372,12 +438,20 @@ public class Critter /*extends Entity*/ implements CritterState {
     
     private int encodeTile(Tile t) {
         if(t.rock())
-            return -1;
+            return Constants.ROCK_VALUE;
         if(t.critter())
             return t.getCritter().read();
         if(t.food() || t.plant())
             return -t.foodValue() + (t.plant()?-Constants.ENERGY_PER_PLANT:0);
         return 0;
+    }
+
+    public void checkDeath() {
+        if (mem[4] < 0) //if run out of energy then
+        {//die
+            pos.contents().addFood(Constants.FOOD_PER_SIZE * size());
+            pos.contents().removeCritter();
+        }
     }
 
     @Override
@@ -404,5 +478,4 @@ public class Critter /*extends Entity*/ implements CritterState {
                 *  mem[2]   Offense*/
         return "critter with \nState:\n" + state()+"\nRuleset:\n" + prog;
     }
-    
 }

@@ -26,7 +26,7 @@ public class Action extends Node<Expression<?>> {
             return new Action(type);
     }
 
-    protected Action(String type) {
+    public Action(String type) {
         super(Collections.EMPTY_LIST);
         this.act = forName(Act.class,type);
     }
@@ -40,11 +40,10 @@ public class Action extends Node<Expression<?>> {
     }
     
     /**
-     * Executes the action, by which I mean it throws an error.
-     * This method's signature is expected to change.
+     * Executes the action.
      */
     public void execute(Critter c) {
-        act.exec();
+        act.exec(c);
     }
 
     @Override
@@ -61,47 +60,47 @@ public class Action extends Node<Expression<?>> {
 
     public static enum Act {
         WAIT {
-            @Override public void exec() {
-                throw new Error("Can't do that yet!");
+            @Override public void exec(Critter c) {
+                c._wait();
             }
         }, FORWARD {
-            @Override public void exec() {
-                throw new Error("Can't do that yet!");
+            @Override public void exec(Critter c) {
+                c.forward();
             }
         }, BACKWARD {
-            @Override public void exec() {
-                throw new Error("Can't do that yet!");
+            @Override public void exec(Critter c) {
+                c.backward();
             }
         }, LEFT {
-            @Override public void exec() {
-                throw new Error("Can't do that yet!");
+            @Override public void exec(Critter c) {
+                c.left();
             }
         }, RIGHT {
-            @Override public void exec() {
-                throw new Error("Can't do that yet!");
+            @Override public void exec(Critter c) {
+                c.right();
             }
         }, EAT {
-            @Override public void exec() {
-                throw new Error("Can't do that yet!");
+            @Override public void exec(Critter c) {
+                c.eat();
             }
         }, ATTACK {
-            @Override public void exec() {
-                throw new Error("Can't do that yet!");
+            @Override public void exec(Critter c) {
+                c.attack();
             }
         }, GROW {
-            @Override public void exec() {
-                throw new Error("Can't do that yet!");
+            @Override public void exec(Critter c) {
+                c.grow();
             }
         }, BUD {
-            @Override public void exec() {
-                throw new Error("Can't do that yet!");
+            @Override public void exec(Critter c) {
+                c.bud();
             }
         }, MATE {
-            @Override public void exec() {
-                throw new Error("Can't do that yet!");
+            @Override public void exec(Critter c) {
+                c.mate();
             }
         };
         
-        public abstract void exec();
+        public abstract void exec(Critter c);
     }
 }

@@ -116,7 +116,8 @@ public class FaultInjector {
             }
             faultType.remove(i); //deletes the last fault type from the list of possible fault types because it was already tried (and failed)
         }
-        return null; //none of the possible fault types worked!
+        System.out.println("Mutation failed");
+        return n; //none of the possible fault types worked!
     }
 
     /**

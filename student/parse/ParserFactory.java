@@ -25,9 +25,9 @@ public class ParserFactory {
                 }
                 System.out.println(program.prettyPrint());
             } catch (FileNotFoundException e) {
-                System.out.println("The given file was not found.");
+                System.out.println("ParserFactory: The given file was not found.");
             } catch (NumberFormatException e) {
-                System.out.println("Operation invalid. --mutate requires an integer for number of mutations");
+                System.out.println("ParserFactory: Operation invalid. --mutate requires an integer for number of mutations");
             }
         } else if (args[0].equals("--extend")) {
             ////////
@@ -38,7 +38,7 @@ public class ParserFactory {
                 System.out.println(program.prettyPrint());
             } catch (FileNotFoundException e) {
 
-                System.out.println("The given file was not found.");
+                System.out.println("ParserFactory: The given file was not found.");
             }
         }
     }

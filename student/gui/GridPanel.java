@@ -215,7 +215,7 @@ public class GridPanel extends JPanel implements Scrollable{
                         drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, imagepack.get(imgnames[2])); 
                     if(t.critter()) {
                         Image i = null;
-                        String s = t.getCritter().getApperance();
+                        String s = t.getCritter().getAppearance();
                         
                         if (s != null) {
                             if (imagepackages == null) {

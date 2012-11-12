@@ -15,6 +15,7 @@ import javax.swing.border.BevelBorder;
 import student.grid.Critter;
 import student.grid.HexGrid;
 import student.grid.Tile;
+import student.parse.Program;
 import student.world.World;
 
 public class WorldDisplay extends JPanel{
@@ -132,17 +133,9 @@ public class WorldDisplay extends JPanel{
         if (currentLocation.contents().plant())
             s = s + "\na plant... ";
         if (currentLocation.contents().critter()) {
-            s = s + "\na ";
+            s = s + "\na critter with ";
             //int[] memory = currentLocation.contents().getCritter().memory();
-            s = s + currentLocation.contents().getCritter().toString();/*//.state();/*"\n\tMemory: " + memory[0]
-                    + "\n\tDefense: " + memory[1]
-                    + "\n\tOffense: " + memory[2]
-                    + "\n\tSize: " + memory[3]
-                    + "\n\tEnergy: " + memory[4]
-                    + "\n\tRule Counter: " + memory[5]
-                    + "\n\tEvent Log: " + memory[6]
-                    + "\n\tTag: " + memory[7]
-                    + "\n\tPosture: " + memory[8];*/
+            s = s + currentLocation.contents().getCritter().state();
         }
         }
         attributes.setText(s);

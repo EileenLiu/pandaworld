@@ -14,10 +14,14 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import student.grid.Critter;
 import student.grid.HexGrid.Reference;
 import student.grid.Tile;
+import student.parse.Constant;
+import student.parse.Program;
+import student.parse.Tag;
 
 /**
  *
@@ -29,9 +33,11 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
     private InteractionHandler masterController;
     private Reference<Tile> rclxtar = null;
     private JPopupMenu men;
+    private String msg;
     private Action rock, unrock,
             plant, unplant;
-    private Action crit, critMenIts[] = new Action[9];
+    private int i;
+    private Action crit, critMenIts[] = new Action[11];
     private boolean EXIT = false;
 
     public MouseInteractionHandler(final InteractionHandler _parent){//final World _model, final WorldFrame _view) {
@@ -81,10 +87,10 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
         crit = new LocAxn("add critter") {
             @Override
             protected void act() {
-                rclxtar.contents().putCritter(new Critter(masterController.getModel(), rclxtar, null));
+                rclxtar.contents().putCritter(new Critter(masterController.getModel(), rclxtar, new Program()));
             }
         };
-        critMenIts[0] = new LocAxn("forward") {
+        critMenIts[0] = new CrLocAxn("forward") {
             @Override
             public void act() {
                 if (rclxtar.contents().critter()) {
@@ -94,7 +100,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
                 }
             }
         };
-        critMenIts[1] = new LocAxn("backward") {
+        critMenIts[1] = new CrLocAxn("backward") {
             @Override
             public void act() {
                 if (rclxtar.contents().critter()) {
@@ -104,7 +110,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
                 }
             }
         };
-        critMenIts[2] = new LocAxn("left") {
+        critMenIts[2] = new CrLocAxn("left") {
             @Override
             public void act() {
                 if (rclxtar.contents().critter()) {
@@ -112,7 +118,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
                 }
             }
         };
-        critMenIts[3] = new LocAxn("right") {
+        critMenIts[3] = new CrLocAxn("right") {
             @Override
             public void act() {
                 if (rclxtar.contents().critter()) {
@@ -120,7 +126,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
                 }
             }
         };
-        critMenIts[4] = new LocAxn("eat") {
+        critMenIts[4] = new CrLocAxn("eat") {
             @Override
             public void act() {
                 if (rclxtar.contents().critter()) {
@@ -128,7 +134,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
                 }
             }
         };
-        critMenIts[5] = new LocAxn("attack") {
+        critMenIts[5] = new CrLocAxn("attack") {
             @Override
             public void act() {
                 if (rclxtar.contents().critter()) {
@@ -136,7 +142,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
                 }
             }
         };
-        critMenIts[6] = new LocAxn("grow") {
+        critMenIts[6] = new CrLocAxn("grow") {
             @Override
             public void act() {
                 if (rclxtar.contents().critter()) {
@@ -144,7 +150,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
                 }
             }
         };
-        critMenIts[7] = new LocAxn("remove") {
+        critMenIts[7] = new CrLocAxn("remove") {
             @Override
             public void act() {
                 if (rclxtar.contents().critter()) {
@@ -152,27 +158,36 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
                 }
             }
         };
-        critMenIts[8] = new LocAxn("bud") {
-         @Override
-         public void act() {
-         if(rclxtar.contents().critter())
-         rclxtar.contents().getCritter().bud();
-         }
-         };
-        /*criMenIts[0] = new LocAxn("mate") {
-         @Override
-         public void act() {
-         if(rclxtar.contents().critter())
-         rclxtar.contents().getCritter().mate();
-         }
-         };*/
-        /*criMenIts[0] = new LocAxn("tag") {
-         @Override
-         public void act() {
-         if(rclxtar.contents().critter())
-         rclxtar.contents().getCritter().tag();
-         }
-         };*/
+        critMenIts[8] = new CrLocAxn("bud") {
+            @Override
+            public void act() {
+                if (rclxtar.contents().critter()) {
+                    rclxtar.contents().getCritter().bud();
+                }
+            }
+        };
+        critMenIts[9] = new CrLocAxn("mate") {
+            @Override
+            public void act() {
+                if (rclxtar.contents().critter()) {
+                    rclxtar.contents().getCritter().mate();
+                }
+            }
+        };
+        critMenIts[10] = new LocAxn("tag") {
+            @Override
+            public void act() {
+                if (rclxtar.contents().critter()) {
+                    men.setVisible(false);
+                    do try {
+                            rclxtar.contents().getCritter()._tag(i=Integer.parseInt((msg=JOptionPane.showInputDialog(masterController.getView(), "New tag value:", "Tagging ahead critter", JOptionPane.QUESTION_MESSAGE))));
+                            rclxtar.contents().getCritter().recentAction = new Tag(new Constant(i));
+                            return;
+                        } catch (NumberFormatException nfe) { if(!"".equals(msg)) continue; }
+                    while(false); //just give up...
+                }
+            }
+        };
         //this.gameLoop();
     }
 
@@ -255,7 +270,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
     private abstract class LocAxn extends AbstractAction {
 
         @Override
-        public final void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent e) {
             act();
             men.setVisible(false);
             masterController.getView().repaint();
@@ -265,6 +280,21 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
 
         public LocAxn(String s) {
             super(s);
+        }
+    }
+    
+    private abstract class CrLocAxn extends LocAxn {
+        private final student.parse.Action a;
+        public CrLocAxn(String s) {
+            super(s);
+            a = new student.parse.Action(s);
+        }
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Critter c = rclxtar.contents().getCritter();
+            c.recentAction = a;
+            super.actionPerformed(e);
+            if(c!=null)c.checkDeath();
         }
     }
 

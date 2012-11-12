@@ -78,7 +78,8 @@ public class Access extends Expression<Expression<?>> {
         },
         RANDOM {
             @Override public int val(int par, CritterState s) {
-                return (int)(par*Math.random());
+                if(par < 2) return 0;
+                else return (int)(par*Math.random());
             }            
         },
         AHEAD {

@@ -62,7 +62,7 @@ public class World {
         WAIT = !WAIT;
     }
 
-    public void doStep() {
+    public void doStep() { //TODO: eileen: what the **** does this do?
         STEP = true;
     }
 
@@ -89,6 +89,7 @@ public class World {
                 for (HexDir d : HexDir.values()) {
                     if (e.adj(d) != null
                             && !e.adj(d).contents().plant()
+                            && !e.adj(d).contents().rock()
                             && Math.random() < prob) {
                         e.adj(d).contents().putPlant();
                     }
@@ -118,56 +119,53 @@ public class World {
     public int width() {
         return grid.nCols();
     }
-
     public Reference<Tile> at(int r, int c) {
         return grid.ref(c, r);
     }
-    public void addCritter(Critter c) throws InvalidWorldAdditionException{
-        HexGrid.Reference<Tile> loc = this.randomLoc();
-        addCritter(c, loc.row(), loc.col());
-    }
-    public void addCritter(Critter c, int row, int col) throws InvalidWorldAdditionException {
+    /**
+     * Adds the given object to the location with the given row and column
+     * Throws InvalidWorldAdditionException if the location is invalid
+     * @param what the object to add
+     * @param row the given row
+     * @param col the given col
+     * @throws student.world.World.InvalidWorldAdditionException 
+     */
+    public void add(Object what, int row, int col) throws InvalidWorldAdditionException {
         HexGrid.Reference<Tile> loc = grid.ref(col, row);
-        if (loc != null) {
-            if (loc.contents() == null) {
-                loc.setContents(new Tile(false, 0));
-            }
-            grid.ref(col, row).contents().putCritter(c);
-        }else {
-            throw new InvalidWorldAdditionException();
-        }
-    }
-    public void add(String type){
-        HexGrid.Reference<Tile> loc = this.randomLoc();
-        try {
-            add(type, loc.row(), loc.col());
-        } catch (InvalidWorldAdditionException ex) {
-            System.out.println("Unreachable code");
-        }
-    }
-    public void add(String type, int row, int col) throws InvalidWorldAdditionException {
-        HexGrid.Reference<Tile> loc = grid.ref(col, row);
-        if (loc != null) {
-            if (loc.contents() == null) {
-                loc.setContents(new Tile(false, 0));
-            }
-            if (type.equals("plant")) {
-                System.out.println(grid);
-                System.out.println(grid.ref(col, row));
-                System.out.println(grid.ref(col, row).contents());
-                loc.contents().putPlant();
-            } //TODO: fix null pointer exception
-            else if (type.equals("rock")) {
-                loc.setContents(new Tile.Rock());
-            } else {
-                throw new InvalidWorldAdditionException();
-            }
+        if (loc != null) { //out of bounds
+            add(what, loc);
         } else {
             throw new InvalidWorldAdditionException();
         }
-        //TODO: Throw some kind of exception
     }
-
+    /**
+     * Adds the given object to the given location
+     * Throws InvalidWorldAdditionException if the object is invalid
+     * Precondition: loc is a valid location, or null
+     * @param what the object to add
+     * @param loc the location to add it, if null, picks a random location
+     * @throws student.world.World.InvalidWorldAdditionException 
+     */
+    public void add(Object what, HexGrid.Reference<Tile> loc) throws InvalidWorldAdditionException{
+            if (loc==null){
+                loc = this.randomLoc();
+            }
+            if (loc.contents() == null) {
+                loc.setContents(new Tile(false, 0));
+            }
+            if (what instanceof Critter) {
+                loc.contents().putCritter((Critter)what);
+            }
+            else if (what instanceof String && what.equals("plant")) {
+                loc.contents().putPlant();
+            }
+            else if (what instanceof String && what.equals("rock")){
+                loc.setContents(new Tile.Rock());
+            }
+            else { //not a valid option to add
+                throw new InvalidWorldAdditionException();
+            }
+    }
     /**
      * Retrieves the default reference at 0, 0
      *

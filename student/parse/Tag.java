@@ -10,7 +10,7 @@ import student.grid.Critter;
  *
  * @author haro
  */
-class Tag extends Action {
+public class Tag extends Action {
     public Tag(Expression ind) {
         super(ind);
     }
@@ -21,7 +21,7 @@ class Tag extends Action {
 
     @Override
     public void execute(Critter c) {
-        throw new Error("Can't execute yet!");
+        c._tag(ind().eval(c));
     }
 
     @Override

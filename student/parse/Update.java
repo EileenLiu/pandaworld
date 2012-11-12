@@ -41,7 +41,10 @@ public class Update extends Node<Expression<?>> {
     }
     
     public void apply(CritterState s) {
-        s.setMem(index().eval(s), newValue().eval(s));
+        int i = index().eval(s);
+        if(i<8) return;
+        if(i==8 && (i > 999 || i < 0))
+        s.setMem(i, newValue().eval(s));
     }
 
     @Override

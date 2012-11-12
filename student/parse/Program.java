@@ -3,6 +3,7 @@ package student.parse;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import student.config.Constants;
 import student.grid.CritterState;
 import student.parse.ParserImpl.HistObj;
 
@@ -29,6 +30,10 @@ public class Program extends Node<Rule> {
         super(new LinkedList<Rule>());
     }
     
+    public Program(Rule...s) {
+        super(s);
+    }
+    
     public List<Rule> rules() {
         return Collections.unmodifiableList(children);
     }
@@ -40,13 +45,17 @@ public class Program extends Node<Rule> {
         return sb;
     }
     
+    public Program mutate() {
+        return (Program)this.copy().mutate(this);
+    }
+    
     public Action run(CritterState s) {
         int i = 0; a:
         do for(Rule r : children) if(r.sat(s)) {
             Action a = r.ap(s);
             if(a != null) return   a;
             else          continue a;
-        } while (i++ < 1000);
+        } while (i++ < Constants.MAX_RULES_PER_TURN);
         return new Action("wait");
     }
 }

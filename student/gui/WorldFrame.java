@@ -19,7 +19,8 @@ public class WorldFrame extends JFrame {
         initMenubar();
         this.setFullScreen();
     }
-    public final void loadWorld(World w){
+
+    public final void loadWorld(World w) {
         world = w;
         /*if(worldDisplay!=null)
         {
@@ -31,6 +32,7 @@ public class WorldFrame extends JFrame {
         this.add(worldDisplay, BorderLayout.CENTER);
         System.out.println("Loaded world");
     }
+
     private void initMenubar() {
 
         MENUBAR = new javax.swing.JMenuBar();
@@ -59,10 +61,10 @@ public class WorldFrame extends JFrame {
 
         importWorld.setText("World");
         /*importWorld.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                importWorldActionPerformed(evt);
-            }
-        });*/
+         public void actionPerformed(java.awt.event.ActionEvent evt) {
+         importWorldActionPerformed(evt);
+         }
+         });*/
         importMenu.add(importWorld);
 
         importCritter.setText("Critter");
@@ -70,10 +72,10 @@ public class WorldFrame extends JFrame {
 
         importSettings.setText("Settings");
         /*importSettings.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                importSettingsActionPerformed(evt);
-            }
-        });*/
+         public void actionPerformed(java.awt.event.ActionEvent evt) {
+         importSettingsActionPerformed(evt);
+         }
+         });*/
         importMenu.add(importSettings);
 
         MENUBAR.add(importMenu);
@@ -82,18 +84,18 @@ public class WorldFrame extends JFrame {
 
         createWorld.setText("World");
         /*createWorld.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                createWorldActionPerformed(evt);
-            }
-        });*/
+         public void actionPerformed(java.awt.event.ActionEvent evt) {
+         createWorldActionPerformed(evt);
+         }
+         });*/
         createMenu.add(createWorld);
 
         createCritter.setText("Critter");
         /*createCritter.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                createCritterActionPerformed(evt);
-            }
-        });*/
+         public void actionPerformed(java.awt.event.ActionEvent evt) {
+         createCritterActionPerformed(evt);
+         }
+         });*/
         createMenu.add(createCritter);
 
         createPlant.setText("Plant");
@@ -101,10 +103,10 @@ public class WorldFrame extends JFrame {
 
         createFood.setText("Food");
         /*createFood.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                createFoodActionPerformed(evt);
-            }
-        });*/
+         public void actionPerformed(java.awt.event.ActionEvent evt) {
+         createFoodActionPerformed(evt);
+         }
+         });*/
         createMenu.add(createFood);
 
         createRock.setText("Rock");
@@ -139,11 +141,12 @@ public class WorldFrame extends JFrame {
         MENUBAR.add(helpMenu);
 
         setJMenuBar(MENUBAR);
-        
+
         fileSelector = new javax.swing.JFileChooser();
         fileSelector.setDialogTitle("Import");
-        
+
     }
+
     public WorldDisplay display() {
         return worldDisplay;
     }
@@ -152,16 +155,18 @@ public class WorldFrame extends JFrame {
         worldDisplay.update();//repaint();
         super.repaint();
     }
+
     /**
      * Sets the WorldFrame to fullscreen.
+     *
      * @param	frame	the JFrame to set to fullscreen
      */
     private void setFullScreen() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int taskBarSize = Toolkit.getDefaultToolkit().getScreenInsets(getGraphicsConfiguration()).bottom;
-        this.setSize(screenSize.width, screenSize.height-taskBarSize);
+        this.setSize(screenSize.width, screenSize.height - taskBarSize);
     }
-        // Variables declaration - do not modify
+    // Variables declaration - do not modify
     public javax.swing.JFileChooser fileSelector;
     private javax.swing.JMenuBar MENUBAR;
     public javax.swing.JMenuItem aboutCredits;
