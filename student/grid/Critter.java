@@ -44,6 +44,10 @@ public class Critter /*extends Entity*/ implements CritterState {
         mem = defaultMemory();
         dir = HexDir.N;
     }
+    public Critter(World _wor, Reference<Tile> _pos, Program p, int d) {
+        this(_wor, _pos, p);
+        dir = HexDir.dir(d);
+    }
     public int []defaultMemory(){
         return new int[]{9, 1, 1, 1, 10, 0, 0, 0, 0};
     }
