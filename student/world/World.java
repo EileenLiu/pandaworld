@@ -6,6 +6,8 @@ package student.world;
 
 import java.util.Iterator;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import student.grid.ArrayHexGrid;
 import student.config.Constants;
 import student.grid.Critter;
@@ -135,7 +137,14 @@ public class World {
             throw new InvalidWorldAdditionException();
         }
     }
-
+    public void add(String type){
+        HexGrid.Reference<Tile> loc = this.randomLoc();
+        try {
+            add(type, loc.row(), loc.col());
+        } catch (InvalidWorldAdditionException ex) {
+            System.out.println("Unreachable code");
+        }
+    }
     public void add(String type, int row, int col) throws InvalidWorldAdditionException {
         HexGrid.Reference<Tile> loc = grid.ref(col, row);
         if (loc != null) {

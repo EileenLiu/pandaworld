@@ -87,5 +87,16 @@ public class MenuInteractionHandler {
                 }
             }
         });
+        masterController.getView().createPlant.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Object[] options = {"OK", "Cancel"};
+                int n = JOptionPane.showOptionDialog(masterController.getView(), "Add a plant to a random location?",
+                        "Create plant", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+                if (n == 0) {
+                   masterController.getModel().add("plant");
+                }
+            }
+        });
     }
 }
