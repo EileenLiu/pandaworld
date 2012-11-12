@@ -37,7 +37,7 @@ public final class Critter /*extends Entity*/ implements CritterState {
         if(pos!=null)
             pos = _pos;
         else
-            _wor.randomLoc();
+            pos =_wor.randomLoc();
         mem = _mem;
         dir = HexDir.N;
         if(_p==null)
@@ -292,6 +292,8 @@ public final class Critter /*extends Entity*/ implements CritterState {
     }
     
     public void bud() {
+        if(pos==null)
+            System.out.println("pos == null");
         Reference<Tile> np = pos.lin(-1, dir);
         if(np == null || np.contents().rock())
             return; //we're in a corner, can't put a critter there.

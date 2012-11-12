@@ -60,60 +60,35 @@ public class WorldFrame extends JFrame {
         importMenu.setText("Import");
 
         importWorld.setText("World");
-        /*importWorld.addActionListener(new java.awt.event.ActionListener() {
-         public void actionPerformed(java.awt.event.ActionEvent evt) {
-         importWorldActionPerformed(evt);
-         }
-         });*/
         importMenu.add(importWorld);
 
         importCritter.setText("Critter");
         importMenu.add(importCritter);
 
         importSettings.setText("Settings");
-        /*importSettings.addActionListener(new java.awt.event.ActionListener() {
-         public void actionPerformed(java.awt.event.ActionEvent evt) {
-         importSettingsActionPerformed(evt);
-         }
-         });*/
-        importMenu.add(importSettings);
+        //importMenu.add(importSettings);
 
         MENUBAR.add(importMenu);
 
         createMenu.setText("Create");
 
         createWorld.setText("World");
-        /*createWorld.addActionListener(new java.awt.event.ActionListener() {
-         public void actionPerformed(java.awt.event.ActionEvent evt) {
-         createWorldActionPerformed(evt);
-         }
-         });*/
         createMenu.add(createWorld);
 
         createCritter.setText("Critter");
-        /*createCritter.addActionListener(new java.awt.event.ActionListener() {
-         public void actionPerformed(java.awt.event.ActionEvent evt) {
-         createCritterActionPerformed(evt);
-         }
-         });*/
         createMenu.add(createCritter);
 
         createPlant.setText("Plant");
         createMenu.add(createPlant);
 
         createFood.setText("Food");
-        /*createFood.addActionListener(new java.awt.event.ActionListener() {
-         public void actionPerformed(java.awt.event.ActionEvent evt) {
-         createFoodActionPerformed(evt);
-         }
-         });*/
-        createMenu.add(createFood);
+        //createMenu.add(createFood);
 
         createRock.setText("Rock");
         createMenu.add(createRock);
 
         MENUBAR.add(createMenu);
-
+        
         viewMenu.setText("View");
 
         viewZoomIn.setText("Zoom In");
@@ -125,10 +100,10 @@ public class WorldFrame extends JFrame {
         viewReset.setText("Reset");
         viewMenu.add(viewReset);
 
-        MENUBAR.add(viewMenu);
+        //MENUBAR.add(viewMenu);
 
         settingsMenu.setText("Settings");
-        MENUBAR.add(settingsMenu);
+        //MENUBAR.add(settingsMenu);
 
         helpMenu.setText("Help");
 
@@ -138,7 +113,7 @@ public class WorldFrame extends JFrame {
         aboutCredits.setText("Credits");
         helpMenu.add(aboutCredits);
 
-        MENUBAR.add(helpMenu);
+        //MENUBAR.add(helpMenu);
 
         setJMenuBar(MENUBAR);
 
