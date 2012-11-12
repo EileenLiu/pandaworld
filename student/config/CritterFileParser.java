@@ -22,6 +22,19 @@ import student.world.World;
  * @author haro
  */
 public class CritterFileParser {
+
+    /*public static Critter generateCritter(World world, HexGrid.Reference<Tile> pos, int direction) {
+        Critter c = null;
+        if (pos == null) {
+            pos = world.randomLoc();
+        }
+        if (!(direction > 0 && direction < 6)) {
+            //c = new Critter(world, pos, program);
+        } else {
+            //c = new Critter(world, pos, program, direction);
+        }
+        return c;
+    }*/
     /**
      * Generates a critter from the specified file, in the given world and location
      * @param filename the given file
@@ -42,7 +55,10 @@ public class CritterFileParser {
                 Program program = ParserFactory.getParser().parse(inStreamReader);
                 if(pos==null)
                     pos = world.randomLoc();
-                c = new Critter(world, pos, program);
+                if(!(direction>0&&direction<6))
+                    c = new Critter(world, pos, program);
+                else
+                    c = new Critter(world, pos, program, direction);
                 c.setDefense(Integer.parseInt(arr[1]));
                 c.setOffense(Integer.parseInt(arr[2]));
                 c.setSize(Integer.parseInt(arr[3]));

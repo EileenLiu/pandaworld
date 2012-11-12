@@ -34,11 +34,20 @@ public final class Critter /*extends Entity*/ implements CritterState {
     }
     private Critter(World _wor, Reference<Tile> _pos, Program _p, int []_mem) {
         wor = _wor;
-        pos = _pos;
+        if(pos!=null)
+            pos = _pos;
+        else
+            pos =_wor.randomLoc();
         mem = _mem;
         dir = HexDir.N;
+        if(_p==null)
+            _p = new Program();
         prog = _p;
         System.err.println("\tMade critter: program is"+prog);
+    }
+    public Critter(World _wor, Reference<Tile> _pos, Program p, int d) {
+        this(_wor, _pos, p);
+        dir = HexDir.dir(d);
     }
     private static final int []defaultMemory = {MIN_MEMORY, 1, 1, 1, INITIAL_ENERGY};
     private static int []defaultMemory(){
@@ -49,7 +58,6 @@ public final class Critter /*extends Entity*/ implements CritterState {
     public HexDir direction() {
         return dir;
     }
-
     public int size() {
         return mem[3];
     }
@@ -284,6 +292,8 @@ public final class Critter /*extends Entity*/ implements CritterState {
     }
     
     public void bud() {
+        if(pos==null)
+            System.out.println("pos == null");
         Reference<Tile> np = pos.lin(-1, dir);
         if(np == null || np.contents().rock())
             return; //we're in a corner, can't put a critter there.
@@ -361,7 +371,8 @@ public final class Critter /*extends Entity*/ implements CritterState {
                 + "\n\tRule Counter: " + mem[5]
                 + "\n\tEvent Log:" + eventLog()//mem[6]
                 + "\n\tTag: " + mem[7]
-                + "\n\tPosture: " + mem[8];
+                + "\n\tPosture: " + mem[8]
+                + "\n\tLatest action: " + recentAction;
         return s;
     }
     /**

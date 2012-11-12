@@ -133,9 +133,9 @@ public class WorldDisplay extends JPanel{
         if (currentLocation.contents().plant())
             s = s + "\na plant... ";
         if (currentLocation.contents().critter()) {
-            s = s + "\na ";
+            s = s + "\na critter with ";
             //int[] memory = currentLocation.contents().getCritter().memory();
-            s = s + currentLocation.contents().getCritter().toString();
+            s = s + currentLocation.contents().getCritter().state();
         }
         }
         attributes.setText(s);
