@@ -300,7 +300,10 @@ public final class Critter /*extends Entity*/ implements CritterState {
     }
     
     public void mate() {
-        Tile t = pos.adj(dir).contents();
+        Reference<Tile> rt = pos.adj(dir);
+        if(rt==null)
+            return;
+        Tile t = rt.contents();
         if(t.critter() && t.getCritter().amorous) {
             Critter c = t.getCritter();
             int nrules = ch(this,c).prog.numChildren(), 
@@ -319,6 +322,7 @@ public final class Critter /*extends Entity*/ implements CritterState {
             bmem[8] = 1;
             Critter cpos = ch(this,c);
             Reference<Tile> np = cpos.pos.lin(-1, cpos.dir);
+            if(np==null || np.contents().rock()) np = (cpos==this?c:this).pos.lin(-1, (cpos!=this?this:c).dir);
             Critter baby = new Critter(wor, np, prog, bmem);
             np.contents().putCritter(baby);
             mem[4] -= Constants.MATE_COST * complexity();
@@ -439,7 +443,7 @@ public final class Critter /*extends Entity*/ implements CritterState {
     }
 
     public void checkDeath() {
-        if (mem[4] < 0) //if run out of energy then
+        if (mem[4] <= 0) //if run out of energy then
         {//die
             pos.contents().addFood(Constants.FOOD_PER_SIZE * size());
             pos.contents().removeCritter();

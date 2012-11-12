@@ -5,13 +5,14 @@
 package student.grid;
 
 import java.util.Iterator;
+import student.config.Constants;
 
 /**
  *
  * @author haro
  */
 public interface HexGrid<E> extends Iterable<HexGrid.Reference<E>> {
-
+    
     /**
      * Returns the item at the given location, given as column and row.
      *
