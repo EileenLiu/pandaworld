@@ -37,7 +37,7 @@ public final class Critter /*extends Entity*/ implements CritterState {
     }
     private Critter(World _wor, Reference<Tile> _pos, Program _p, int []_mem) {
         wor = _wor;
-        if(pos!=null)
+        if(_pos!=null)
             pos = _pos;
         else
             pos =_wor.randomLoc();
