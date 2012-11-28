@@ -4,8 +4,16 @@
  */
 package student.world;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.SortedSet;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import student.grid.ArrayHexGrid;
@@ -190,6 +198,112 @@ public class World {
             population[3] = population[3] + (t.rock() ? 1 : 0);
         }
         return population;
+    }
+    
+    public int smell(Reference<Tile> pos, TilePredicate pred, int maxLev) {
+        SortedSet<PQEntry> gray = new TreeSet<PQEntry>();
+        Set<PQEntry> black = new HashSet<PQEntry>();
+        gray.add(new PQEntry(pos, 0, null, null));
+        PQEntry res = null;
+     out:while(!gray.isEmpty()) {
+            PQEntry v = gray.first();
+            gray.remove(v);
+            black.add(v);
+            System.out.printf("(%d,%d):\n",v.curr.col(),v.curr.row());
+    working:for(HexDir d : HexDir.VALUES) {
+                Reference<Tile> adj = v.curr.adj(d);
+                if(adj == null || adj.contents() == null || adj.contents().rock())
+                    continue working;
+                PQEntry w = null;
+                for(PQEntry p : gray) //find in gray set
+                    if((w=p).curr.equals(adj))
+                        break;
+                    else w = null;
+                if(w == null)
+                    for(PQEntry p : black) //find in black set
+                        if((w=p).curr.equals(adj))
+                            break;
+                        else w = null;
+                System.out.printf("\t(%d,%d): ",adj.col(),adj.row());
+                if(w == null) {
+                    gray.add(w = new PQEntry(adj, v.distance + 1, v, v.direction == null ? d : v.direction));
+                    System.out.println("null");
+                } /*else if(w.distance > 10) {
+                    System.out.println("done");
+                    return 1000000;
+                } */else if(w.distance > v.distance + 1) {
+                    gray.remove(w);
+                    w.distance = v.distance + 1;
+                    w.direction = v.direction == null ? d : v.direction;
+                    w.previous = v;
+                    gray.add(w);
+                    System.out.printf("relax: %d(%d,%d)\n", w.distance, v.curr.col(), v.curr.row());
+                } else
+                    System.out.println("check: "+w.distance);
+                if(pred.test(adj)) {
+                    res = w;
+                    break out;
+                }
+            }
+        }
+        if(res == null)
+            return 1000000;
+        if(res.curr == pos)
+            return 0;
+        int d;
+        System.out.println(res.distance);
+        for(d = 1; res.previous.direction != null; d++)
+            res = res.previous;
+        return 1000 * d + res.direction.ordinal();
+    }
+    
+    public static class PQEntry implements Comparable<PQEntry> {
+        public int distance;
+        public Reference<Tile> curr;
+        public PQEntry previous;
+        public HexDir direction;
+        public PQEntry(Reference<Tile> c, int d, PQEntry p, HexDir dd) { 
+            curr = c; distance = d; previous = p; direction = dd;
+        }
+        @Override
+        public int compareTo(PQEntry o) {
+            return distance - o.distance;
+        }
+        @Override
+        public int hashCode() {
+            int hash = 3;
+            hash = 19 * hash + this.distance;
+            hash = 19 * hash + (this.curr != null ? this.curr.hashCode() : 0);
+            hash = 19 * hash + (this.previous != null ? this.previous.hashCode() : 0);
+            return hash;
+        }
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == null)
+                return false;
+            if (getClass() != obj.getClass()) 
+                return false;
+            final PQEntry other = (PQEntry) obj;
+            if (this.distance != other.distance) 
+                return false;
+            if (this.curr != other.curr && (this.curr == null || !this.curr.equals(other.curr))) 
+                return false;
+            if (this.previous != other.previous && (this.previous == null || !this.previous.equals(other.previous)))
+                return false;
+            return true;
+        }
+        
+    }
+    
+    public static interface TilePredicate {
+        public boolean test(Reference<Tile> t);
+        public static final TilePredicate isFood =
+                new TilePredicate() {
+                    @Override
+                    public boolean test(Reference<Tile> t) {
+                        return t!=null && t.contents() != null && (t.contents().food() || t.contents().plant());
+                    }
+                };
     }
 
     public static class InvalidWorldAdditionException extends Exception {

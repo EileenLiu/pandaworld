@@ -110,6 +110,8 @@ public interface HexGrid<E> extends Iterable<HexGrid.Reference<E>> {
             i %= 6;
             return values()[i];
         }
+        
+        public static final HexDir VALUES[] = values();
     }
 
     public static class HexIndexOutOfBoundsException extends java.lang.RuntimeException {
