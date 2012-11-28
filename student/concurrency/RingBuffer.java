@@ -29,7 +29,7 @@ public class RingBuffer<T> implements BlockingQueue<T> {
         headIndex = 0;
         tailIndex = 0;
     }
-
+    ////////////-------------BlockingQueue Methods----------------//////////////
     @Override
     public boolean add(T e) {
         if ((tailIndex - headIndex) < (queue.length)) {
@@ -105,7 +105,7 @@ public class RingBuffer<T> implements BlockingQueue<T> {
     public int drainTo(Collection<? super T> c, int maxElements) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
+    ////////////-------------Queue Methods----------------//////////////
     @Override
     public T remove() {
         T removed = this.poll();
@@ -142,7 +142,7 @@ public class RingBuffer<T> implements BlockingQueue<T> {
     public T peek() {
         return isEmpty() ? null : queue[headIndex];
     }
-
+    ////////////-------------Collection Methods----------------//////////////
     @Override
     public int size() {
         return (tailIndex - headIndex);
@@ -159,24 +159,6 @@ public class RingBuffer<T> implements BlockingQueue<T> {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        Iterator<T> objiter = ((RingBuffer)obj).iterator();
-        Iterator<T> iter = this.iterator();
-        boolean match = true;
-        while(iter.hasNext()&&objiter.hasNext())
-        {
-            match = match&&(iter.next().equals(objiter.next()));
-        }
-        return (match&&!iter.hasNext()&&!objiter.hasNext());
-    }
-
-    @Override
     public Object[] toArray() {
         return Arrays.copyOfRange(queue, headIndex, tailIndex);
     }
@@ -187,7 +169,7 @@ public class RingBuffer<T> implements BlockingQueue<T> {
         headIndex = 0;
         tailIndex = 0;
     }
-
+    //extra nonrequired method implementation, unsafe to add stuff while trying to change at same time
     @Override
     public boolean addAll(Collection<? extends T> c) {
         boolean wasSuccessful = true;
@@ -210,7 +192,24 @@ public class RingBuffer<T> implements BlockingQueue<T> {
         }
         return wasSuccessful;
     }
-    ////////////===========UNSUPPORTED METHODS============//////////////
+        @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Iterator<T> objiter = ((RingBuffer)obj).iterator();
+        Iterator<T> iter = this.iterator();
+        boolean match = true;
+        while(iter.hasNext()&&objiter.hasNext())
+        {
+            match = match&&(iter.next().equals(objiter.next()));
+        }
+        return (match&&!iter.hasNext()&&!objiter.hasNext());
+    }
+    ////////////!!!========UNSUPPORTED METHODS=========!!!//////////////
 
     @Override
     public <T> T[] toArray(T[] a) {

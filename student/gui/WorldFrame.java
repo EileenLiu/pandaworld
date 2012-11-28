@@ -33,6 +33,22 @@ public class WorldFrame extends JFrame {
         System.out.println("Loaded world");
     }
 
+    public void godControlsEnabled(boolean b) {
+        importWorld.setEnabled(b);
+        importCritter.setEnabled(b);
+        importSettings.setEnabled(b);
+        createWorld.setEnabled(b);
+        createCritter.setEnabled(b);
+        createPlant.setEnabled(b);
+        createFood.setEnabled(b);
+        createRock.setEnabled(b);
+    }
+
+    public void demigodControlsEnabled(boolean b) {
+        importCritter.setEnabled(b);
+        createCritter.setEnabled(b);
+    }
+
     private void initMenubar() {
 
         MENUBAR = new javax.swing.JMenuBar();
