@@ -13,28 +13,51 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.DelayQueue;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  *
  * @author Eileen Liu <el544@cornell.edu>
  */
 public class RingBuffer<T> implements BlockingQueue<T> {
+   /** Main lock guarding all access */
+    final ReentrantLock lock;
+    /** Condition for waiting takes */
+    private final Condition notEmpty;
+    /** Condition for waiting puts */
+    private final Condition notFull;
 
     private T[] queue;
     private int headIndex = -1;
     private int tailIndex = -1;
 
     public RingBuffer(int capacity) {
+        this(capacity, false);
+    }
+    public RingBuffer(int capacity, boolean fair) {
+        if (capacity <= 0)
+            throw new IllegalArgumentException();
         queue = (T[]) (Array.newInstance(Object.class, capacity));
         headIndex = 0;
         tailIndex = 0;
+        lock = new ReentrantLock(fair);
+        notEmpty = lock.newCondition();
+        notFull = lock.newCondition();
     }
-
+    private static void checkNull(Object o) {
+        if (o == null)
+            throw new NullPointerException();
+    }
+    ////////////-------------BlockingQueue Methods----------------//////////////
     @Override
     public boolean add(T e) {
-        if ((tailIndex - headIndex) < (queue.length)) {
+        if (this.size() < (queue.length)) {
             queue[tailIndex % queue.length] = e;
             tailIndex++;
+            notEmpty.signal();
             return true;
         }
         return false;
@@ -54,29 +77,84 @@ public class RingBuffer<T> implements BlockingQueue<T> {
         }
         return false;
     }
-
     @Override
     public boolean offer(T e) {
-        throw new UnsupportedOperationException("Not supported yet.");
+       
+        final ReentrantLock lock = this.lock;
+        lock.lock();
+        try {
+            if (this.size() == queue.length)
+                return false;
+            else {
+                this.add(e);
+                return true;
+            }
+        } finally {
+            lock.unlock();
+        }
     }
 
     @Override
     public void put(T e) throws InterruptedException {
+        checkNull(e);
+        final ReentrantLock lock = this.lock;
+        lock.lockInterruptibly();
+        try {
+            while (this.size() == queue.length)
+                notFull.await();
+            this.add(e);
+        } finally {
+            lock.unlock();
+        }
     }
 
     @Override
     public boolean offer(T e, long timeout, TimeUnit unit) throws InterruptedException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        checkNull(e);
+        long nanos = unit.toNanos(timeout);
+        final ReentrantLock lock = this.lock;
+        lock.lockInterruptibly();
+        try {
+            while (this.size() == queue.length) {
+                if (nanos <= 0)
+                    return false;
+                nanos = notFull.awaitNanos(nanos);
+            }
+            add(e);
+            return true;
+        } finally {
+            lock.unlock();
+        }
     }
 
     @Override
     public T take() throws InterruptedException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        final ReentrantLock lock = this.lock;
+        lock.lockInterruptibly();
+        try {
+            while (this.size() == 0)
+                notEmpty.await();
+            return remove();
+        } finally {
+            lock.unlock();
+        }
     }
 
     @Override
     public T poll(long timeout, TimeUnit unit) throws InterruptedException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        long nanos = unit.toNanos(timeout);
+        final ReentrantLock lock = this.lock;
+        lock.lockInterruptibly();
+        try {
+            while (this.size() == 0) {
+                if (nanos <= 0)
+                    return null;
+                nanos = notEmpty.awaitNanos(nanos);
+            }
+            return remove();
+        } finally {
+            lock.unlock();
+        }
     }
 
     @Override
@@ -98,6 +176,11 @@ public class RingBuffer<T> implements BlockingQueue<T> {
 
     @Override
     public int drainTo(Collection<? super T> c) {
+        if(c.equals(this))
+        {
+         throw new IllegalArgumentException();
+        }
+
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -105,7 +188,7 @@ public class RingBuffer<T> implements BlockingQueue<T> {
     public int drainTo(Collection<? super T> c, int maxElements) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
+    ////////////-------------Queue Methods----------------//////////////
     @Override
     public T remove() {
         T removed = this.poll();
@@ -142,7 +225,7 @@ public class RingBuffer<T> implements BlockingQueue<T> {
     public T peek() {
         return isEmpty() ? null : queue[headIndex];
     }
-
+    ////////////-------------Collection Methods----------------//////////////
     @Override
     public int size() {
         return (tailIndex - headIndex);
@@ -159,24 +242,6 @@ public class RingBuffer<T> implements BlockingQueue<T> {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        Iterator<T> objiter = ((RingBuffer)obj).iterator();
-        Iterator<T> iter = this.iterator();
-        boolean match = true;
-        while(iter.hasNext()&&objiter.hasNext())
-        {
-            match = match&&(iter.next().equals(objiter.next()));
-        }
-        return (match&&!iter.hasNext()&&!objiter.hasNext());
-    }
-
-    @Override
     public Object[] toArray() {
         return Arrays.copyOfRange(queue, headIndex, tailIndex);
     }
@@ -187,7 +252,7 @@ public class RingBuffer<T> implements BlockingQueue<T> {
         headIndex = 0;
         tailIndex = 0;
     }
-
+    //extra nonrequired method implementation, unsafe to add stuff while trying to change at same time
     @Override
     public boolean addAll(Collection<? extends T> c) {
         boolean wasSuccessful = true;
@@ -210,7 +275,24 @@ public class RingBuffer<T> implements BlockingQueue<T> {
         }
         return wasSuccessful;
     }
-    ////////////===========UNSUPPORTED METHODS============//////////////
+        @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Iterator<T> objiter = ((RingBuffer)obj).iterator();
+        Iterator<T> iter = this.iterator();
+        boolean match = true;
+        while(iter.hasNext()&&objiter.hasNext())
+        {
+            match = match&&(iter.next().equals(objiter.next()));
+        }
+        return (match&&!iter.hasNext()&&!objiter.hasNext());
+    }
+    ////////////!!!========UNSUPPORTED METHODS=========!!!//////////////
 
     @Override
     public <T> T[] toArray(T[] a) {
