@@ -4,7 +4,7 @@ package student.remote;
  *
  * @author haro
  */
-public interface RLogin extends java.rmi.Remote, LLogin {
+public interface RLogin extends java.rmi.Remote {
     /**
      * Implements the Diffie-Hellman-Merkle secret-sharing algorithm.
      * @param uname the username

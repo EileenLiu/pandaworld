@@ -7,28 +7,33 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.security.SecureRandom;
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
+
 
 
 /**
  *
  * @author haro
  */
-public class LoginServer implements LLogin, RLogin {
+public class LoginServer<Permissions extends Enum<Permissions>> implements LLogin<Permissions>, RLogin {
     private Map<String, LoginState> loginTable = new ConcurrentHashMap<String, LoginState>();
     private Map<String, DHM>        inProgress = new ConcurrentHashMap<String, DHM>();
-    private Map<String, Password>   users      = new ConcurrentHashMap<String, Password>();
+    private Map<String, Password<Permissions>>   
+                                    users      = new ConcurrentHashMap<String, Password<Permissions>>();
+    private EnumSet<Permissions> defaultPermissions;
     
-    public LoginServer () throws RemoteException {
-        super();
+    public LoginServer (Permissions def0, Permissions...defaults) throws RemoteException {
+        defaultPermissions = EnumSet.of(def0, defaults);
     }
     
     @Override
-    public boolean verifyRequest(String uname, byte []token) {
+    public boolean verifyRequest(String uname, byte []token, EnumSet<Permissions> ps) {
         LoginState s = loginTable.get(uname);
         boolean good = s != null && s.check(token);
+        good = good && users.get(uname).permissions.containsAll(ps);
         System.out.println((good?"S":"Uns")+"uccessful request: "+uname);
         return good;
     }
@@ -57,6 +62,7 @@ public class LoginServer implements LLogin, RLogin {
         if(!target.check(pwordhash.xor(dhm.gab()))) 
             return false;
         //if we get here they're good.
+        inProgress.remove(uname);
         System.out.println("doLogin success");
         SecureRandom sync = PRNG.getSHA1PRNG();
         sync.setSeed(dhm.gab().toByteArray());
@@ -75,12 +81,60 @@ public class LoginServer implements LLogin, RLogin {
         LocateRegistry.getRegistry().rebind(name,stub);
     }
 
-    public static void main(String []args) throws Exception {
-        LoginServer ls = new LoginServer();
-        ls.users.put("user", new Password("user", "pass"));
-        ls.register("test");
+    @Override
+    public boolean addUser(String user, String pass) {
+        if(users.containsKey(user))
+            return false;
+        Password<Permissions> pword 
+                = new Password<Permissions>(user, pass, defaultPermissions);
+        users.put(user, pword);
+        System.out.println("Added user "+user);
+        return true;
+    }
+
+    @Override
+    public boolean addUser(String user, byte[] passhash) {
+        if(users.containsKey(user))
+            return false;
+        Password<Permissions> pword 
+                = new Password<Permissions>(user, passhash, defaultPermissions);
+        users.put(user, pword);
+        System.out.println("Added user "+user);
+        return true;
+    }
+
+    @Override
+    public void delUser(String user) {
+        loginTable.remove(user);
+        inProgress.remove(user);
+        users.remove(user);
+    }
+
+    @Override
+    public EnumSet<Permissions> userPermissions(String user) {
+        Password p = users.get(user);
+        if(p == null)
+            return null;
+        return p.permissions.clone();
+    }
+
+    @Override
+    public void grantPermission(String user, Permissions... p) {
+        Password pass = users.get(user);
+        if(pass == null)
+            return;
+        pass.permissions.addAll(EnumSet.of(p[0], p));
+    }
+
+    @Override
+    public void revokePermission(String user, Permissions... p) {
+        Password pass = users.get(user);
+        if(pass == null)
+            return;
+        pass.permissions.retainAll(EnumSet.of(p[0], p));
     }
 }
+
 final class LoginState {
     public static final int DEPTH = 5;
     
@@ -114,15 +168,27 @@ final class LoginState {
     }
 }
 
-final class Password {
+final class Password<P extends Enum<P>> {
     private static final Random rand = new Random();
     private static final int SALT_SIZE = 8;
-    public final byte hash[], salt[];
+    private final byte salt[];
+    private byte hash[];
+    public final EnumSet<P> permissions;        
     
-    public Password(String uname, String pword) {
+    private Password(EnumSet<P> _permissions) {
+        permissions = EnumSet.copyOf(_permissions);
         salt = new byte[SALT_SIZE];
         rand.nextBytes(salt);
+    }
+    
+    public Password(String uname, String pword, EnumSet<P> _permissions) {
+        this(_permissions);
         hash = doHash(uname, pword);
+    }
+    
+    public Password(String uname, byte []pword, EnumSet<P> _permissions) {
+        this(_permissions);
+        hash = SHA256.hash(pword, salt);
     }
     
     private byte []doHash(String uname, String pword) {

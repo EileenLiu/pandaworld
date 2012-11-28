@@ -44,7 +44,7 @@ public class LoginClient {
             super(msg);
         }
     }
-
+    /*/ //This only works if verifyRequest is added to RLogin (bad idea!)
     public static void main(String []argv) throws Exception {
         LoginClient lc = new LoginClient("localhost","test","user","pass");
         boolean good = lc.remote.verifyRequest("user",lc.getToken());
@@ -67,4 +67,5 @@ public class LoginClient {
         good = lc.remote.verifyRequest("user",lc.getToken());
         System.out.println("De-sync test "+(!good?"":"un")+"successful");
     }
+    /*/
 }
