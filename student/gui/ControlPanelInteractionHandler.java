@@ -53,7 +53,7 @@ public class ControlPanelInteractionHandler {
                 masterController.getView().worldDisplay.controls.runButton.setEnabled(false);
                 masterController.getView().worldDisplay.controls.stopButton.setEnabled(true);
                 masterController.getView().worldDisplay.controls.stepButton.setEnabled(false);  
-                masterController.getModel().toggleRun();
+                //masterController.getModel().toggleRun();
             }
         });
         cp.stopButton.addActionListener(new ActionListener(){
@@ -65,7 +65,7 @@ public class ControlPanelInteractionHandler {
                 masterController.getView().worldDisplay.controls.stopButton.setEnabled(false);
                 masterController.getView().worldDisplay.controls.stepButton.setEnabled(true);
                 masterController.getView().worldDisplay.controls.runButton.setEnabled(true); 
-                masterController.getModel().toggleRun();
+                //masterController.getModel().toggleRun();
             }
         });
         cp.stepButton.addActionListener(new ActionListener(){
@@ -84,7 +84,7 @@ public class ControlPanelInteractionHandler {
                 masterController.getView().worldDisplay.controls.stopButton.setEnabled(false);
                 masterController.getView().worldDisplay.controls.stepButton.setEnabled(true);
                 masterController.getView().worldDisplay.controls.runButton.setEnabled(true); 
-                masterController.getModel().toggleRun();
+                //masterController.getModel().toggleRun();
             }
         });
     }
