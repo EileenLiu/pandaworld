@@ -50,7 +50,6 @@ public class RingBuffer<T> implements BlockingQueue<T> {
             throw new NullPointerException();
         }
     }
-
     private T queue(int pos) {
         return queue[pos % queue.length];
     }

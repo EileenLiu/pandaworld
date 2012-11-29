@@ -4,6 +4,7 @@
  */
 package student.gui;
 
+import student.Permission;
 import student.world.World;
 
 /**
@@ -13,6 +14,7 @@ import student.world.World;
 public class InteractionHandler {
     private World model;
     private WorldFrame view;
+    private Permission permissions;
     public InteractionHandler(final World _model, final WorldFrame _view)
     {
         model = _model;
@@ -46,5 +48,9 @@ public class InteractionHandler {
     public WorldFrame getView()
     {
         return view;
+    }
+    public Permission getPermissions()
+    {
+        return permissions;
     }
 }

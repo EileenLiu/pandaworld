@@ -89,5 +89,14 @@ public class ControlPanel extends JPanel{
         buttons.add(stopButton);
         return buttons;
     }
+    public void setEnabled(boolean b)
+    {
+        stepButton.setEnabled(b);
+        runButton.setEnabled(b);
+        stopButton.setEnabled(b);
+        wait.setEnabled(b);
+        random.setEnabled(b);
+        speedSlider.setEnabled(b);
+    }
     
 }
