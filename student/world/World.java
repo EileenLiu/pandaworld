@@ -24,8 +24,6 @@ public class World {
 
     HexGrid<Tile> grid;
     private int timesteps = 0;
-    private boolean RUNNING = false;
-    private boolean STEP = false;
     private boolean WAIT = true; //if false, random action
 
     public World() {
@@ -39,29 +37,9 @@ public class World {
     public String getStatus() {
         return "Timesteps: " + timesteps + "\n" + population();
     }
-
-    public boolean isRunning() {
-        return RUNNING;
-    }
-
-    public boolean shouldStep() {
-        return STEP;
-    }
-
-    public boolean shouldWait() {
-        return WAIT;
-    }
-
-    public void toggleRun() {
-        RUNNING = !RUNNING;
-    }
-
+    
     public void toggleWait() {
-        WAIT = !WAIT;
-    }
-
-    public void doStep() { //TODO: eileen: what the **** does this do?
-        STEP = true;
+        WAIT =! WAIT;
     }
 
     public void step() {
@@ -176,6 +154,7 @@ public class World {
     public HexGrid.Reference<Tile> randomLoc() {
         return grid.ref((int)(Math.random()*height()), (int)(Math.random()*height()));
     }
+    public static final int CRIT = 0, PLANT = 1, FOOD = 2, ROCK = 3;
     public int[] population() {
         int[] population = new int[4]; //[critters, plants, food, rocks]
         Iterator<Reference<Tile>> it = grid.iterator();

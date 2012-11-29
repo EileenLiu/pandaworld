@@ -1,4 +1,4 @@
-package student.remote;
+package student.remote.login;
 
 import java.math.BigInteger;
 import java.rmi.registry.LocateRegistry;
@@ -14,26 +14,29 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 
+
 /**
  *
  * @author haro
  */
-public class LoginServer<Permissions extends Enum<Permissions>> implements LLogin<Permissions>, RLogin {
+public class LoginServer implements LLogin, RLogin {
     private Map<String, LoginState> loginTable = new ConcurrentHashMap<String, LoginState>();
     private Map<String, DHM>        inProgress = new ConcurrentHashMap<String, DHM>();
-    private Map<String, Password<Permissions>>   
-                                    users      = new ConcurrentHashMap<String, Password<Permissions>>();
-    private EnumSet<Permissions> defaultPermissions;
+    private Map<String, Password<Permission>>   
+                                    users      = new ConcurrentHashMap<String, Password<Permission>>();
+    private EnumSet<Permission> defaultPermission;
     
-    public LoginServer (Permissions def0, Permissions...defaults) throws RemoteException {
-        defaultPermissions = EnumSet.of(def0, defaults);
+    public LoginServer () throws RemoteException {
+        defaultPermission = EnumSet.of(Permission.WORLD);
     }
     
     @Override
-    public boolean verifyRequest(String uname, byte []token, EnumSet<Permissions> ps) {
+    public boolean verifyRequest(String uname, byte []token, Permission p) {
+        if("anonymous".equals(uname) && p == Permission.WORLD)
+            return true;
         LoginState s = loginTable.get(uname);
         boolean good = s != null && s.check(token);
-        good = good && users.get(uname).permissions.containsAll(ps);
+        good = good && users.get(uname).permissions.contains(p);
         System.out.println((good?"S":"Uns")+"uccessful request: "+uname);
         return good;
     }
@@ -85,8 +88,8 @@ public class LoginServer<Permissions extends Enum<Permissions>> implements LLogi
     public boolean addUser(String user, String pass) {
         if(users.containsKey(user))
             return false;
-        Password<Permissions> pword 
-                = new Password<Permissions>(user, pass, defaultPermissions);
+        Password<Permission> pword 
+                = new Password<Permission>(user, pass, defaultPermission);
         users.put(user, pword);
         System.out.println("Added user "+user);
         return true;
@@ -96,8 +99,8 @@ public class LoginServer<Permissions extends Enum<Permissions>> implements LLogi
     public boolean addUser(String user, byte[] passhash) {
         if(users.containsKey(user))
             return false;
-        Password<Permissions> pword 
-                = new Password<Permissions>(user, passhash, defaultPermissions);
+        Password<Permission> pword 
+                = new Password<Permission>(user, passhash, defaultPermission);
         users.put(user, pword);
         System.out.println("Added user "+user);
         return true;
@@ -111,7 +114,7 @@ public class LoginServer<Permissions extends Enum<Permissions>> implements LLogi
     }
 
     @Override
-    public EnumSet<Permissions> userPermissions(String user) {
+    public EnumSet<Permission> userPermissions(String user) {
         Password p = users.get(user);
         if(p == null)
             return null;
@@ -119,7 +122,7 @@ public class LoginServer<Permissions extends Enum<Permissions>> implements LLogi
     }
 
     @Override
-    public void grantPermission(String user, Permissions... p) {
+    public void grantPermission(String user, Permission... p) {
         Password pass = users.get(user);
         if(pass == null)
             return;
@@ -127,14 +130,18 @@ public class LoginServer<Permissions extends Enum<Permissions>> implements LLogi
     }
 
     @Override
-    public void revokePermission(String user, Permissions... p) {
+    public void revokePermission(String user, Permission... p) {
         Password pass = users.get(user);
         if(pass == null)
             return;
-        pass.permissions.retainAll(EnumSet.of(p[0], p));
+        pass.permissions.removeAll(EnumSet.of(p[0], p));
+    }
+
+    @Override
+    public boolean hasPermission(String uname, Permission p) throws RemoteException {
+        return userPermissions(uname).contains(p);
     }
 }
-
 final class LoginState {
     public static final int DEPTH = 5;
     

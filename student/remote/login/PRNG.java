@@ -1,4 +1,4 @@
-package student.remote;
+package student.remote.login;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;

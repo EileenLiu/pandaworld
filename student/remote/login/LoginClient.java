@@ -1,4 +1,4 @@
-package student.remote;
+package student.remote.login;
 
 import java.math.BigInteger;
 import java.rmi.registry.LocateRegistry;
@@ -15,8 +15,10 @@ import java.security.SecureRandom;
 public class LoginClient {
     private RLogin remote;
     private SecureRandom sync;
+    private String uname;
     
     public LoginClient(String hostname, String servname, String uname, String pword) throws RemoteException, NotBoundException, MalformedURLException, LoginException {
+        this.uname = uname;
         remote = (RLogin)LocateRegistry.getRegistry(hostname).lookup(servname);
         DHM dhm = new DHM();
         BigInteger gb = remote.startLogin(uname, dhm.ga());
@@ -37,6 +39,10 @@ public class LoginClient {
         byte bytes[] = new byte[32];
         sync.nextBytes(bytes);
         return bytes;
+    }
+    
+    public boolean hasPermission(Permission p) throws RemoteException {
+        return remote.hasPermission(uname, p);
     }
     
     public static class LoginException extends Exception {

@@ -1,4 +1,4 @@
-package student.remote;
+package student.remote.login;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;

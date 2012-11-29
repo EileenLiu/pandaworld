@@ -1,4 +1,4 @@
-package student.remote;
+package student.remote.login;
 
 /**
  *
@@ -30,5 +30,8 @@ public interface RLogin extends java.rmi.Remote {
      * @param uname The user to log out.
      */
     public void logout(String uname)
+            throws java.rmi.RemoteException;
+    
+    public boolean hasPermission(String uname, Permission p)
             throws java.rmi.RemoteException;
 }
