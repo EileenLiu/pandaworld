@@ -133,7 +133,7 @@ public class WorldDisplay extends JPanel{
         if (currentLocation.contents().plant())
             s = s + "\na plant... ";
         if (currentLocation.contents().critter()) {
-            s = s + "\na critter with ";
+            s = s + "\na critter sees food: "+WORLD.smell(currentLocation, World.TilePredicate.isFood, 10)+"\nwith ";
             //int[] memory = currentLocation.contents().getCritter().memory();
             s = s + currentLocation.contents().getCritter().state();
         }

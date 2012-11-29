@@ -494,6 +494,7 @@ public final class Critter /*extends Entity*/ implements CritterState {
         /* mem[0]   Memory
                 *  mem[1]   Defense
                 *  mem[2]   Offense*/
-        return "critter with \nState:\n" + state()+"\nRuleset:\n" + prog;
+        return "critter with \nState:\n" + state()
+               +wor.smell(pos, World.TilePredicate.isFood, 10)+"\nRuleset:\n" + prog;
     }
 }

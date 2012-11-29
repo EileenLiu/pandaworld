@@ -158,7 +158,7 @@ public class ArrayHexGrid<E> implements HexGrid<E> {
                         ec += 1; break;
                 }
             }
-            System.out.println("("+er+","+ec+")");
+            //System.out.println("("+er+","+ec+")");
             if(er < 0 || er >= data.length || ec < 0 || ec >= data[er].length)
                 return null;
             return data[er]
@@ -179,6 +179,36 @@ public class ArrayHexGrid<E> implements HexGrid<E> {
             if(adj(dir)!=null)
                 return adj(dir).lin(dist-1,dir);
             return null;
+        }
+        
+        @Override
+        public int hashCode() {
+            return (int)(((long)r&(long)c)*((long)r^(long)c)%Integer.MAX_VALUE);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            final Ref other = (Ref) obj;
+            if (this.r != other.r) {
+                return false;
+            }
+            if (this.c != other.c) {
+                return false;
+            }
+            if (!this.outer().equals(other.outer())) {
+                return false;
+            }
+            return true;
+        }     
+        
+        private ArrayHexGrid outer () {
+            return ArrayHexGrid.this;
         }
     }
 }
