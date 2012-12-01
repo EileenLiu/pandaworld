@@ -64,7 +64,7 @@ public final class Critter /*extends Entity*/ implements CritterState {
             _p = new Program();
         prog = _p;
         if(mutate) mutateCritter(this);
-        species = new Species(new int[]{mem[0], mem[1], mem[2]}, prog);
+        species = Species.getInstance(new int[]{mem[0], mem[1], mem[2]}, prog, lineage);
         lineage = ancestors;
         lineage.add((Integer)species.hashCode());
         System.err.println("\tMade critter: program is"+prog);

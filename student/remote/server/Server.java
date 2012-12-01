@@ -191,7 +191,7 @@ public interface Server extends Remote {
      */
     @RemoteVisibility(WORLD)
     public int[] getSpeciesAttributes(int species_id) throws RemoteException;
-
+    //Species.get(species_id).getAttributes();
     /**
      * Returns the pretty-print of the program associated with the specified
      * species.
@@ -202,7 +202,7 @@ public interface Server extends Remote {
      */
     @RemoteVisibility(WORLD)
     public String getSpeciesProgram(int species_id) throws RemoteException;
-
+    //Species.get(species_id).getProgram();
     /**
      * Returns an array tracing the species's lineage back as far as possible.
      * The first element in the array is the species id, the second is the id of
@@ -217,4 +217,5 @@ public interface Server extends Remote {
      */
     @RemoteVisibility(WORLD)
     public int[] getLineage(int species_id) throws RemoteException;
+    //Species.get(species_id).getLineage();
 }

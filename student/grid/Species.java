@@ -5,7 +5,9 @@
 package student.grid;
 
 import java.awt.Color;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import student.parse.Program;
 import student.remote.server.RemoteSpecies;
 
@@ -18,15 +20,30 @@ public final class Species implements RemoteSpecies {
     private int[] attributes;
     private Program program;
     private Color color; //each unique species corresponds to a unique color
-
-    public Species(int[] att, Program p) {
+    private HashSet<Integer> lineage;
+    private static HashMap<Integer, Species> instances;
+    public static Species getInstance(int[] att, Program p, LinkedList<Integer> l)
+    {
+        Species s = instances.get(hash(att,p));
+        if(s == null)
+        {
+            s = new Species(att, p, l);
+            instances.put(s.hashCode(), s);
+        }
+        return s;
+    }
+    public static Species get(int speciesID)
+    {
+        return instances.get(speciesID);
+    }
+    private Species(int[] att, Program p, LinkedList<Integer> l) {
         this.attributes = att;
         program = p;
         //Guarantees same species (of same appearance) have the same color
         //We square it first b/c of implementation of .hashCode() [not good for bit fields]
         long h = Math.abs((long) this.hashCode()), r = 7, k = 1;
         while (h > 1) {
-            if((h&1L) == 1) {
+            if ((h & 1L) == 1) {
                 h--;
                 k *= r;
             }
@@ -39,6 +56,9 @@ public final class Species implements RemoteSpecies {
         int grn = (int) ((r >>= 8) & 0xff);
         int blu = (int) ((r >> 8) & 0xff);
         color = new Color(red, grn, blu);
+        for (Integer i : l) {
+            lineage.add(i);
+        }
     }
 
     @Override
@@ -47,8 +67,8 @@ public final class Species implements RemoteSpecies {
     }
 
     @Override
-    public ArrayList<RemoteSpecies> getLineage() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public HashSet<Integer> getLineage() {
+        return lineage;
     }
 
     @Override
@@ -59,18 +79,31 @@ public final class Species implements RemoteSpecies {
     public Color getColor() {
         return color;
     }
-
+    private static int hash(int[] att, Program prog){
+        int res = 1;
+        res += att[0];
+        res <<= 8;            //memory size
+        res += att[1];
+        res <<= 8;            //offense
+        res += att[2];
+        res <<= 8;            //defense
+        res = res + (prog.hashCode() & 0xff); //program
+        return res;
+    }
     @Override
     public int hashCode() {
-        int res = 1;
-        res += attributes[0];
-        res <<= 8;            //memory size
-        res += attributes[1];
-        res <<= 8;            //offense
-        res += attributes[2];
-        res <<= 8;            //defense
-        res = res + (program.hashCode() & 0xff); //program
-        return res;
+        return hash(attributes, program);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        return this.hashCode() == obj.hashCode();
     }
 
     @Override
