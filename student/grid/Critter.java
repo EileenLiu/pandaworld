@@ -14,13 +14,14 @@ import student.grid.HexGrid.Reference;
 import student.parse.Action;
 import student.parse.Program;
 import student.parse.Rule;
+import student.remote.server.RemoteCritter;
 import student.world.World;
 
 /**
  *
  * @author haro
  */
-public final class Critter /*extends Entity*/ implements CritterState {
+public final class Critter implements CritterState, RemoteCritter {
 
     private World wor;
     private Reference<Tile> pos;
@@ -30,7 +31,7 @@ public final class Critter /*extends Entity*/ implements CritterState {
     /*/private/*/public Program prog;
     private String appearance;
     private Color species;
-    public Action recentAction = new Action("wait");
+    public student.parse.Action recentAction = new student.parse.Action("wait");
     
     public Critter(World _wor, Reference<Tile> _pos, Program _p) {
         this(_wor, _pos, _p, defaultMemory());
@@ -498,5 +499,10 @@ public final class Critter /*extends Entity*/ implements CritterState {
                 *  mem[2]   Offense*/
         return "critter with \nState:\n" + state()
                +wor.smell(pos, World.TilePredicate.isFood, 10)+"\nRuleset:\n" + prog;
+    }
+
+    @Override
+    public void act(Action action) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
