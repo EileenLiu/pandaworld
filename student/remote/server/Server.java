@@ -113,7 +113,7 @@ public interface Server extends Remote {
      */
     @RemoteVisibility(WORLD)
     public String getCritterCurrentRule(int id) throws RemoteException;
-
+    
     /**
      * Returns an action a critter should take, overriding regular behavior.
      *
