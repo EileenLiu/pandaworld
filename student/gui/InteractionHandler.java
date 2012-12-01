@@ -4,7 +4,8 @@
  */
 package student.gui;
 
-import student.Permission;
+import student.remote.login.LoginClient;
+import student.remote.server.AdminServer;
 import student.world.World;
 
 /**
@@ -14,11 +15,25 @@ import student.world.World;
 public class InteractionHandler {
     private World model;
     private WorldFrame view;
-    private Permission permissions;
+    private LoginClient login;
+    private AdminServer server;
+    private boolean remote;
     public InteractionHandler(final World _model, final WorldFrame _view)
     {
         model = _model;
         view = _view;
+        remote = false;
+        login = null;
+        server = null;
+        load();
+    }
+    public InteractionHandler(final WorldFrame _view, LoginClient lc, AdminServer as)
+    {
+        model = null;
+        view = _view;
+        remote = true;
+        login = lc;
+        server = as;
         load();
     }
     private void load()
@@ -34,8 +49,18 @@ public class InteractionHandler {
     {
         return model;
     }
+    public AdminServer getServer()
+    {
+        return server;
+    }
+    public LoginClient getLogin()
+    {
+        return login;
+    }
     public void setModel(World newWorld)
     {
+        if(remote)
+            throw new RuntimeException("Remote");
         view.setVisible(false);
         view.dispose();
         model = newWorld;
@@ -49,8 +74,8 @@ public class InteractionHandler {
     {
         return view;
     }
-    public Permission getPermissions()
-    {
-        return permissions;
+
+    boolean isRemote() {
+        return remote;
     }
 }

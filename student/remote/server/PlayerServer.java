@@ -18,5 +18,5 @@ public interface PlayerServer extends Server {
      * @throws RemoteException
      */
     @RemoteVisibility(Permission.USER)
-    public String uploadCritter(byte []token, String critterFileContent) throws RemoteException;
+    public String uploadCritter(byte []token, String uname, String critterFileContent) throws RemoteException;
 }

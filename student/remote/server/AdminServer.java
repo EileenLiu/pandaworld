@@ -15,7 +15,7 @@ public interface AdminServer extends PlayerServer {
      * @throws RemoteException
      */
     @RemoteVisibility(ADMIN)
-    public void loadWorld(byte []token, String worldFileContent) throws RemoteException;
+    public void loadWorld(byte []token, String uname, String worldFileContent) throws RemoteException;
 
     /**
      * Advance the simulation by one step.
@@ -23,7 +23,7 @@ public interface AdminServer extends PlayerServer {
      * @throws RemoteException
      */
     @RemoteVisibility(ADMIN)
-    public void simStep(byte []token) throws RemoteException;
+    public void simStep(byte []token, String uname) throws RemoteException;
 
     /**
      * Continuously advance the simulation.
@@ -31,7 +31,7 @@ public interface AdminServer extends PlayerServer {
      * @throws RemoteException
      */
     @RemoteVisibility(ADMIN)
-    public void startSim(byte []token) throws RemoteException;
+    public void startSim(byte []token, String uname) throws RemoteException;
 
     /**
      * Pause the simulation.
@@ -39,7 +39,7 @@ public interface AdminServer extends PlayerServer {
      * @throws RemoteException
      */
     @RemoteVisibility(ADMIN)
-    public void pauseSim(byte []token) throws RemoteException;
+    public void pauseSim(byte []token, String uname) throws RemoteException;
 
     /**
      * Reset the world to its original state, free of critters.
@@ -47,7 +47,7 @@ public interface AdminServer extends PlayerServer {
      * @throws RemoteException
      */
     @RemoteVisibility(ADMIN)
-    public void resetSim(byte []token) throws RemoteException;
+    public void resetSim(byte []token, String uname) throws RemoteException;
 
     //methods for managing the simulation
     /**
@@ -57,7 +57,7 @@ public interface AdminServer extends PlayerServer {
      * @throws RemoteException
      */
     @RemoteVisibility(ADMIN)
-    public void setSimRate(byte []token, long rate) throws RemoteException;
+    public void setSimRate(byte []token, String uname, long rate) throws RemoteException;
 
     /**
      * Remove all critters from the world.
@@ -65,7 +65,7 @@ public interface AdminServer extends PlayerServer {
      * @throws RemoteException
      */
     @RemoteVisibility(ADMIN)
-    public void killAll(byte []token) throws RemoteException;
+    public void killAll(byte []token, String uname) throws RemoteException;
 
     /**
      * Remove the specified critter from the world.
@@ -74,7 +74,7 @@ public interface AdminServer extends PlayerServer {
      * @throws RemoteException
      */
     @RemoteVisibility(ADMIN)
-    public void kill(byte []token, int id) throws RemoteException;
+    public void kill(byte []token, String uname, int id) throws RemoteException;
 
     /**
      * Set an action a critter should take, overriding regular behavior.
@@ -85,23 +85,23 @@ public interface AdminServer extends PlayerServer {
      * @throws RemoteException
      */
     @RemoteVisibility(ADMIN)
-    public void control(byte []token, RemoteCritter critter, Action a) throws RemoteException;
+    public void control(byte []token, String uname, RemoteCritter critter, Action a) throws RemoteException;
 
     //Uploads
     @RemoteVisibility(ADMIN)
-    public boolean uploadsOn(byte []token) throws RemoteException;
+    public boolean uploadsOn(byte []token, String uname) throws RemoteException;
 
     @RemoteVisibility(ADMIN)
-    public void setCritterUploads(byte []token, boolean on) throws RemoteException;
+    public void setCritterUploads(byte []token, String uname, boolean on) throws RemoteException;
 
     @RemoteVisibility(ADMIN)
-    public boolean downloadsOn(byte []token) throws RemoteException;
+    public boolean downloadsOn(byte []token, String uname) throws RemoteException;
 
     @RemoteVisibility(ADMIN)
-    public void setCritterDownloads(byte []token, boolean on) throws RemoteException;
+    public void setCritterDownloads(byte []token, String uname, boolean on) throws RemoteException;
 
     @RemoteVisibility(ADMIN)
-    public String[] listCritterFiles(byte []token) throws RemoteException;
+    public String[] listCritterFiles(byte []token, String uname) throws RemoteException;
 
     //Methods for managing user credentials
     /**
@@ -111,7 +111,7 @@ public interface AdminServer extends PlayerServer {
      * @throws RemoteException
      */
     @RemoteVisibility(ADMIN)
-    public String[] getPlayerList(byte []token) throws RemoteException;
+    public String[] getPlayerList(byte []token, String uname) throws RemoteException;
 
     /**
      * Return the list of pending player requests.
@@ -120,7 +120,7 @@ public interface AdminServer extends PlayerServer {
      * @throws RemoteException
      */
     @RemoteVisibility(ADMIN)
-    public String[] getPlayerRequests(byte []token) throws RemoteException;
+    public String[] getPlayerRequests(byte []token, String uname) throws RemoteException;
 
     /**
      * Approve the player request and add the player to the player list.
@@ -129,7 +129,7 @@ public interface AdminServer extends PlayerServer {
      * @throws RemoteException
      */
     @RemoteVisibility(ADMIN) 
-    public void addPlayer(byte []token, String name) throws RemoteException;
+    public void addPlayer(byte []token, String uname, String name) throws RemoteException;
 
     /**
      * Reject the player request.
@@ -138,7 +138,7 @@ public interface AdminServer extends PlayerServer {
      * @throws RemoteException
      */
     @RemoteVisibility(ADMIN)
-    public void rejectPlayer(byte []token, String name) throws RemoteException;
+    public void rejectPlayer(byte []token, String uname, String name) throws RemoteException;
 
     /**
      * Remove the player from the player list.
@@ -147,7 +147,7 @@ public interface AdminServer extends PlayerServer {
      * @throws RemoteException
      */
     @RemoteVisibility(ADMIN)
-    public void removePlayer(byte []token, String name) throws RemoteException;
+    public void removePlayer(byte []token, String uname, String name) throws RemoteException;
 
     /**
      * Return the list of admins.
@@ -156,7 +156,7 @@ public interface AdminServer extends PlayerServer {
      * @throws RemoteException
      */
     @RemoteVisibility(ADMIN)
-    public String[] getAdminList(byte []token) throws RemoteException;
+    public String[] getAdminList(byte []token, String uname) throws RemoteException;
 
     /**
      * Return the list of pending admin requests.
@@ -165,7 +165,7 @@ public interface AdminServer extends PlayerServer {
      * @throws RemoteException
      */
     @RemoteVisibility(ADMIN)
-    public String[] getAdminRequests(byte []token) throws RemoteException;
+    public String[] getAdminRequests(byte []token, String uname) throws RemoteException;
 
     /**
      * Approve the admin request and add the admin to the player list.
@@ -174,7 +174,7 @@ public interface AdminServer extends PlayerServer {
      * @throws RemoteException
      */
     @RemoteVisibility(ADMIN)
-    public void addAdmin(byte []token, String name) throws RemoteException;
+    public void addAdmin(byte []token, String uname, String name) throws RemoteException;
 
     /**
      * Reject the admin request.
@@ -183,7 +183,7 @@ public interface AdminServer extends PlayerServer {
      * @throws RemoteException
      */
     @RemoteVisibility(ADMIN)
-    public void rejectAdmin(byte []token, String name) throws RemoteException;
+    public void rejectAdmin(byte []token, String uname, String name) throws RemoteException;
 
     /**
      * Remove the admin from the player list.
@@ -192,5 +192,5 @@ public interface AdminServer extends PlayerServer {
      * @throws RemoteException
      */
     @RemoteVisibility(ADMIN)
-    public void removeAdmin(byte []token, String name) throws RemoteException;
+    public void removeAdmin(byte []token, String uname, String name) throws RemoteException;
 }

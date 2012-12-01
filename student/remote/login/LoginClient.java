@@ -41,6 +41,10 @@ public class LoginClient {
         return bytes;
     }
     
+    public String getUser() {
+        return uname;
+    }
+    
     public boolean hasPermission(Permission p) throws RemoteException {
         return remote.hasPermission(uname, p);
     }
