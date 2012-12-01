@@ -2,6 +2,7 @@ package student.remote.server;
 
 import java.rmi.RemoteException;
 import static student.remote.login.Permission.ADMIN;
+import student.remote.server.RemoteCritter.Action;
 
 /**
  * An AdminServer exposes the administrative interface to the critter system.
@@ -100,9 +101,11 @@ public interface AdminServer extends PlayerServer {
     @RemoteVisibility(ADMIN)
     public void setCritterDownloads(byte []token, String uname, boolean on) throws RemoteException;
 
+    /*/
     @RemoteVisibility(ADMIN)
     public String[] listCritterFiles(byte []token, String uname) throws RemoteException;
-
+    /*/
+    
     //Methods for managing user credentials
     /**
      * Return the list of players.

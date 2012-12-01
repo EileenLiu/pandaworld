@@ -1,7 +1,10 @@
 package student;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import student.config.Constants;
 import student.config.WorldFileParser;
 import student.gui.InteractionHandler;
@@ -27,7 +30,12 @@ public class SimulationRunner {
         }
         World model = null;
         if (args.length>0) {
-            model = WorldFileParser.generateWorld(args[0], Constants.MAX_ROW, Constants.MAX_COLUMN);
+            try {
+                model = WorldFileParser.generateWorld(new File(args[0]), Constants.MAX_ROW, Constants.MAX_COLUMN);
+            } catch (FileNotFoundException ex) {
+                System.err.println("File not found");
+                System.exit(34);
+            }
             System.out.println("Generate world from file");
         }
         else model = new World(Constants.MAX_ROW,Constants.MAX_COLUMN);

@@ -6,6 +6,7 @@ package student.grid;
 
 import java.awt.Color;
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicInteger;
 import student.config.Constants;
 import static student.config.Constants.*;
 import student.grid.HexGrid.HexDir;
@@ -21,8 +22,10 @@ import student.world.World;
  * @author haro
  */
 public final class Critter /*extends Entity*/ implements CritterState {
-
+    private static AtomicInteger SERIAL = new AtomicInteger();
+    
     private World wor;
+    private int serial = SERIAL.getAndIncrement();
     private Reference<Tile> pos;
     private HexDir dir;
     private int mem[];
@@ -31,6 +34,7 @@ public final class Critter /*extends Entity*/ implements CritterState {
     private String appearance;
     private Color species;
     public Action recentAction = new Action("wait");
+    private String name;
     
     public Critter(World _wor, Reference<Tile> _pos, Program _p) {
         this(_wor, _pos, _p, defaultMemory());
@@ -51,6 +55,7 @@ public final class Critter /*extends Entity*/ implements CritterState {
         long h = (long)this.hashCode();
         species = new Color((int)((h*=h)&0xff), (int)((h>>=8)&0xff), (int)((h>>8)&0xff)); 
         System.err.println("\tMade critter: program is"+prog);
+        name = "Critter"+hashCode();
     }
     public Critter(World _wor, Reference<Tile> _pos, Program p, int d) {
         this(_wor, _pos, p);
@@ -470,7 +475,7 @@ public final class Critter /*extends Entity*/ implements CritterState {
             pos.contents().removeCritter();
         }
     }
-
+    /*/ //This is the *species's* hashCode
     @Override
     public int hashCode() {
         int res = 1;
@@ -479,7 +484,13 @@ public final class Critter /*extends Entity*/ implements CritterState {
         res += mem[2]; res <<= 8;            //defense
         return res + prog.hashCode() & 0xff; //program
     }
-
+    /*/
+    
+    @Override
+    public int hashCode() {
+        return serial;
+    }
+    
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -498,5 +509,9 @@ public final class Critter /*extends Entity*/ implements CritterState {
                 *  mem[2]   Offense*/
         return "critter with \nState:\n" + state()
                +wor.smell(pos, World.TilePredicate.isFood, 10)+"\nRuleset:\n" + prog;
+    }
+
+    public String name() {
+        return name;
     }
 }

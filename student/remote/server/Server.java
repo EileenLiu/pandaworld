@@ -4,6 +4,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import static student.remote.login.Permission.*;
 import student.remote.login.RLogin;
+import student.remote.server.RemoteCritter.Action;
 
 public interface Server extends Remote {
 
@@ -123,15 +124,6 @@ public interface Server extends Remote {
      */
     @RemoteVisibility(WORLD)
     public Action getCritterAction(int id) throws RemoteException;
-
-    /**
-     * An enum listing all possible actions.
-     */
-    public enum Action {
-
-        WAIT, FORWARD, BACKWARD, LEFT, RIGHT,
-        EAT, ATTACK, GROW, BUD, MATE
-    }
 
     //login interface
     /**

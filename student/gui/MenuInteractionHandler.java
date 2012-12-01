@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.rmi.RemoteException;
@@ -41,7 +42,16 @@ public class MenuInteractionHandler {
                         int returnVal = masterController.getView().fileSelector.showOpenDialog(masterController.getView());
                         if(returnVal == JFileChooser.APPROVE_OPTION) {
                             String filename = masterController.getView().fileSelector.getSelectedFile().getName();
-                            World newImportedWorld = WorldFileParser.generateWorld(filename, Constants.MAX_ROW , Constants.MAX_COLUMN);
+                            World newImportedWorld = null;
+                            try {
+                                newImportedWorld = WorldFileParser.generateWorld(new File(filename), Constants.MAX_ROW , Constants.MAX_COLUMN);
+                            } catch (FileNotFoundException ex) {
+                                System.err.println("File not found");
+                                JOptionPane.showMessageDialog(masterController.getView(),
+                                                              "File not found: " +filename, 
+                                                              "File not found", 
+                                                              JOptionPane.ERROR_MESSAGE);
+                            }
                             masterController.setModel(newImportedWorld);
                         }
                     }
@@ -80,7 +90,7 @@ public class MenuInteractionHandler {
                      int i = Arrays.asList(possibilities).indexOf(s);*/
                     if (returnVal == JFileChooser.APPROVE_OPTION) {
                         String filename = masterController.getView().fileSelector.getSelectedFile().getName();
-                        Critter newImportedCritter = CritterFileParser.generateCritter(filename, masterController.getModel(), null, -1);
+                        Critter newImportedCritter = CritterFileParser.generateCritter(new File(filename), masterController.getModel(), null, -1);
                         try {
                             masterController.getView().display().setCurrentLocation(masterController.getModel().add(newImportedCritter, newImportedCritter.loc()));
                             masterController.getView().repaint();

@@ -8,6 +8,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
@@ -53,6 +54,10 @@ public class LoginServer implements LLogin, RLogin {
         return dhm.ga();
     }
 
+    public Iterator<String> users() {
+        return users.keySet().iterator();
+    }
+    
     @Override
     public boolean doLogin(String uname, BigInteger pwordhash) throws RemoteException {
         System.out.println("doLogin");

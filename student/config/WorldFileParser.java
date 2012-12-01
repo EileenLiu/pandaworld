@@ -6,6 +6,10 @@ package student.config;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.InputStream;
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -21,10 +25,10 @@ import student.world.World.InvalidWorldAdditionException;
  */
 public class WorldFileParser {
     private static Pattern comment = Pattern.compile("//");
-    public static World generateWorld(String filename, int MAX_ROW, int MAX_COLUMN) {
+    public static World generateWorld(Reader in, int MAX_ROW, int MAX_COLUMN) {
         World world = null;
         try {
-            Scanner infile = new Scanner(new File(filename));
+            Scanner infile = new Scanner(in);
             world = new World(MAX_ROW, MAX_COLUMN);
             while (infile.hasNext()) {
                 String s = comment.split(infile.nextLine(), 2)[0];
@@ -43,14 +47,19 @@ public class WorldFileParser {
                     }
                 }
             }
-
-        } catch (FileNotFoundException e) {
-            System.out.println("WorldFileParser: The given file was not found.");
         } catch (NumberFormatException e) {
             System.out.println("WorldFileParser: The given file has invalid data: Integer expected.");
         } catch (InvalidWorldAdditionException ex) {
             System.out.println("WorldFileParser: The given file has invalid data: Item(s) could not be added to the world.");
         }
         return world;
+    }
+    
+    public static World generateWorld(String in, int r, int c) {
+        return generateWorld(new StringReader(in), r, c);
+    }
+    
+    public static World generateWorld(File filename, int r, int c) throws FileNotFoundException {
+        return generateWorld(new FileReader(filename), r, c);
     }
 }

@@ -4,19 +4,11 @@
  */
 package student.world;
 
-import java.util.AbstractMap;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
-import java.util.SortedMap;
 import java.util.SortedSet;
-import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import student.grid.ArrayHexGrid;
 import student.config.Constants;
 import student.grid.Critter;
@@ -24,6 +16,7 @@ import student.grid.HexGrid;
 import student.grid.HexGrid.HexDir;
 import student.grid.HexGrid.Reference;
 import student.grid.Tile;
+import student.world.util.HashCodeAccessSet;
 
 /**
  *
@@ -31,10 +24,12 @@ import student.grid.Tile;
  */
 public class World {
 
-    HexGrid<Tile> grid;
+    private HexGrid<Tile> grid;
     private int timesteps = 0;
     private boolean WAIT = true; //if false, random action
-
+    private HashCodeAccessSet<Critter> critters = new HashCodeAccessSet<Critter>();
+    //private HashCodeAccessSet<Species> species = new HashCodeAccessSet<Species>();
+    
     public World() {
         this(Constants.MAX_ROW, Constants.MAX_COLUMN);
     }
@@ -140,6 +135,8 @@ public class World {
             }
             if (what instanceof Critter) {
                 loc.contents().putCritter((Critter)what);
+                if(critters.add((Critter)what))
+                    ;//species.add(((Critter)what).species());
             }
             else if (what instanceof String && what.equals("plant")) {
                 loc.contents().putPlant();
@@ -152,6 +149,11 @@ public class World {
             }
             return loc;
     }
+    
+    public Critter critterForID(int id) {
+        return critters.forHashCode(id);
+    }
+    
     /**
      * Retrieves the default reference at 0, 0
      *
@@ -163,10 +165,11 @@ public class World {
     public HexGrid.Reference<Tile> randomLoc() {
         return grid.ref((int)(Math.random()*height()), (int)(Math.random()*height()));
     }
-    /** MUST BE USED FOR CHANGES
-     *  This ensures critters get kept track of properly
+    /** 
+     * MUST BE USED FOR CHANGES
+     * This ensures critters get kept track of properly
      */
-    public void setGrid(int c, int r, Tile t) {
+    public void gridSet(int c, int r, Tile t) {
         grid.set(c, r, t);
         //if(t.critter()) TODO: fix
             //critters.put(t.getCritter().hashCode(), t.getCritter());
@@ -244,6 +247,17 @@ public class World {
         for(d = 1; res.previous.direction != null; d++)
             res = res.previous;
         return 1000 * d + res.direction.ordinal();
+    }
+
+    public Tile gridGet(int c, int r) {
+        return grid.get(c, r);
+    }
+
+    public void reset() {
+        for(Critter c : critters)
+            c.loc().contents().removeCritter();
+        critters.clear();
+        //species.clear();
     }
     
     public static class PQEntry implements Comparable<PQEntry> {
