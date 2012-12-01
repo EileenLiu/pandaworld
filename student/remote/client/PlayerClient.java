@@ -6,8 +6,7 @@ public class PlayerClient extends Client {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		
-
+            
 	}
 	
 	/**

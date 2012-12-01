@@ -34,7 +34,7 @@ public final class Constants {
                                ROCK_VALUE               = -1,
                                MAX_RULES_PER_TURN       = 10,
                                MIN_MEMORY               = 9,
-                               MAX_SMELL_DISTANCE       = 10000, //also
+                               MAX_SMELL_DISTANCE       = 10, //also
                                ENERGY_PER_SIZE          = 0; //for testing
     public static volatile double DAMAGE_INC = 0.2,
                                   PLANT_GROW_PROB = .005;
