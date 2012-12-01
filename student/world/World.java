@@ -4,6 +4,7 @@
  */
 package student.world;
 
+import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -162,6 +163,15 @@ public class World {
     public HexGrid.Reference<Tile> randomLoc() {
         return grid.ref((int)(Math.random()*height()), (int)(Math.random()*height()));
     }
+    /** MUST BE USED FOR CHANGES
+     *  This ensures critters get kept track of properly
+     */
+    public void setGrid(int c, int r, Tile t) {
+        grid.set(c, r, t);
+        //if(t.critter()) TODO: fix
+            //critters.put(t.getCritter().hashCode(), t.getCritter());
+    }
+    
     public static final int CRIT = 0, PLANT = 1, FOOD = 2, ROCK = 3;
     public int[] population() {
         int[] population = new int[4]; //[critters, plants, food, rocks]
@@ -286,7 +296,6 @@ public class World {
     }
 
     public static class InvalidWorldAdditionException extends Exception {
-
         public InvalidWorldAdditionException() {
         }
     }

@@ -46,11 +46,10 @@ public final class Critter /*extends Entity*/ implements CritterState {
         if(_p==null)
             _p = new Program();
         prog = _p;
-        int h = this.hashCode();
-        int rc = Math.abs(h % 256);
-        int gc = Math.abs(h * h % 256);
-        int bc = Math.abs(h * h * h % 256);
-        species = new Color(rc, gc, bc); //Guarantees same species of same appearance have the same color
+        //Guarantees same species of same appearance have the same color
+        //We square it first b/c of implementation of .hashCode() [not good for bit fields]
+        long h = (long)this.hashCode();
+        species = new Color((int)((h*=h)&0xff), (int)((h>>=8)&0xff), (int)((h>>8)&0xff)); 
         System.err.println("\tMade critter: program is"+prog);
     }
     public Critter(World _wor, Reference<Tile> _pos, Program p, int d) {
@@ -474,8 +473,11 @@ public final class Critter /*extends Entity*/ implements CritterState {
 
     @Override
     public int hashCode() {
-        int[] h = new int[]{mem[0], mem[1], mem[2], prog.hashCode()};
-        return Arrays.hashCode(h);
+        int res = 1;
+        res += mem[0]; res <<= 8;            //memory size
+        res += mem[1]; res <<= 8;            //offense
+        res += mem[2]; res <<= 8;            //defense
+        return res + prog.hashCode() & 0xff; //program
     }
 
     @Override

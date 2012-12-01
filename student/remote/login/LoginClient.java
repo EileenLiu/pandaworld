@@ -17,9 +17,9 @@ public class LoginClient {
     private SecureRandom sync;
     private String uname;
     
-    public LoginClient(String hostname, String servname, String uname, String pword) throws RemoteException, NotBoundException, MalformedURLException, LoginException {
+    public LoginClient(String hostname, String servname, String uname, String pword) throws RemoteException, NotBoundException, LoginException {
         this.uname = uname;
-        remote = (RLogin)LocateRegistry.getRegistry(hostname).lookup(servname);
+        remote = (RLogin)LocateRegistry.getRegistry(hostname).lookup(servname+"__login");
         DHM dhm = new DHM();
         BigInteger gb = remote.startLogin(uname, dhm.ga());
         if(gb == null)

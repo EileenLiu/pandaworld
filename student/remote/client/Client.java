@@ -1,9 +1,16 @@
 package student.remote.client;
 
+import java.net.MalformedURLException;
+import java.nio.channels.IllegalBlockingModeException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import student.remote.login.LoginClient;
+import student.remote.login.LoginClient.LoginException;
+import student.remote.login.LoginServer;
 
 import student.remote.server.AdminServer;
 import student.remote.server.PlayerServer;
@@ -13,8 +20,8 @@ public abstract class Client {
 
     String HOST, SERV;
     Registry registry;
-    private Server stub;
-
+    protected Server stub;
+    protected LoginClient login = null;
     /**
      * A constructor that will connect to the given host via RMI
      */
@@ -34,7 +41,7 @@ public abstract class Client {
      */
     private void connectToServer() {
         try {
-            Registry registry = LocateRegistry.getRegistry(HOST);
+            registry = LocateRegistry.getRegistry(HOST);
             stub = (Server) registry.lookup(SERV);
         } catch (RemoteException re) {
             System.err.println("Remote Server Exception: " + re.toString());
@@ -54,7 +61,16 @@ public abstract class Client {
      */
     protected AdminServer getAdminServer(String userName, String password) {
         try {
-            return stub.getAdminServer(userName, password);
+            try {
+                login = new LoginClient(HOST, SERV, userName, password);
+            } catch (NotBoundException ex) {
+                System.err.println("No such server");
+                return null;
+            } catch (LoginException ex) {
+                System.err.println("Incorrect username/password");
+                return null;
+            }
+            return stub.getAdminServer(login.getToken(), password);
         } catch (RemoteException e) {
             System.err.println("Unable to retrieve Admin Server");
             return null;
@@ -70,10 +86,25 @@ public abstract class Client {
      */
     protected PlayerServer getPlayerServer(String userName, String password) {
         try {
-            return stub.getPlayerServer(userName, password);
+            try {
+                login = new LoginClient(HOST, SERV, userName, password);
+            } catch (NotBoundException ex) {
+                System.err.println("No such server");
+                return null;
+            } catch (LoginException ex) {
+                System.err.println("Incorrect username/password");
+                return null;
+            }
+            return stub.getPlayerServer(login.getToken(), password);
         } catch (RemoteException e) {
             System.err.println("Unable to retrieve Admin Server");
             return null;
         }
+    }
+    
+    public byte []getToken() {
+        if(login == null)
+            return null;
+        return login.getToken();
     }
 }

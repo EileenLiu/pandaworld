@@ -81,7 +81,7 @@ public class LoginServer implements LLogin, RLogin {
     
     public void register(String name) throws RemoteException, MalformedURLException {
         RLogin stub = (RLogin)UnicastRemoteObject.exportObject(this);
-        LocateRegistry.getRegistry().rebind(name,stub);
+        LocateRegistry.getRegistry().rebind(name + "__login",stub);
     }
 
     @Override
