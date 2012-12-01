@@ -5,6 +5,7 @@
 package student.grid;
 
 import java.awt.Color;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Random;
@@ -25,7 +26,7 @@ import student.world.World;
  */
 public final class Critter /*extends Entity*/ implements CritterState {
     private static AtomicInteger SERIAL = new AtomicInteger();
-    
+    private static HashMap<Integer,Critter> aliveCritters = new HashMap<Integer,Critter>();
     private World wor;
     private int serial = SERIAL.getAndIncrement();
     private Reference<Tile> pos;
@@ -67,10 +68,13 @@ public final class Critter /*extends Entity*/ implements CritterState {
         species = Species.getInstance(new int[]{mem[0], mem[1], mem[2]}, prog, lineage);
         lineage = ancestors;
         lineage.add((Integer)species.hashCode());
-        System.err.println("\tMade critter: program is"+prog);
         name = "Critter"+hashCode();
+        aliveCritters.put(serial, this);
+        System.err.println("\tMade critter: program is "+prog);
     }
-
+    public static Critter get(int ID){
+        return aliveCritters.get(ID);
+    }
     private static final int []defaultMemory = {MIN_MEMORY, 1, 1, 1, INITIAL_ENERGY};
     private static int []defaultMemory(){
         int mem[] = new int[MIN_MEMORY];
@@ -510,6 +514,7 @@ public final class Critter /*extends Entity*/ implements CritterState {
         {//die
             pos.contents().addFood(Constants.FOOD_PER_SIZE * size());
             pos.contents().removeCritter();
+            Critter.aliveCritters.remove(serial);
         }
     }
     /*/ //This is the *species's* hashCode
@@ -532,7 +537,7 @@ public final class Critter /*extends Entity*/ implements CritterState {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        return (this.hashCode()== ((Critter)obj).hashCode());
+        return (this.hashCode()== obj.hashCode());
     }
 
     @Override
