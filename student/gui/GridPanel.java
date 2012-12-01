@@ -217,7 +217,7 @@ public class GridPanel extends JPanel implements Scrollable{
                         Image i = null;
                         String s = t.getCritter().getAppearance();
                         Color color = t.getCritter().getColor();
-                        System.out.println(s + color);
+                        //System.out.println(s + color);
                         if (s == null) {
                             s = "data.zip";
                         }
