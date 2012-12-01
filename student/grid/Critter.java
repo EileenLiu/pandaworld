@@ -5,9 +5,10 @@
 package student.grid;
 
 import java.awt.Color;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 import student.config.Constants;
 import static student.config.Constants.*;
 import student.grid.HexGrid.HexDir;
@@ -46,12 +47,12 @@ public final class Critter /*extends Entity*/ implements CritterState {
         dir = HexDir.dir(d);
     }
     private Critter(World _wor, Reference<Tile> _pos, Program _p, int []_mem) {
-        this(_wor, _pos, _p, _mem, new LinkedList());
+        this(_wor, _pos, _p, _mem, new LinkedList(), false);
     }
     private Critter(World _wor, Reference<Tile> _pos, Program _p, LinkedList<Integer> ancestors) {
-                this(_wor, _pos, _p, defaultMemory(), ancestors);
+                this(_wor, _pos, _p, defaultMemory(), ancestors,false);
     }
-    private Critter(World _wor, Reference<Tile> _pos, Program _p, int []_mem, LinkedList<Integer> ancestors) {
+    private Critter(World _wor, Reference<Tile> _pos, Program _p, int []_mem, LinkedList<Integer> ancestors, boolean mutate) {
         wor = _wor;
         if(_pos!=null)
             pos = _pos;
@@ -62,6 +63,7 @@ public final class Critter /*extends Entity*/ implements CritterState {
         if(_p==null)
             _p = new Program();
         prog = _p;
+        if(mutate) mutateCritter(this);
         species = new Species(new int[]{mem[0], mem[1], mem[2]}, prog);
         lineage = ancestors;
         lineage.add((Integer)species.hashCode());
@@ -323,15 +325,16 @@ public final class Critter /*extends Entity*/ implements CritterState {
         Reference<Tile> np = pos.lin(-1, dir);
         if(np == null || np.contents().rock() || np.contents().critter())
             return; //we're in a corner, can't put a critter there.
-        Critter baby = new Critter(wor, np, prog.mutate(), lineage);
-        baby.mem = new int[mem.length];
-        System.arraycopy(mem, 0, baby.mem, 0, MIN_MEMORY);
+        int newmem[] = new int[mem.length];
+        System.arraycopy(mem, 0, newmem, 0, MIN_MEMORY);
+        Critter baby = new Critter(wor, np, prog, newmem, lineage, true);
         baby.mem[3] = 1;
         baby.mem[4] = Constants.INITIAL_ENERGY;
         baby.mem[7] = 0;
         baby.mem[8] = 1;
         np.contents().putCritter(baby);
         mem[4] -= complexity() * Constants.BUD_COST;
+        mutateCritter(baby);
         acted = true;
     }
     
@@ -359,7 +362,7 @@ public final class Critter /*extends Entity*/ implements CritterState {
             Critter cpos = ch(this,c);
             Reference<Tile> np = cpos.pos.lin(-1, cpos.dir);
             if(np==null || np.contents().rock()||np.contents().critter()) np = (cpos==this?c:this).pos.lin(-1, (cpos!=this?this:c).dir);
-            Critter baby = new Critter(wor, np, prog, bmem, lineage);
+            Critter baby = new Critter(wor, np, prog, bmem, lineage, true);
             np.contents().putCritter(baby);
             mem[4] -= Constants.MATE_COST * complexity();
             c.mem[4] -= Constants.MATE_COST * c.complexity();
@@ -412,6 +415,7 @@ public final class Critter /*extends Entity*/ implements CritterState {
     public String lineage() {
         String l = "Generation " + lineage.size();
         if(lineage.size()>1){
+            l = l+"\n\t(From earliest to previous)";
             Iterator<Integer> iter = lineage.iterator();
             iter.next();
             while (iter.hasNext()) {
@@ -542,5 +546,20 @@ public final class Critter /*extends Entity*/ implements CritterState {
 
     public String name() {
         return name;
+    }    
+    private static Random mutRand = new Random();
+    private static void mutateCritter(Critter c) {
+        while(mutRand.nextInt(4) == 0) {
+            if(mutRand.nextBoolean())
+                c.prog = c.prog.mutate();
+            else {
+                int i = mutRand.nextInt(3);
+                c.mem[i] += mutRand.nextBoolean() ? -1 : 1;
+                if(i == 0 && c.mem[0] < 9)
+                    c.mem[0] = 9;
+                else if (c.mem[i] < 1)
+                    c.mem[i] = 1;
+            }
+        }
     }
 }

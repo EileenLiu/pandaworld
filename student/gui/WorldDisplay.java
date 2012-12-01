@@ -6,6 +6,7 @@ package student.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -25,7 +26,7 @@ public class WorldDisplay extends JPanel{
     public JPanel worldStatusPanel;
     public JTextArea attributes;
     public ControlPanel controls;
-    public JScrollPane scrollpane;
+    public JScrollPane scrollpane, scrollAttributes;
     public JLabel timestep, crittercount, plantcount, foodcount, rockcount;
     
     public World WORLD;
@@ -40,6 +41,7 @@ public class WorldDisplay extends JPanel{
         controls = new ControlPanel();
         controls.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));//createBevelBorder(0, 10, 0, 10));
         attributes = generateAttributes();
+        scrollAttributes = generateVerticalScroll(attributes);
         gridpane = generateGridPanel();
         worldStatusPanel = generateWorldStatusPanel();
         infoDisplay = generateInfoPanel();
@@ -48,7 +50,6 @@ public class WorldDisplay extends JPanel{
         updateAttributes();
         scrollpane = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         scrollpane.setViewportView(gridpane);
-             
         add(scrollpane, BorderLayout.CENTER);
         add(infoDisplay, BorderLayout.EAST);
         gridpane.setVisible(true);
@@ -63,6 +64,12 @@ public class WorldDisplay extends JPanel{
         textArea.setOpaque(false);
         textArea.setBackground(new Color(164, 173, 210));
         return textArea;
+    }
+    private final JScrollPane generateVerticalScroll(Component view){
+        JScrollPane scrollpane = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);     
+        scrollpane.setViewportView(view);
+        scrollpane.setBorder(null);
+        return scrollpane;
     }
     private final GridPanel generateGridPanel(){
         GridPanel grid = new GridPanel(WORLD);
@@ -109,7 +116,7 @@ public class WorldDisplay extends JPanel{
         JPanel infoDisp = new JPanel();
         infoDisp.setLayout(new BorderLayout());
         infoDisp.add(worldStatusPanel, BorderLayout.NORTH);
-        infoDisp.add(attributes, BorderLayout.CENTER);
+        infoDisp.add(scrollAttributes, BorderLayout.CENTER);
         infoDisp.add(controls, BorderLayout.SOUTH);
         infoDisp.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
         //textDisp.setBackground(new Color(68, 82, 138));
