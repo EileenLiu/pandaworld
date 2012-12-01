@@ -45,7 +45,7 @@ public class PNGImagePack {
                     else
                     {
                         pack.put(s, changeColor(c, img));
-                        System.out.println("changed color to "+c);
+                        //System.out.println("changed color to "+c);
                     }
                 }
             } else { //not in a zipfile, assume is an image file (.png, .jpg,..etc)

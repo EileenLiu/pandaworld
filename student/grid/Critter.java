@@ -410,10 +410,8 @@ public final class Critter /*extends Entity*/ implements CritterState {
      * @return the lineage as a string
      */
     public String lineage() {
-        String l = "";
-        if (lineage.size() <= 1) {
-            l = "first generation";
-        } else {
+        String l = "Generation " + lineage.size();
+        if(lineage.size()>1){
             Iterator<Integer> iter = lineage.iterator();
             iter.next();
             while (iter.hasNext()) {

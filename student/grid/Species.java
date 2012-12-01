@@ -24,7 +24,7 @@ public final class Species implements RemoteSpecies {
         program = p;
         //Guarantees same species (of same appearance) have the same color
         //We square it first b/c of implementation of .hashCode() [not good for bit fields]
-        long h = Math.abs((long) this.hashCode()), r = 5, k = 1;
+        long h = Math.abs((long) this.hashCode()), r = 7, k = 1;
         while (h > 1) {
             if((h&1L) == 1) {
                 h--;
@@ -64,21 +64,12 @@ public final class Species implements RemoteSpecies {
     public int hashCode() {
         int res = 1;
         res += attributes[0];
-        System.out.println("res " + res);
         res <<= 8;            //memory size
-        System.out.println("res " + res);
         res += attributes[1];
-        System.out.println("res " + res);
         res <<= 8;            //offense
-        System.out.println("res " + res);
         res += attributes[2];
-        System.out.println("res " + res);
         res <<= 8;            //defense
-        System.out.println("res " + res);
         res = res + (program.hashCode() & 0xff); //program
-        System.out.println("res " + res);
-        System.out.print("--------------");
-
         return res;
     }
 
