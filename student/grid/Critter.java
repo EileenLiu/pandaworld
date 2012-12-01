@@ -6,6 +6,7 @@ package student.grid;
 
 import java.awt.Color;
 import java.util.Arrays;
+import java.util.Random;
 import student.config.Constants;
 import static student.config.Constants.*;
 import student.grid.HexGrid.HexDir;
@@ -316,6 +317,7 @@ public final class Critter /*extends Entity*/ implements CritterState {
         baby.mem[8] = 1;
         np.contents().putCritter(baby);
         mem[4] -= complexity() * Constants.BUD_COST;
+        mutateChild(baby);
         acted = true;
     }
     
@@ -347,6 +349,7 @@ public final class Critter /*extends Entity*/ implements CritterState {
             np.contents().putCritter(baby);
             mem[4] -= Constants.MATE_COST * complexity();
             c.mem[4] -= Constants.MATE_COST * c.complexity();
+            mutateChild(c);
         }
         else amorous = true;
         acted = true;
@@ -498,5 +501,21 @@ public final class Critter /*extends Entity*/ implements CritterState {
                 *  mem[2]   Offense*/
         return "critter with \nState:\n" + state()
                +wor.smell(pos, World.TilePredicate.isFood, 10)+"\nRuleset:\n" + prog;
+    }
+
+    private static Random mutRand = new Random();
+    private static void mutateChild(Critter c) {
+        while(mutRand.nextInt(4) == 0) {
+            if(mutRand.nextBoolean())
+                c.prog = c.prog.mutate();
+            else {
+                int i = mutRand.nextInt(3);
+                c.mem[i] += mutRand.nextBoolean() ? -1 : 1;
+                if(i == 0 && c.mem[0] < 9)
+                    c.mem[0] = 9;
+                else if (c.mem[i] < 1)
+                    c.mem[i] = 1;
+            }
+        }
     }
 }
