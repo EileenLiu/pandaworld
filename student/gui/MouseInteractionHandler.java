@@ -37,7 +37,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
     private Action rock, unrock,
             plant, unplant;
     private int i;
-    private Action crit, critMenIts[] = new Action[11];
+    private Action crit, critMenIts[] = new Action[12];
     private boolean EXIT = false;
 
     public MouseInteractionHandler(final InteractionHandler _parent){//final World _model, final WorldFrame _view) {
@@ -188,8 +188,18 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
                 }
             }
         };
-        //this.gameLoop();
-    }
+        critMenIts[11] = new LocAxn("view program") {
+            @Override
+            public void act() {
+                if (rclxtar.contents().critter()) {
+                    men.setVisible(false);
+                    JOptionPane.showMessageDialog(masterController.getView(),
+                        rclxtar.contents().getCritter().getProgram().toString(),"Critter Program",
+                        JOptionPane.PLAIN_MESSAGE);
+               }
+            }
+        };
+     }
 
     @Override
     public void mouseClicked(MouseEvent e) {

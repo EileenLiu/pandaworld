@@ -208,14 +208,16 @@ public class World {
                     continue working;
                 PQEntry w = null;
                 for(PQEntry p : gray) //find in gray set
-                    if((w=p).curr.equals(adj))
+                    if(p.curr.equals(adj)) {
+                        w = p;
                         break;
-                    else w = null;
+                    }
                 if(w == null)
                     for(PQEntry p : black) //find in black set
-                        if((w=p).curr.equals(adj))
+                        if(p.curr.equals(adj)) {
+                            w = p;
                             break;
-                        else w = null;
+                        }
                 System.out.printf("\t(%d,%d): ",adj.col(),adj.row());
                 if(w == null) {
                     gray.add(w = new PQEntry(adj, v.distance + 1, v, v.direction == null ? d : v.direction));
