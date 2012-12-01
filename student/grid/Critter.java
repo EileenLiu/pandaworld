@@ -6,6 +6,8 @@ package student.grid;
 
 import java.awt.Color;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.LinkedList;
 import student.config.Constants;
 import static student.config.Constants.*;
 import student.grid.HexGrid.HexDir;
@@ -29,13 +31,24 @@ public final class Critter /*extends Entity*/ implements CritterState {
     private boolean acted, amorous;
     /*/private/*/public Program prog;
     private String appearance;
-    private Color species;
+    private Species species;
+    private LinkedList<Integer> lineage;
     public Action recentAction = new Action("wait");
     
     public Critter(World _wor, Reference<Tile> _pos, Program _p) {
         this(_wor, _pos, _p, defaultMemory());
     }
+    public Critter(World _wor, Reference<Tile> _pos, Program p, int d) {
+        this(_wor, _pos, p);
+        dir = HexDir.dir(d);
+    }
     private Critter(World _wor, Reference<Tile> _pos, Program _p, int []_mem) {
+        this(_wor, _pos, _p, _mem, new LinkedList());
+    }
+    private Critter(World _wor, Reference<Tile> _pos, Program _p, LinkedList<Integer> ancestors) {
+                this(_wor, _pos, _p, defaultMemory(), ancestors);
+    }
+    private Critter(World _wor, Reference<Tile> _pos, Program _p, int []_mem, LinkedList<Integer> ancestors) {
         wor = _wor;
         if(_pos!=null)
             pos = _pos;
@@ -46,16 +59,12 @@ public final class Critter /*extends Entity*/ implements CritterState {
         if(_p==null)
             _p = new Program();
         prog = _p;
-        //Guarantees same species of same appearance have the same color
-        //We square it first b/c of implementation of .hashCode() [not good for bit fields]
-        long h = (long)this.hashCode();
-        species = new Color((int)((h*=h)&0xff), (int)((h>>=8)&0xff), (int)((h>>8)&0xff)); 
+        species = new Species(new int[]{mem[0], mem[1], mem[2]}, prog);
+        lineage = ancestors;
+        lineage.add((Integer)species.hashCode());
         System.err.println("\tMade critter: program is"+prog);
     }
-    public Critter(World _wor, Reference<Tile> _pos, Program p, int d) {
-        this(_wor, _pos, p);
-        dir = HexDir.dir(d);
-    }
+
     private static final int []defaultMemory = {MIN_MEMORY, 1, 1, 1, INITIAL_ENERGY};
     private static int []defaultMemory(){
         int mem[] = new int[MIN_MEMORY];
@@ -154,7 +163,10 @@ public final class Critter /*extends Entity*/ implements CritterState {
     {
         return appearance;
     }
-    public Color getSpecies(){
+    public Color getColor(){
+        return species.getColor();
+    }
+    public Species getSpecies(){
         return species;
     }
     public void timeStep() {
@@ -305,9 +317,9 @@ public final class Critter /*extends Entity*/ implements CritterState {
         if(pos==null)
             System.out.println("pos == null");
         Reference<Tile> np = pos.lin(-1, dir);
-        if(np == null || np.contents().rock())
+        if(np == null || np.contents().rock() || np.contents().critter())
             return; //we're in a corner, can't put a critter there.
-        Critter baby = new Critter(wor, np, prog.mutate());
+        Critter baby = new Critter(wor, np, prog.mutate(), lineage);
         baby.mem = new int[mem.length];
         System.arraycopy(mem, 0, baby.mem, 0, MIN_MEMORY);
         baby.mem[3] = 1;
@@ -342,8 +354,8 @@ public final class Critter /*extends Entity*/ implements CritterState {
             bmem[8] = 1;
             Critter cpos = ch(this,c);
             Reference<Tile> np = cpos.pos.lin(-1, cpos.dir);
-            if(np==null || np.contents().rock()) np = (cpos==this?c:this).pos.lin(-1, (cpos!=this?this:c).dir);
-            Critter baby = new Critter(wor, np, prog, bmem);
+            if(np==null || np.contents().rock()||np.contents().critter()) np = (cpos==this?c:this).pos.lin(-1, (cpos!=this?this:c).dir);
+            Critter baby = new Critter(wor, np, prog, bmem, lineage);
             np.contents().putCritter(baby);
             mem[4] -= Constants.MATE_COST * complexity();
             c.mem[4] -= Constants.MATE_COST * c.complexity();
@@ -371,22 +383,46 @@ public final class Critter /*extends Entity*/ implements CritterState {
     private int complexity() {
         return prog.numChildren() * Constants.RULE_COST + (mem[1] + mem[2]) * ABILITY_COST;
     }
-
+    public Program getProgram(){
+        return prog;
+    }
     public String state() {
-        String s = "\n\tMemory: " + mem[0]
+        String s =  "\n\tSpecies: " + species.hashCode()
+                + "\n\tLineage: "+ this.lineage()
+                + "\n\tMemory: " + mem[0]
                 + "\n\tDefense: " + mem[1]
                 + "\n\tOffense: " + mem[2]
-                + "\n\tSize: " + mem[3]
+                + "\n\n\tSize: " + mem[3]
                 + "\n\tEnergy: " + mem[4]
                 + "\n\tRule Counter: " + mem[5]
                 + "\n\tEvent Log:" + eventLog()//mem[6]
                 + "\n\tTag: " + mem[7]
                 + "\n\tPosture: " + mem[8]
-                + "\n\tLatest action: " + recentAction;
+                + "\n\n\tLatest action: " + recentAction;
         return s;
     }
     /**
+     * Prints the lineage of the critter
+     * @return the lineage as a string
+     */
+    public String lineage() {
+        String l = "";
+        if (lineage.size() <= 1) {
+            l = "first generation";
+        } else {
+            Iterator<Integer> iter = lineage.iterator();
+            iter.next();
+            while (iter.hasNext()) {
+                l = l + "\n\t--->species " + iter.next();
+            }
+        }
+
+        return l;
+    }
+
+    /**
      * Generates the event log of the critter
+     *
      * @return the event log as a string
      */
     public String eventLog() {
@@ -473,11 +509,7 @@ public final class Critter /*extends Entity*/ implements CritterState {
 
     @Override
     public int hashCode() {
-        int res = 1;
-        res += mem[0]; res <<= 8;            //memory size
-        res += mem[1]; res <<= 8;            //offense
-        res += mem[2]; res <<= 8;            //defense
-        return res + prog.hashCode() & 0xff; //program
+        return species.hashCode();
     }
 
     @Override

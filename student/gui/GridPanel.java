@@ -216,20 +216,20 @@ public class GridPanel extends JPanel implements Scrollable{
                     if(t.critter()) {
                         Image i = null;
                         String s = t.getCritter().getAppearance();
-                        Color species = t.getCritter().getSpecies();
-                        System.out.println(s + species);
+                        Color color = t.getCritter().getColor();
+                        System.out.println(s + color);
                         if (s == null) {
                             s = "data.zip";
                         }
                         if (imagepackages == null) {
                             imagepackages = new HashMap<String, PNGImagePack>();
                         }
-                        if (imagepackages.containsKey(s + species)) {
-                            imagepack = imagepackages.get(s + species);
+                        if (imagepackages.containsKey(s + color)) {
+                            imagepack = imagepackages.get(s + color);
                         } else {
-                            imagepack = new PNGImagePack(s, Arrays.copyOfRange(imgnames, 4, imgnames.length), species);
+                            imagepack = new PNGImagePack(s, Arrays.copyOfRange(imgnames, 4, imgnames.length), color);
                             if (imagepack.isValid()) {
-                                imagepackages.put(s + species, imagepack);
+                                imagepackages.put(s + color, imagepack);
                             } else {
                                 imagepack = defaultImgs;
                             }

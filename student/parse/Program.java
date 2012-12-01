@@ -42,7 +42,7 @@ public class Program extends Node<Rule> {
     public StringBuffer toString(StringBuffer sb) {
         for(Rule r : children)
             sb = r.toString(sb);
-        return sb;
+        return (sb == null || sb.length() == 0) ? new StringBuffer("(blank)") : sb;
     }
     
     @Override
