@@ -28,8 +28,8 @@ import static student.config.Constants.*;
 import student.config.CritterFileParser;
 import student.config.WorldFileParser;
 import student.grid.Critter;
+import student.parse.Action;
 import student.remote.login.*;
-import student.remote.server.RemoteCritter.Action;
 import student.world.World;
 import student.world.World.InvalidWorldAdditionException;
 
@@ -169,6 +169,11 @@ public class AdminServerImpl implements AdminServer, RLogin {
     public int[] getCritterMemory(int id) throws RemoteException {
         return zaWarudo.critterForID(id).memory();
     }
+    
+    @Override
+    public RemoteCritter getCritter(int id) throws RemoteException {
+        return (RemoteCritter)UnicastRemoteObject.exportObject(zaWarudo.critterForID(id));
+    }
 
     @Override
     public String getCritterCurrentRule(int id) throws RemoteException {
@@ -177,8 +182,7 @@ public class AdminServerImpl implements AdminServer, RLogin {
 
     @Override
     public Action getCritterAction(int id) throws RemoteException {
-        // TODO Auto-generated method stub
-        return null;
+        return zaWarudo.critterForID(id).recentAction();
     }
 
     @Override

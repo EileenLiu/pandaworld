@@ -15,6 +15,7 @@ import student.grid.Critter;
 import student.grid.HexGrid;
 import student.grid.HexGrid.HexDir;
 import student.grid.HexGrid.Reference;
+import student.grid.Species;
 import student.grid.Tile;
 import student.world.util.HashCodeAccessSet;
 
@@ -28,7 +29,7 @@ public class World {
     private int timesteps = 0;
     private boolean WAIT = true; //if false, random action
     private HashCodeAccessSet<Critter> critters = new HashCodeAccessSet<Critter>();
-    //private HashCodeAccessSet<Species> species = new HashCodeAccessSet<Species>();
+    private HashCodeAccessSet<Species> species = new HashCodeAccessSet<Species>();
     
     public World() {
         this(Constants.MAX_ROW, Constants.MAX_COLUMN);
@@ -136,7 +137,7 @@ public class World {
             if (what instanceof Critter) {
                 loc.contents().putCritter((Critter)what);
                 if(critters.add((Critter)what))
-                    ;//species.add(((Critter)what).species());
+                    species.add(((Critter)what).getSpecies());
             }
             else if (what instanceof String && what.equals("plant")) {
                 loc.contents().putPlant();
@@ -171,8 +172,9 @@ public class World {
      */
     public void gridSet(int c, int r, Tile t) {
         grid.set(c, r, t);
-        //if(t.critter()) TODO: fix
-            //critters.put(t.getCritter().hashCode(), t.getCritter());
+        if(t.critter())
+            if(critters.add(t.getCritter()))
+                species.add(t.getCritter().getSpecies());
     }
     
     public static final int CRIT = 0, PLANT = 1, FOOD = 2, ROCK = 3;

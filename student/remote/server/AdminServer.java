@@ -1,8 +1,8 @@
 package student.remote.server;
 
 import java.rmi.RemoteException;
+import student.parse.Action;
 import static student.remote.login.Permission.ADMIN;
-import student.remote.server.RemoteCritter.Action;
 
 /**
  * An AdminServer exposes the administrative interface to the critter system.

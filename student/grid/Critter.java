@@ -5,9 +5,9 @@
 package student.grid;
 
 import java.awt.Color;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.concurrent.atomic.AtomicInteger;
 import student.config.Constants;
 import static student.config.Constants.*;
 import student.grid.HexGrid.HexDir;
@@ -16,13 +16,14 @@ import student.grid.HexGrid.Reference;
 import student.parse.Action;
 import student.parse.Program;
 import student.parse.Rule;
+import student.remote.server.RemoteCritter;
 import student.world.World;
 
 /**
  *
  * @author haro
  */
-public final class Critter /*extends Entity*/ implements CritterState {
+public final class Critter /*extends Entity*/ implements CritterState, RemoteCritter {
     private static AtomicInteger SERIAL = new AtomicInteger();
     
     private World wor;
@@ -544,5 +545,14 @@ public final class Critter /*extends Entity*/ implements CritterState {
 
     public String name() {
         return name;
+    }
+
+    @Override
+    public void act(Action action) {
+        (recentAction = action).execute(this);
+    }
+    
+    public Action recentAction() {
+        return recentAction;
     }
 }

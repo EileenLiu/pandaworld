@@ -2,9 +2,9 @@ package student.remote.server;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import student.parse.Action;
 import static student.remote.login.Permission.*;
 import student.remote.login.RLogin;
-import student.remote.server.RemoteCritter.Action;
 
 public interface Server extends Remote {
 
@@ -125,6 +125,8 @@ public interface Server extends Remote {
     @RemoteVisibility(WORLD)
     public Action getCritterAction(int id) throws RemoteException;
 
+    public RemoteCritter getCritter(int id) throws RemoteException;
+    
     //login interface
     /**
      * Submit a request for a user account.
