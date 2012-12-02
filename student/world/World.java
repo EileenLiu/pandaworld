@@ -20,8 +20,11 @@ import student.grid.Critter;
 import student.grid.HexGrid;
 import student.grid.HexGrid.HexDir;
 import student.grid.HexGrid.Reference;
+import student.grid.RReference;
 import student.grid.Species;
 import student.grid.Tile;
+import student.parse.Program;
+import student.remote.server.RemoteCritter;
 import student.remote.world.RWorld;
 import student.world.util.HashCodeAccessSet;
 
@@ -285,6 +288,16 @@ public class World extends UnicastRemoteObject implements RWorld {
             System.err.println("Trouble unexporting World");
         }
         super.finalize();
+    }
+
+    @Override
+    public RemoteCritter makeCritter(RReference<Tile> loc, Program p) throws RemoteException {
+        return new Critter(this, null, p);
+    }
+
+    @Override
+    public RemoteCritter makeCritter(RReference<Tile> loc, Program p, int direction) throws RemoteException {
+        return new Critter(this, null, p, direction);
     }
     
     public static class PQEntry implements Comparable<PQEntry> {

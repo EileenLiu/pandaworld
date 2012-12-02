@@ -7,6 +7,7 @@ package student.gui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Polygon;
 import java.awt.Rectangle;
@@ -22,6 +23,8 @@ import student.grid.HexGrid.Reference;
 import student.grid.Tile;
 import student.gui.render.PNGImagePack;
 import student.gui.render.TintFilter;
+import student.remote.client.Client;
+import student.remote.world.RWorld;
 import student.world.World;
 
 public class GridPanel extends JPanel implements Scrollable{
@@ -91,8 +94,8 @@ public class GridPanel extends JPanel implements Scrollable{
     private Polygon hexen[][];
     //A MULTIPLE OF FOUR
     private int HEXSIZE = 140;
-    public World world; 
-    public GridPanel(World world) {
+    public RWorld world; 
+    public GridPanel(RWorld world) throws RemoteException {
         this.world = world;
         //this.setBorder(new LineBorder(Color.MAGENTA, 3));
         hexen = new Polygon[world.height()][world.width()];
@@ -116,12 +119,16 @@ public class GridPanel extends JPanel implements Scrollable{
         this.requestFocusInWindow();
     }
     public int []hexAt(int x, int y) {
-        x -= this.getX();
-        y -= this.getY();
-        for(int r = 0; r < world.height(); r++)
-            for(int c = 0; c < world.width(); c++)
-                if(hexen[r][c].contains(x, y))
-                    return new int[]{r,c};
+        try {
+            x -= this.getX();
+            y -= this.getY();
+            for(int r = 0; r < world.height(); r++)
+                for(int c = 0; c < world.width(); c++)
+                    if(hexen[r][c].contains(x, y))
+                        return new int[]{r,c};
+        } catch (RemoteException ex) {
+            Client.connectionError(this);
+        }
         return null;
     }
     
@@ -205,67 +212,91 @@ public class GridPanel extends JPanel implements Scrollable{
    /**
      * Draws the entire grid
      */
-    public void drawGrid(int hexsize, Graphics gp) {//HWHdrawGrid(int hxsz, Graphics gp) {
-        for (int c = 0; c < world.width(); c++) {
-            for (int r = 0; r < world.height(); r++) {
-                Polygon loc = hexen[r][c];
-                Rectangle bbx = loc.getBounds();
-                Tile t = world.at(r, c).mutableContents();
-                PNGImagePack imagepack = defaultImgs;
-                if(t != null && t.rock()) 
-                    drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, imagepack.get(imgnames[1]));//ROCK);
-                else {
-                    drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, imagepack.get(imgnames[0]));//TILE); 
-                    if(t.food())
-                        drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, imagepack.get(imgnames[3])); 
-                    if(t.plant())
-                        drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, imagepack.get(imgnames[2])); 
-                    if(t.critter()) {
-                        Image i = null;
-                        String s = t.getCritter().getAppearance();
-                        Color color = t.getCritter().getColor();
-                        System.out.println(s + color);
-                        if (s == null) {
-                            s = "data.zip";
+    public void drawGrid(int hexsize, Graphics gp) {
+        try {
+            //HWHdrawGrid(int hxsz, Graphics gp) {
+            for (int c = 0; c < world.width(); c++) {
+                for (int r = 0; r < world.height(); r++) {
+                    Polygon loc = hexen[r][c];
+                    Rectangle bbx = loc.getBounds();
+                    Tile t = world.at(r, c).mutableContents();
+                    PNGImagePack imagepack = defaultImgs;
+                    if (t != null && t.rock()) {
+                        drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, imagepack.get(imgnames[1]));//ROCK);
+                    } else {
+                        drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, imagepack.get(imgnames[0]));//TILE); 
+                        if (t.food()) {
+                            drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, imagepack.get(imgnames[3]));
                         }
-                        if (imagepackages == null) {
-                            imagepackages = new HashMap<String, PNGImagePack>();
+                        if (t.plant()) {
+                            drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, imagepack.get(imgnames[2]));
                         }
-                        if (imagepackages.containsKey(s + color)) {
-                            imagepack = imagepackages.get(s + color);
-                        } else {
-                            imagepack = new PNGImagePack(s, Arrays.copyOfRange(imgnames, 4, imgnames.length), color);
-                            if (imagepack.isValid()) {
-                                imagepackages.put(s + color, imagepack);
-                            } else {
-                                imagepack = defaultImgs;
+                        if (t.critter()) {
+                            Image i = null;
+                            String s = t.getCritter().getAppearance();
+                            Color color = t.getCritter().getColor();
+                            System.out.println(s + color);
+                            if (s == null) {
+                                s = "data.zip";
                             }
+                            if (imagepackages == null) {
+                                imagepackages = new HashMap<String, PNGImagePack>();
+                            }
+                            if (imagepackages.containsKey(s + color)) {
+                                imagepack = imagepackages.get(s + color);
+                            } else {
+                                imagepack = new PNGImagePack(s, Arrays.copyOfRange(imgnames, 4, imgnames.length), color);
+                                if (imagepack.isValid()) {
+                                    imagepackages.put(s + color, imagepack);
+                                } else {
+                                    imagepack = defaultImgs;
+                                }
+                            }
+                            switch (t.getCritter().direction()) {
+                                case N:
+                                    i = imagepack.get(imgnames[4]);
+                                    break;//CNN; break;
+                                case NE:
+                                    i = imagepack.get(imgnames[5]);
+                                    break;//CNE; break;
+                                case NW:
+                                    i = imagepack.get(imgnames[6]);
+                                    break;//CNW; break;
+                                case S:
+                                    i = imagepack.get(imgnames[9]);
+                                    break;//CSS; break;
+                                case SW:
+                                    i = imagepack.get(imgnames[8]);
+                                    break;//CSW; break;
+                                case SE:
+                                    i = imagepack.get(imgnames[7]);
+                                    break;//CSE; break;
+                            }
+
+                            drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, i);
                         }
-                        switch (t.getCritter().direction()) {
-                             case N:  i = imagepack.get(imgnames[4]); break;//CNN; break;
-                             case NE: i = imagepack.get(imgnames[5]); break;//CNE; break;
-                             case NW: i = imagepack.get(imgnames[6]); break;//CNW; break;
-                             case S:  i = imagepack.get(imgnames[9]); break;//CSS; break;
-                             case SW: i = imagepack.get(imgnames[8]); break;//CSW; break;
-                             case SE: i = imagepack.get(imgnames[7]); break;//CSE; break;
-                            } 
-                        
-                        drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, i);
                     }
+                    /*/
+                     gp.setColor(Color.RED);
+                     String s = "("+r+","+c+")";
+                     gp.drawChars(s.toCharArray(), 0, s.length(), bbx.x+20, bbx.y+20);
+                     /*/
                 }
-                /*/
-                gp.setColor(Color.RED);
-                String s = "("+r+","+c+")";
-                gp.drawChars(s.toCharArray(), 0, s.length(), bbx.x+20, bbx.y+20);
-                /*/
             }
+        } catch (RemoteException ex) {
+            Client.connectionError(this);
         }
     }
 
     @Override
     public Dimension getPreferredSize()
     {
-        return new Dimension(world.width()*HEXSIZE - (world.width() - 1)*HEXSIZE/4, (world.height()+1)*HEXSIZE);
+        try {
+            return new Dimension(world.width()*HEXSIZE - (world.width() - 1)*HEXSIZE/4, (world.height()+1)*HEXSIZE);
+        } catch (RemoteException ex) {
+            Client.connectionError(this);
+            return null;
+        }
     }
    @Override
     public Dimension getPreferredScrollableViewportSize() {

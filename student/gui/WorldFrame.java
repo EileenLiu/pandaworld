@@ -5,22 +5,25 @@
 package student.gui;
 
 import java.awt.*;
+import java.rmi.RemoteException;
 import javax.swing.*;
+import student.remote.world.RWorld;
 import student.world.World;
 
 public class WorldFrame extends JFrame {
 
-    private World world;
+    private World fworld;
+    private RWorld world;
     public WorldDisplay worldDisplay; //- made up of two JPanels, one is the grid, one is the current attributes
 
-    public WorldFrame(World w) {
+    public WorldFrame(RWorld w) throws RemoteException {
         setLayout(new BorderLayout());
         loadWorld(w);
         initMenubar();
         this.setFullScreen();
     }
 
-    public final void loadWorld(World w) {
+    public final void loadWorld(RWorld w) throws RemoteException {
         world = w;
         /*if(worldDisplay!=null)
         {
@@ -38,7 +41,7 @@ public class WorldFrame extends JFrame {
         importCritter.setEnabled(b);
         importSettings.setEnabled(b);
         createWorld.setEnabled(b);
-        createCritter.setEnabled(b);
+        //createCritter.setEnabled(b);
         createPlant.setEnabled(b);
         createFood.setEnabled(b);
         createRock.setEnabled(b);
@@ -46,7 +49,7 @@ public class WorldFrame extends JFrame {
 
     public void demigodControlsEnabled(boolean b) {
         importCritter.setEnabled(b);
-        createCritter.setEnabled(b);
+        //createCritter.setEnabled(b);
     }
 
     private void initMenubar() {
@@ -58,7 +61,7 @@ public class WorldFrame extends JFrame {
         importSettings = new javax.swing.JMenuItem();
         createMenu = new javax.swing.JMenu();
         createWorld = new javax.swing.JMenuItem();
-        createCritter = new javax.swing.JMenuItem();
+        //createCritter = new javax.swing.JMenuItem();
         createPlant = new javax.swing.JMenuItem();
         createFood = new javax.swing.JMenuItem();
         createRock = new javax.swing.JMenuItem();
@@ -91,8 +94,8 @@ public class WorldFrame extends JFrame {
         createWorld.setText("World");
         createMenu.add(createWorld);
 
-        createCritter.setText("Critter");
-        createMenu.add(createCritter);
+        //createCritter.setText("Critter");
+        //createMenu.add(createCritter);
 
         createPlant.setText("Plant");
         createMenu.add(createPlant);
@@ -161,7 +164,7 @@ public class WorldFrame extends JFrame {
     public javax.swing.JFileChooser fileSelector;
     private javax.swing.JMenuBar MENUBAR;
     public javax.swing.JMenuItem aboutCredits;
-    public javax.swing.JMenuItem createCritter;
+    //public javax.swing.JMenuItem createCritter;
     public javax.swing.JMenuItem createFood;
     public javax.swing.JMenu createMenu;
     public javax.swing.JMenuItem createPlant;

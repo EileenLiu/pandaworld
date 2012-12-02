@@ -196,4 +196,6 @@ public interface AdminServer extends PlayerServer {
      */
     @RemoteVisibility(ADMIN)
     public void removeAdmin(byte []token, String uname, String name) throws RemoteException;
+
+    public void putCritter(byte []token, String uname, RemoteCritter rc) throws RemoteException;
 }

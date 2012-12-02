@@ -9,14 +9,12 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.util.Set;
+import java.rmi.RemoteException;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
-import student.grid.Critter;
 import student.grid.HexGrid;
 import student.grid.Tile;
-import student.parse.Program;
-import student.world.World;
+import student.remote.world.RWorld;
 
 public class WorldDisplay extends JPanel{
     public GridPanel gridpane;
@@ -28,12 +26,12 @@ public class WorldDisplay extends JPanel{
     public JScrollPane scrollpane;
     public JLabel timestep, crittercount, plantcount, foodcount, rockcount;
     
-    public World WORLD;
+    public RWorld WORLD;
     public HexGrid.Reference<Tile> currentLocation;
     
-    public WorldDisplay(World world) {
+    public WorldDisplay(RWorld world) throws RemoteException {
         WORLD = world;
-        currentLocation = WORLD.defaultLoc();
+        currentLocation = WORLD.at(0,0);
         
         setLayout(new BorderLayout());
         
@@ -64,7 +62,7 @@ public class WorldDisplay extends JPanel{
         textArea.setBackground(new Color(164, 173, 210));
         return textArea;
     }
-    private final GridPanel generateGridPanel(){
+    private final GridPanel generateGridPanel() throws RemoteException {
         GridPanel grid = new GridPanel(WORLD);
         grid.setMinimumSize(new Dimension(WORLD.width(), WORLD.height()));
         grid.setSize(WORLD.width()*100, WORLD.height()*100);
@@ -98,12 +96,16 @@ public class WorldDisplay extends JPanel{
         return wst;
     }
     private final void updateWorldStatus(){
-        int[] population = WORLD.population();
-        timestep.setText("Timestep: "+WORLD.getTimesteps());
-        crittercount.setText("\n\tCritters: "+population[0]);
-        plantcount.setText("\n\tPlants: "+population[1]);
-        foodcount.setText("\n\tFood: "+population[2]);
-        rockcount.setText("\n\tRocks: "+population[3]);
+        try {
+            int[] population = WORLD.population();
+            timestep.setText("Timestep: "+WORLD.getTimesteps());
+            crittercount.setText("\n\tCritters: "+population[0]);
+            plantcount.setText("\n\tPlants: "+population[1]);
+            foodcount.setText("\n\tFood: "+population[2]);
+            rockcount.setText("\n\tRocks: "+population[3]);
+        } catch (RemoteException ex) {
+            JOptionPane.showMessageDialog(this, "Connection to server failed", "Connection error", JOptionPane.ERROR_MESSAGE);
+        }
     }
     private final JPanel generateInfoPanel(){
         JPanel infoDisp = new JPanel();

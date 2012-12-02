@@ -505,4 +505,14 @@ public class AdminServerImpl extends UnicastRemoteObject implements AdminServer,
     public RWorld getWorld() throws RemoteException {
         return zaWarudo;
     }
+
+    @Override
+    public void putCritter(byte []token, String uname, RemoteCritter rc) throws RemoteException {
+        try {
+            if(login.verifyRequest(uname, token, Permission.ADMIN))
+                zaWarudo.add(rc, zaWarudo.randomLoc());
+        } catch (InvalidWorldAdditionException ex) {
+            throw new RemoteException("Invalid critter", ex);
+        }
+    }
 }

@@ -1,5 +1,7 @@
 package student.remote.client;
 
+import java.awt.Component;
+import java.awt.HeadlessException;
 import java.net.MalformedURLException;
 import java.nio.channels.IllegalBlockingModeException;
 import java.rmi.NotBoundException;
@@ -8,6 +10,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import student.remote.login.LoginClient;
 import student.remote.login.LoginClient.LoginException;
 import student.remote.login.LoginServer;
@@ -106,5 +109,9 @@ public abstract class Client {
         if(login == null)
             return null;
         return login.getToken();
+    }
+    
+    public static void connectionError(Component p) {
+        JOptionPane.showMessageDialog(p, "Connection to server failed", "Connection error", JOptionPane.ERROR_MESSAGE);
     }
 }

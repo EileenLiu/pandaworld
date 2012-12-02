@@ -4,8 +4,11 @@
  */
 package student.gui;
 
+import java.rmi.RemoteException;
 import student.remote.login.LoginClient;
 import student.remote.server.AdminServer;
+import student.remote.server.Server;
+import student.remote.world.RWorld;
 import student.world.World;
 
 /**
@@ -13,27 +16,27 @@ import student.world.World;
  * @author Eileen Liu <el544@cornell.edu>
  */
 public class InteractionHandler {
-    private World model;
+    private RWorld rmodel;
+    private World wmodel;
     private WorldFrame view;
     private LoginClient login;
-    private AdminServer server;
-    private boolean remote;
-    public InteractionHandler(final World _model, final WorldFrame _view)
+    private Server server;
+    public InteractionHandler(final RWorld _model, final WorldFrame _view)
     {
-        model = _model;
+        rmodel = _model;
+        wmodel = _model instanceof World ? (World)_model : null;
         view = _view;
-        remote = false;
         login = null;
         server = null;
         load();
     }
-    public InteractionHandler(final WorldFrame _view, LoginClient lc, AdminServer as)
+    public InteractionHandler(RWorld _model, WorldFrame _view, LoginClient _client, Server _server)
     {
-        model = null;
+        rmodel = _model;
+        wmodel = null;
         view = _view;
-        remote = true;
-        login = lc;
-        server = as;
+        login = _client;
+        server = _server;
         load();
     }
     private void load()
@@ -45,11 +48,14 @@ public class InteractionHandler {
         view.repaint();
         view.setDefaultCloseOperation(WorldFrame.EXIT_ON_CLOSE);
     }
-    public World getModel()
+    public RWorld getModel()
     {
-        return model;
+        return rmodel;
     }
-    public AdminServer getServer()
+    public World getRealModel() {
+        return wmodel;
+    }
+    public Server getServer()
     {
         return server;
     }
@@ -57,14 +63,14 @@ public class InteractionHandler {
     {
         return login;
     }
-    public void setModel(World newWorld)
+    public void setModel(World newWorld) throws RemoteException
     {
-        if(remote)
+        if(isRemote())
             throw new RuntimeException("Remote");
         view.setVisible(false);
         view.dispose();
-        model = newWorld;
-        view = new WorldFrame(model);
+        rmodel = newWorld;
+        view = new WorldFrame(rmodel);
         load();
         //view.loadWorld(newWorld);
         //view.setVisible(true);
@@ -76,6 +82,6 @@ public class InteractionHandler {
     }
 
     boolean isRemote() {
-        return remote;
+        return wmodel != null;
     }
 }

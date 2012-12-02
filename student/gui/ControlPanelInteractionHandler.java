@@ -6,10 +6,16 @@ package student.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import student.remote.client.Client;
+import student.remote.login.Permission;
+import student.remote.server.AdminServer;
 import student.world.World;
 
 /**
@@ -30,7 +36,7 @@ public class ControlPanelInteractionHandler {
         //view = masterController.getView();
         cp = masterController.getView().worldDisplay.controls;
         
-        cp.random.addActionListener(new ActionListener(){
+        /*cp.random.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 masterController.getModel().toggleWait();
@@ -41,7 +47,7 @@ public class ControlPanelInteractionHandler {
             public void actionPerformed(ActionEvent arg0) {
                 masterController.getModel().toggleWait();
             }
-        });
+        });*/
         cp.runButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent arg0) {
@@ -71,8 +77,7 @@ public class ControlPanelInteractionHandler {
         cp.stepButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                masterController.getModel().step();
-                masterController.getView().repaint();
+                new TmrTsk().run();
             }
         });
         cp.speedSlider.addChangeListener(new ChangeListener(){
@@ -97,7 +102,14 @@ public class ControlPanelInteractionHandler {
         @Override
         public void run() {
             //if(running){
-            masterController.getModel().step();
+            try {
+                if (!masterController.isRemote())
+                    masterController.getRealModel().step();
+                else if (masterController.getLogin().hasPermission(Permission.ADMIN)) 
+                    ((AdminServer) masterController.getServer()).simStep(masterController.getLogin().getToken(), masterController.getLogin().getUser());
+            } catch (RemoteException ex) {
+                Client.connectionError(masterController.getView());
+            }
             masterController.getView().repaint();
             //}
        }
