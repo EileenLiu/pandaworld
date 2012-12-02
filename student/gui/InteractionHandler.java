@@ -56,6 +56,7 @@ public class InteractionHandler {
         MouseInteractionHandler controller = new MouseInteractionHandler(this);
         ControlPanelInteractionHandler cpih = new ControlPanelInteractionHandler(this);
         MenuInteractionHandler mih = new MenuInteractionHandler(this);
+        LoginInteractionHandler lih = new LoginInteractionHandler(this);
         view.setVisible(true);
         view.repaint();
         view.setDefaultCloseOperation(WorldFrame.EXIT_ON_CLOSE);
