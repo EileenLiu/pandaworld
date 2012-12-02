@@ -10,6 +10,7 @@ import java.io.FileReader;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
+import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -48,9 +49,11 @@ public class WorldFileParser {
                 }
             }
         } catch (NumberFormatException e) {
-            System.out.println("WorldFileParser: The given file has invalid data: Integer expected.");
+            System.err.println("WorldFileParser: The given file has invalid data: Integer expected.");
         } catch (InvalidWorldAdditionException ex) {
-            System.out.println("WorldFileParser: The given file has invalid data: Item(s) could not be added to the world.");
+            System.err.println("WorldFileParser: The given file has invalid data: Item(s) could not be added to the world.");
+        } catch (RemoteException re) {
+            System.err.println("WorldFileParser: could not export world");
         }
         return world;
     }

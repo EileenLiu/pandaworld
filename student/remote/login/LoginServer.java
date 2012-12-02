@@ -20,14 +20,14 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @author haro
  */
-public class LoginServer implements LLogin, RLogin {
+public class LoginServer extends UnicastRemoteObject implements LLogin, RLogin {
     private Map<String, LoginState> loginTable = new ConcurrentHashMap<String, LoginState>();
     private Map<String, DHM>        inProgress = new ConcurrentHashMap<String, DHM>();
     private Map<String, Password<Permission>>   
                                     users      = new ConcurrentHashMap<String, Password<Permission>>();
     private EnumSet<Permission> defaultPermission;
     
-    public LoginServer () throws RemoteException {
+    public LoginServer() throws RemoteException {
         defaultPermission = EnumSet.of(Permission.WORLD);
     }
     
@@ -85,8 +85,7 @@ public class LoginServer implements LLogin, RLogin {
     }
     
     public void register(String name) throws RemoteException, MalformedURLException {
-        RLogin stub = (RLogin)UnicastRemoteObject.exportObject(this);
-        LocateRegistry.getRegistry().rebind(name + "__login",stub);
+        LocateRegistry.getRegistry().rebind(name + "__login",this);
     }
 
     @Override

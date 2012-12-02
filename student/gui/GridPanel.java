@@ -12,8 +12,11 @@ import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageFilter;
+import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import student.grid.HexGrid.Reference;
 import student.grid.Tile;
@@ -96,13 +99,17 @@ public class GridPanel extends JPanel implements Scrollable{
         for (int c = 0; c < this.world.width(); c++) {
             int x = pnX(0, c);
             for (int r = 0; r < this.world.height(); r++) {
-                int y = pnY(r, c);
-                //System.out.println(""+x+","+y);
-                //gp.fillOval(x, y, 10, 10);
-                hexen[r][c] = makePoly(x,y,HEXSIZE);
-                Reference<Tile> rt = world.at(r, c);
-                if(rt.contents() == null)
-                    rt.setContents(new Tile(false, 0));
+                try {
+                    int y = pnY(r, c);
+                    //System.out.println(""+x+","+y);
+                    //gp.fillOval(x, y, 10, 10);
+                    hexen[r][c] = makePoly(x,y,HEXSIZE);
+                    Reference<Tile> rt = world.at(r, c);
+                    if(rt.mutableContents() == null)
+                        rt.setContents(new Tile(false, 0));
+                } catch (RemoteException ex) {
+                    System.err.println("Could not instantiate tile");
+                }
             }
         }
         this.setFocusable(true);
@@ -158,11 +165,11 @@ public class GridPanel extends JPanel implements Scrollable{
         g.drawImage(i, x, y, hexsize, hexsize, this);
     }
 
-    public int pnX(int row, int col) {
+    public final int pnX(int row, int col) {
         return col * HEXSIZE / 4 * 3;
     }
     
-    public int pnY(int row, int col) {
+    public final int pnY(int row, int col) {
         return row * HEXSIZE
              + (col%2==0
                  ? HEXSIZE/2 
@@ -203,7 +210,7 @@ public class GridPanel extends JPanel implements Scrollable{
             for (int r = 0; r < world.height(); r++) {
                 Polygon loc = hexen[r][c];
                 Rectangle bbx = loc.getBounds();
-                Tile t = world.at(r, c).contents();
+                Tile t = world.at(r, c).mutableContents();
                 PNGImagePack imagepack = defaultImgs;
                 if(t != null && t.rock()) 
                     drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, imagepack.get(imgnames[1]));//ROCK);

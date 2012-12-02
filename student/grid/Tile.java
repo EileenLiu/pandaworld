@@ -4,68 +4,87 @@
  */
 package student.grid;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+import student.config.Constants;
+
 /**
  *
  * @author haro
  */
-public class Tile {
-    private boolean plant;
+public class Tile extends UnicastRemoteObject implements RTile {
+    private boolean plant, rock;
     private int food;
     private Critter critter;
     
-    public Tile(boolean _plant, int _food) {
+    public Tile(boolean _plant, int _food) throws RemoteException {
         plant = _plant; food = _food;
     }
-    protected Tile(Tile t) {
-        plant = t.plant;
-        food = t.food;
+    public Tile(boolean _rock) throws RemoteException {
+        this(false, 0);
+        rock = _rock;
+    }
+    protected Tile(Tile t) throws RemoteException {
+        this(t.plant, t.food);
         critter = t.critter;
     }
+    @Override
     public boolean isEmpty(){
         return !(rock()||food()||plant()||critter());
     }
+    @Override
     public boolean rock() {
-        return false;
+        return rock;
     }
     
+    @Override
     public boolean food() {
         return food > 0;
     }
     
+    @Override
     public boolean plant() {
         return plant;
     }
     
+    @Override
     public boolean critter() {
         return critter != null;
     }
     
+    @Override
     public int foodValue() {
         return food;
     }
     
     public void putPlant() {
+        if(rock) throw new IllegalStateException("It's a rock");
         plant = true;
     }
     
     public void removePlant() {
+        if(rock) throw new IllegalStateException("It's a rock");
         plant = false;
     }
     
     public void addFood(int dfood) {
+        if(rock) throw new IllegalStateException("It's a rock");
         assert(dfood>0);
         food += dfood;
     }
     
     public void takeFood() {
+        if(rock) throw new IllegalStateException("It's a rock");
         food = 0;
     }
     
+    @Override
     public Critter getCritter() {
         return critter;
     }
     
     public void putCritter(Critter _critter) {
+        if(rock) throw new IllegalStateException("It's a rock");
         assert(critter==null);
         critter = _critter;
     }
@@ -74,45 +93,17 @@ public class Tile {
         critter = null;
     }
     
-    public Tile ignoringCritter() {
-        return new Tile(this) {
-            @Override public boolean critter   () { return false; }
-            @Override public Critter getCritter() { return null;  }
-            @Override public void    putPlant  () { throw new RuntimeException("Please don't do that"); }
-            @Override public void    takeFood  () { throw new RuntimeException("Please don't do that"); }
-            
-            @Override public void addFood   (int f) 
-                { throw new RuntimeException("Please don't do that"); }
-            @Override public void putCritter(Critter c) 
-                { throw new RuntimeException("Please don't do that"); }
-        };
+    public int encode() {
+        if(critter())
+            return critter.read();
+        return encodeIgnoringCritter();
     }
     
-    public static class Rock extends Tile {
-        public Rock() {
-            super(false, 0);
-        }
-        
-        @Override
-        public boolean rock() {
-            return true;
-        }
-
-        @Override
-        public void putPlant() {
-            throw new RuntimeException("It's a rock");
-        }
-
-        @Override
-        public void addFood(int dfood) {
-            throw new RuntimeException("It's a rock");
-        }
-
-        @Override
-        public void putCritter(Critter _critter) {
-            throw new RuntimeException("It's a rock");
-        }
-        
-        
+    public int encodeIgnoringCritter() {        
+        if(rock())
+            return Constants.ROCK_VALUE;
+        if(food() || plant())
+            return -foodValue() + (plant()?-Constants.ENERGY_PER_PLANT:0);
+        return 0;
     }
 }

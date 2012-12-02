@@ -122,19 +122,19 @@ public class WorldDisplay extends JPanel{
     private final void updateAttributes() {
         //state.setText()
         String s = "The currently selected\nlocation has ";
-        if (currentLocation == null || currentLocation.contents() == null || currentLocation.contents().isEmpty())
+        if (currentLocation == null || currentLocation.mutableContents() == null || currentLocation.mutableContents().isEmpty())
             s = s+"\nnothing... ";
         else
         {
-        if (currentLocation.contents().rock())
+        if (currentLocation.mutableContents().rock())
             s = s + "\na rock... ";
-        if (currentLocation.contents().food())
-            s = s + "\nfood worth " + currentLocation.contents().foodValue() + " units of energy...";
-        if (currentLocation.contents().plant())
+        if (currentLocation.mutableContents().food())
+            s = s + "\nfood worth " + currentLocation.mutableContents().foodValue() + " units of energy...";
+        if (currentLocation.mutableContents().plant())
             s = s + "\na plant... ";
-        if (currentLocation.contents().critter()) {
+        if (currentLocation.mutableContents().critter()) {
             s = s + "\na critter with ";
-            s = s + currentLocation.contents().getCritter().state()+"\n";
+            s = s + currentLocation.mutableContents().getCritter().state()+"\n";
  //           s = s + "\nwhich sees food: "+WORLD.smell(currentLocation, World.TilePredicate.isFood, 10);
         }
         }

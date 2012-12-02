@@ -30,10 +30,11 @@ import student.config.WorldFileParser;
 import student.grid.Critter;
 import student.parse.Action;
 import student.remote.login.*;
+import student.remote.world.RWorld;
 import student.world.World;
 import student.world.World.InvalidWorldAdditionException;
 
-public class AdminServerImpl implements AdminServer, RLogin {
+public class AdminServerImpl extends UnicastRemoteObject implements AdminServer, RLogin {
     LoginServer login;
     RLogin loginstub;
     World zaWarudo;
@@ -60,11 +61,10 @@ public class AdminServerImpl implements AdminServer, RLogin {
         }
         try {
             Server obj = new AdminServerImpl();
-            Server stub = (Server) UnicastRemoteObject.exportObject(obj, 0);
-
+            
             // Bind the remote object's stub in the registry
             Registry registry = LocateRegistry.getRegistry();
-            registry.bind("Server", stub);
+            registry.bind("Server", obj);
             System.err.println("Server ready");
         } catch (RemoteException re) {
             System.err.println("Remote Server Exception: " + re.toString());
@@ -105,18 +105,22 @@ public class AdminServerImpl implements AdminServer, RLogin {
         frame.setVisible(true);
     }
 
-    public AdminServerImpl() {
+    public AdminServerImpl() throws RemoteException {
         // Register the location of the codebase with your rmi registry
         System.setProperty("java.rmi.server.codebase",
                 AdminServerImpl.class.getProtectionDomain().getCodeSource().getLocation().toString());
         try {
             login = new LoginServer();
-            RLogin stub = (RLogin)UnicastRemoteObject.exportObject(login);
-            System.err.println("Login server ready");
+            System.out.println("Login server ready");
         } catch (RemoteException ex) {
-            System.err.println("Couldn't start login server");
+            System.err.println("Couldn't start login server:" +ex.getMessage());
         }
-        zaWarudo = new World(MAX_ROW, MAX_COLUMN);
+        try {
+            zaWarudo = new World(MAX_ROW, MAX_COLUMN);
+            System.out.println("World exported");
+        } catch (RemoteException ex) {
+            System.err.println("Couldn't export world");
+        }
     }
 
     @Override
@@ -495,5 +499,10 @@ public class AdminServerImpl implements AdminServer, RLogin {
     @Override
     public RLogin getLoginServer(String user) throws RemoteException {
         return loginstub;
+    }
+    
+    @Override
+    public RWorld getWorld() throws RemoteException {
+        return zaWarudo;
     }
 }

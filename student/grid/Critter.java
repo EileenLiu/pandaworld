@@ -223,9 +223,9 @@ public final class Critter /*extends Entity*/ implements CritterState, RemoteCri
     public void forward() {
         mem[4] -= mem[3] * MOVE_COST;
         Reference<Tile> newPos = pos.adj(dir);
-        if(!(newPos==null||newPos.contents().rock()||newPos.contents().critter())){
-            pos.contents().removeCritter();
-            newPos.contents().putCritter(this);
+        if(!(newPos==null||newPos.mutableContents().rock()||newPos.mutableContents().critter())){
+            pos.mutableContents().removeCritter();
+            newPos.mutableContents().putCritter(this);
             pos = newPos;
             acted = true;
         }
@@ -233,9 +233,9 @@ public final class Critter /*extends Entity*/ implements CritterState, RemoteCri
     
     public void backward() {
         Reference<Tile> newPos = pos.lin(-1,dir);
-        if(!(newPos==null||newPos.contents().rock()||newPos.contents().critter())){
-            pos.contents().removeCritter();
-            newPos.contents().putCritter(this);
+        if(!(newPos==null||newPos.mutableContents().rock()||newPos.mutableContents().critter())){
+            pos.mutableContents().removeCritter();
+            newPos.mutableContents().putCritter(this);
             pos = newPos;
             acted = true;
         }
@@ -265,12 +265,12 @@ public final class Critter /*extends Entity*/ implements CritterState, RemoteCri
     
     public void eat() {
         mem[4] -= mem[3];
-        if (pos.contents().food() || pos.contents().plant()) {
-            int ene = pos.contents().foodValue()
-                    +(pos.contents().plant()? Constants.ENERGY_PER_PLANT: 0);
+        if (pos.mutableContents().food() || pos.mutableContents().plant()) {
+            int ene = pos.mutableContents().foodValue()
+                    +(pos.mutableContents().plant()? Constants.ENERGY_PER_PLANT: 0);
             System.out.println("Ate " + ene + " units of energy");
-            pos.contents().removePlant();
-            pos.contents().takeFood();
+            pos.mutableContents().removePlant();
+            pos.mutableContents().takeFood();
             if((mem[4] += ene) > mem[3] * Constants.ENERGY_PER_SIZE)
                 mem[4] = Constants.ENERGY_PER_SIZE * mem[3];
             return;
@@ -281,7 +281,7 @@ public final class Critter /*extends Entity*/ implements CritterState, RemoteCri
     
     public void attack() {
         mem[4] -= mem[3] * ATTACK_COST;
-        Tile ahead = pos.adj(dir).contents();
+        Tile ahead = pos.adj(dir).mutableContents();
         if (ahead.critter()) {
             Critter c = ahead.getCritter();
             double damage = BASE_DAMAGE * mem[3]
@@ -301,7 +301,7 @@ public final class Critter /*extends Entity*/ implements CritterState, RemoteCri
     
     public void tag(int t) {
         mem[4] -= mem[3];
-        Tile ahead = pos.adj(dir).contents();
+        Tile ahead = pos.adj(dir).mutableContents();
         if (ahead.critter()) {
             Critter c = ahead.getCritter();
             c.mem[7] = t;
@@ -322,7 +322,7 @@ public final class Critter /*extends Entity*/ implements CritterState, RemoteCri
         if(pos==null)
             System.out.println("pos == null");
         Reference<Tile> np = pos.lin(-1, dir);
-        if(np == null || np.contents().rock() || np.contents().critter())
+        if(np == null || np.mutableContents().rock() || np.mutableContents().critter())
             return; //we're in a corner, can't put a critter there.
         Critter baby = new Critter(wor, np, prog.mutate(), lineage);
         baby.mem = new int[mem.length];
@@ -331,7 +331,7 @@ public final class Critter /*extends Entity*/ implements CritterState, RemoteCri
         baby.mem[4] = Constants.INITIAL_ENERGY;
         baby.mem[7] = 0;
         baby.mem[8] = 1;
-        np.contents().putCritter(baby);
+        np.mutableContents().putCritter(baby);
         mem[4] -= complexity() * Constants.BUD_COST;
         acted = true;
     }
@@ -340,7 +340,7 @@ public final class Critter /*extends Entity*/ implements CritterState, RemoteCri
         Reference<Tile> rt = pos.adj(dir);
         if(rt==null)
             return;
-        Tile t = rt.contents();
+        Tile t = rt.mutableContents();
         if(t.critter() && t.getCritter().amorous) {
             Critter c = t.getCritter();
             int nrules = ch(this,c).prog.numChildren(), 
@@ -359,9 +359,9 @@ public final class Critter /*extends Entity*/ implements CritterState, RemoteCri
             bmem[8] = 1;
             Critter cpos = ch(this,c);
             Reference<Tile> np = cpos.pos.lin(-1, cpos.dir);
-            if(np==null || np.contents().rock()||np.contents().critter()) np = (cpos==this?c:this).pos.lin(-1, (cpos!=this?this:c).dir);
+            if(np==null || np.mutableContents().rock()||np.mutableContents().critter()) np = (cpos==this?c:this).pos.lin(-1, (cpos!=this?this:c).dir);
             Critter baby = new Critter(wor, np, prog, bmem, lineage);
-            np.contents().putCritter(baby);
+            np.mutableContents().putCritter(baby);
             mem[4] -= Constants.MATE_COST * complexity();
             c.mem[4] -= Constants.MATE_COST * c.complexity();
         }
@@ -370,7 +370,7 @@ public final class Critter /*extends Entity*/ implements CritterState, RemoteCri
     }
 
     public void _tag(int i) {
-        Critter c = pos.adj(dir).contents().getCritter();
+        Critter c = pos.adj(dir).mutableContents().getCritter();
         if(c != null)
             c.mem[7] = i;
         else
@@ -483,32 +483,22 @@ public final class Critter /*extends Entity*/ implements CritterState, RemoteCri
         if((i>0?i:-i)>Constants.MAX_SMELL_DISTANCE)
             return 0;
         if(i>0)
-            return encodeTile(pos.lin(i, dir).contents());
+            return pos.lin(i, dir).mutableContents().encode();
         else
-            return encodeTile(pos.lin(-i, dir).contents().ignoringCritter());
+            return pos.lin(-i, dir).mutableContents().encodeIgnoringCritter();
         
     }
 
     @Override
     public int nearby(int i) {
-        return encodeTile(pos.adj(HexDir.dir(i)).contents());
-    }
-    
-    private int encodeTile(Tile t) {
-        if(t.rock())
-            return Constants.ROCK_VALUE;
-        if(t.critter())
-            return t.getCritter().read();
-        if(t.food() || t.plant())
-            return -t.foodValue() + (t.plant()?-Constants.ENERGY_PER_PLANT:0);
-        return 0;
+        return pos.adj(HexDir.dir(i)).mutableContents().encode();
     }
 
     public void checkDeath() {
         if (mem[4] <= 0) //if run out of energy then
         {//die
-            pos.contents().addFood(Constants.FOOD_PER_SIZE * size());
-            pos.contents().removeCritter();
+            pos.mutableContents().addFood(Constants.FOOD_PER_SIZE * size());
+            pos.mutableContents().removeCritter();
         }
     }
     /*/ //This is the *species's* hashCode

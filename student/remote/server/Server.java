@@ -5,6 +5,7 @@ import java.rmi.RemoteException;
 import student.parse.Action;
 import static student.remote.login.Permission.*;
 import student.remote.login.RLogin;
+import student.remote.world.RWorld;
 
 public interface Server extends Remote {
 
@@ -218,4 +219,7 @@ public interface Server extends Remote {
      */
     @RemoteVisibility(WORLD)
     public int[] getLineage(int species_id) throws RemoteException;
+    
+    @RemoteVisibility(WORLD)
+    public RWorld getWorld() throws RemoteException;
 }

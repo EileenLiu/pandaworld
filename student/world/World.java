@@ -4,11 +4,16 @@
  */
 package student.world;
 
+import java.rmi.NoSuchObjectException;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import student.grid.ArrayHexGrid;
 import student.config.Constants;
 import student.grid.Critter;
@@ -17,28 +22,29 @@ import student.grid.HexGrid.HexDir;
 import student.grid.HexGrid.Reference;
 import student.grid.Species;
 import student.grid.Tile;
+import student.remote.world.RWorld;
 import student.world.util.HashCodeAccessSet;
 
 /**
  *
  * @author Panda
  */
-public class World {
+public class World extends UnicastRemoteObject implements RWorld {
 
     private HexGrid<Tile> grid;
     private int timesteps = 0;
     private boolean WAIT = true; //if false, random action
     private HashCodeAccessSet<Critter> critters = new HashCodeAccessSet<Critter>();
-    private HashCodeAccessSet<Species> species = new HashCodeAccessSet<Species>();
     
-    public World() {
+    public World() throws RemoteException {
         this(Constants.MAX_ROW, Constants.MAX_COLUMN);
     }
 
-    public World(int _r, int _c) {
+    public World(int _r, int _c) throws RemoteException {
         grid = new ArrayHexGrid<Tile>(_r, _c);
     }
 
+    @Override
     public String getStatus() {
         return "Timesteps: " + timesteps + "\n" + population();
     }
@@ -59,20 +65,20 @@ public class World {
         }
         int cr = 0;
         for (Reference<Tile> e : grid) {
-            if (e.contents() != null && e.contents().critter()) {
+            if (e.mutableContents() != null && e.mutableContents().critter()) {
                 cr++;
             }
         }
         double prob = Constants.PLANT_GROW_PROB / (cr == 0 ? 1 : cr);
         for (Reference<Tile> e : grid) {
-            Tile t = e.contents();
+            Tile t = e.mutableContents();
             if (t.plant()) {
                 for (HexDir d : HexDir.values()) {
                     if (e.adj(d) != null
-                            && !e.adj(d).contents().plant()
-                            && !e.adj(d).contents().rock()
+                            && !e.adj(d).mutableContents().plant()
+                            && !e.adj(d).mutableContents().rock()
                             && Math.random() < prob) {
-                        e.adj(d).contents().putPlant();
+                        e.adj(d).mutableContents().putPlant();
                     }
                 }
             }
@@ -89,17 +95,22 @@ public class World {
         System.out.println("-----------------" + timesteps);
     }
 
+    @Override
     public int getTimesteps() {
         return timesteps;
     }
 
+    @Override
     public int height() {
         return grid.nRows();
     }
 
+    @Override
     public int width() {
         return grid.nCols();
     }
+    
+    @Override
     public Reference<Tile> at(int r, int c) {
         return grid.ref(c, r);
     }
@@ -111,7 +122,7 @@ public class World {
      * @param col the given col
      * @throws student.world.World.InvalidWorldAdditionException 
      */
-    public void add(Object what, int row, int col) throws InvalidWorldAdditionException {
+    public void add(Object what, int row, int col) throws InvalidWorldAdditionException, RemoteException {
         HexGrid.Reference<Tile> loc = grid.ref(col, row);
         if (loc != null) { //out of bounds
             add(what, loc);
@@ -127,23 +138,22 @@ public class World {
      * @param loc the location to add it, if null, picks a random location
      * @throws student.world.World.InvalidWorldAdditionException 
      */
-    public HexGrid.Reference<Tile> add(Object what, HexGrid.Reference<Tile> loc) throws InvalidWorldAdditionException{
+    public HexGrid.Reference<Tile> add(Object what, HexGrid.Reference<Tile> loc) throws InvalidWorldAdditionException, RemoteException{
             if (loc==null){
                 loc = this.randomLoc();
             }
-            if (loc.contents() == null) {
+            if (loc.mutableContents() == null) {
                 loc.setContents(new Tile(false, 0));
             }
             if (what instanceof Critter) {
-                loc.contents().putCritter((Critter)what);
-                if(critters.add((Critter)what))
-                    species.add(((Critter)what).getSpecies());
+                loc.mutableContents().putCritter((Critter)what);
+                critters.add((Critter)what);
             }
             else if (what instanceof String && what.equals("plant")) {
-                loc.contents().putPlant();
+                loc.mutableContents().putPlant();
             }
             else if (what instanceof String && what.equals("rock")){
-                loc.setContents(new Tile.Rock());
+                loc.setContents(new Tile(true));
             }
             else { //not a valid option to add
                 throw new InvalidWorldAdditionException();
@@ -151,6 +161,7 @@ public class World {
             return loc;
     }
     
+    @Override
     public Critter critterForID(int id) {
         return critters.forHashCode(id);
     }
@@ -163,6 +174,7 @@ public class World {
     public HexGrid.Reference<Tile> defaultLoc() {
         return grid.ref(0, 0);
     }
+    @Override
     public HexGrid.Reference<Tile> randomLoc() {
         return grid.ref((int)(Math.random()*height()), (int)(Math.random()*height()));
     }
@@ -173,16 +185,16 @@ public class World {
     public void gridSet(int c, int r, Tile t) {
         grid.set(c, r, t);
         if(t.critter())
-            if(critters.add(t.getCritter()))
-                species.add(t.getCritter().getSpecies());
+            critters.add(t.getCritter());
     }
     
     public static final int CRIT = 0, PLANT = 1, FOOD = 2, ROCK = 3;
+    @Override
     public int[] population() {
         int[] population = new int[4]; //[critters, plants, food, rocks]
         Iterator<Reference<Tile>> it = grid.iterator();
         while (it.hasNext()) {
-            Tile t = it.next().contents();
+            Tile t = it.next().mutableContents();
             if (t == null) {
                 continue;
             }
@@ -206,7 +218,7 @@ public class World {
             System.out.printf("(%d,%d):\n",v.curr.col(),v.curr.row());
     working:for(HexDir d : HexDir.VALUES) {
                 Reference<Tile> adj = v.curr.adj(d);
-                if(adj == null || adj.contents() == null || adj.contents().rock())
+                if(adj == null || adj.mutableContents() == null || adj.mutableContents().rock())
                     continue working;
                 PQEntry w = null;
                 for(PQEntry p : gray) //find in gray set
@@ -259,9 +271,20 @@ public class World {
 
     public void reset() {
         for(Critter c : critters)
-            c.loc().contents().removeCritter();
+            c.loc().mutableContents().removeCritter();
         critters.clear();
         //species.clear();
+    }
+    
+    //We don't need to clutter up port space
+    @Override
+    protected void finalize() throws Throwable {
+        try {
+            unexportObject(this, true);
+        } catch (NoSuchObjectException ex) {
+            System.err.println("Trouble unexporting World");
+        }
+        super.finalize();
     }
     
     public static class PQEntry implements Comparable<PQEntry> {
@@ -308,7 +331,7 @@ public class World {
                 new TilePredicate() {
                     @Override
                     public boolean test(Reference<Tile> t) {
-                        return t!=null && t.contents() != null && (t.contents().food() || t.contents().plant());
+                        return t!=null && t.mutableContents() != null && (t.mutableContents().food() || t.mutableContents().plant());
                     }
                 };
     }

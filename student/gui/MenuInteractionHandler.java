@@ -51,7 +51,7 @@ public class MenuInteractionHandler {
                                                               "File not found: " +filename, 
                                                               "File not found", 
                                                               JOptionPane.ERROR_MESSAGE);
-                            }
+                            } 
                             masterController.setModel(newImportedWorld);
                         }
                     }
@@ -96,6 +96,8 @@ public class MenuInteractionHandler {
                             masterController.getView().repaint();
                         } catch (InvalidWorldAdditionException ex) {
                             System.out.println("Failed to import: Critter import file is invalid");
+                        } catch (RemoteException re) {
+                            System.err.println("Failed to import: could not export tile");
                         }
                     }/*Object[] options = {"Click on a location", "Anywhere", "Cancel"};
                     int n = JOptionPane.showOptionDialog(masterController.getView(), "How do you want to put the Critter?",
@@ -126,7 +128,11 @@ public class MenuInteractionHandler {
                     int n = JOptionPane.showOptionDialog(masterController.getView(), "Destroy world and replace with a new one?",
                             "New world", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
                     if (n == 0) {
-                        masterController.setModel(new World());
+                        try {
+                            masterController.setModel(new World());
+                        } catch (RemoteException ex) {
+                            System.err.println("Could not export resetted world!");
+                        }
                     }
                 }
             });
@@ -143,6 +149,8 @@ public class MenuInteractionHandler {
                             masterController.getView().repaint();
                         } catch (InvalidWorldAdditionException ex) {
                             System.out.println("Unreachable code");
+                        } catch (RemoteException re) {
+                            System.err.println("Failed to import: could not export tile");
                         }
                     }
                 }
@@ -160,6 +168,8 @@ public class MenuInteractionHandler {
                         
                         } catch (InvalidWorldAdditionException ex) {
                             System.out.println("Unreachable code");
+                        } catch (RemoteException re) {
+                            System.err.println("Failed to import: could not export tile");
                         }
                     }
                 }
@@ -176,6 +186,8 @@ public class MenuInteractionHandler {
                             masterController.getView().repaint();
                         } catch (InvalidWorldAdditionException ex) {
                             System.out.println("Unreachable code");
+                        } catch (RemoteException re) {
+                            System.err.println("Failed to import: could not export tile");
                         }
                     }
                 }

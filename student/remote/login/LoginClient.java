@@ -1,11 +1,9 @@
 package student.remote.login;
 
 import java.math.BigInteger;
-import java.rmi.registry.LocateRegistry;
-import java.net.MalformedURLException;
-import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
 import java.security.SecureRandom;
 
 /**

@@ -3,6 +3,7 @@ package student;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import student.config.Constants;
@@ -21,7 +22,7 @@ import student.world.World;
  */
 public class SimulationRunner {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws RemoteException {
         try {
             Constants.loadFromFile(new File("constants.txt"));
         } catch (IOException ex) {

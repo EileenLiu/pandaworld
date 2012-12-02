@@ -5,15 +5,19 @@
 package student.grid;
 
 import java.lang.reflect.Array;
+import java.rmi.NoSuchObjectException;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Iterator;
 import static student.grid.HexGrid.HexDir.*;
 
 
-public class ArrayHexGrid<E> implements HexGrid<E> {
+public class ArrayHexGrid<E extends Remote> implements HexGrid<E> {
     private int rs, cs;
     private Ref data[][];
     
-    public ArrayHexGrid(int _rs, int _cs) {
+    public ArrayHexGrid(int _rs, int _cs) throws RemoteException {
         rs = _rs; cs = _cs;
         data = (Ref[][]) Array.newInstance(Ref[].class, rs);
         for(int r = 0; r < rs; r++) {
@@ -28,7 +32,7 @@ public class ArrayHexGrid<E> implements HexGrid<E> {
         Reference<E> ref = ref(c,r);
         if(ref == null)
             throw new HexIndexOutOfBoundsException(r, c);
-        return ref.contents();
+        return ref.mutableContents();
     }
 
     @Override
@@ -87,12 +91,17 @@ public class ArrayHexGrid<E> implements HexGrid<E> {
         
     }
    
-    private class Ref implements Reference<E> {
+    private class Ref extends UnicastRemoteObject implements Reference<E>, RReference<E> {
         int r, c;
         E e;
         
-        public Ref(int _r, int _c){
+        public Ref(int _r, int _c) throws RemoteException {
             r = _r; c = _c;
+        }
+        
+        @Override
+        public E mutableContents() {
+            return e;
         }
         
         @Override
@@ -121,7 +130,7 @@ public class ArrayHexGrid<E> implements HexGrid<E> {
         }
 
         @Override
-        public Reference<E> adj(HexDir dir) {
+        public Ref adj(HexDir dir) {
             int er = r, ec = c;
             if(c%2==0) {
                 switch(dir) {
@@ -166,7 +175,7 @@ public class ArrayHexGrid<E> implements HexGrid<E> {
         }
 
         @Override
-        public Reference<E> lin(int dist,HexDir dir) {
+        public Ref lin(int dist,HexDir dir) {
             if(dist == 0)
                 return this;
             else if(dist < 0)
@@ -209,6 +218,16 @@ public class ArrayHexGrid<E> implements HexGrid<E> {
         
         private ArrayHexGrid outer () {
             return ArrayHexGrid.this;
+        }
+        
+        @Override
+        protected void finalize() throws Throwable {
+            try {
+                unexportObject(this, true);
+            } catch (NoSuchObjectException noSuchObjectException) {
+                System.err.println("ArrayHexGrid$Ref.finalize(): NoSuchObjectException");
+            }
+            super.finalize();
         }
     }
 }

@@ -12,6 +12,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JOptionPane;
@@ -63,38 +66,46 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
         rock = new LocAxn("put rock") {
             @Override
             public void act() {
-                rclxtar.setContents(new Tile.Rock());
+                try {
+                    rclxtar.setContents(new Tile(true));
+                } catch (RemoteException ex) {
+                    JOptionPane.showMessageDialog(masterController.getView(), "Could not instantiate rock", "Export error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         };
         unrock = new LocAxn("derock") {
             @Override
             public void act() {
-                rclxtar.setContents(new Tile(false, 0));
+                try {
+                    rclxtar.setContents(new Tile(false, 0));
+                } catch (RemoteException ex) {
+                   JOptionPane.showMessageDialog(masterController.getView(), "Could not instantiate tile", "Export error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         };
         plant = new LocAxn("plant") {
             @Override
             protected void act() {
-                rclxtar.contents().putPlant();
+                rclxtar.mutableContents().putPlant();
             }
         };
         unplant = new LocAxn("weed-x") {
             @Override
             protected void act() {
-                rclxtar.contents().removePlant();
+                rclxtar.mutableContents().removePlant();
             }
         };
         crit = new LocAxn("add critter") {
             @Override
             protected void act() {
-                rclxtar.contents().putCritter(new Critter(masterController.getModel(), rclxtar, new Program()));
+                rclxtar.mutableContents().putCritter(new Critter(masterController.getModel(), rclxtar, new Program()));
             }
         };
         critMenIts[0] = new CrLocAxn("forward") {
             @Override
             public void act() {
-                if (rclxtar.contents().critter()) {
-                    Critter rclxtarcri = rclxtar.contents().getCritter();
+                if (rclxtar.mutableContents().critter()) {
+                    Critter rclxtarcri = rclxtar.mutableContents().getCritter();
                     rclxtarcri.forward();
                     masterController.getView().display().setCurrentLocation(rclxtarcri.loc());
                 }
@@ -103,8 +114,8 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
         critMenIts[1] = new CrLocAxn("backward") {
             @Override
             public void act() {
-                if (rclxtar.contents().critter()) {
-                    Critter rclxtarcri = rclxtar.contents().getCritter();
+                if (rclxtar.mutableContents().critter()) {
+                    Critter rclxtarcri = rclxtar.mutableContents().getCritter();
                     rclxtarcri.backward();
                     masterController.getView().display().setCurrentLocation(rclxtarcri.loc());
                 }
@@ -113,75 +124,75 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
         critMenIts[2] = new CrLocAxn("left") {
             @Override
             public void act() {
-                if (rclxtar.contents().critter()) {
-                    rclxtar.contents().getCritter().left();
+                if (rclxtar.mutableContents().critter()) {
+                    rclxtar.mutableContents().getCritter().left();
                 }
             }
         };
         critMenIts[3] = new CrLocAxn("right") {
             @Override
             public void act() {
-                if (rclxtar.contents().critter()) {
-                    rclxtar.contents().getCritter().right();
+                if (rclxtar.mutableContents().critter()) {
+                    rclxtar.mutableContents().getCritter().right();
                 }
             }
         };
         critMenIts[4] = new CrLocAxn("eat") {
             @Override
             public void act() {
-                if (rclxtar.contents().critter()) {
-                    rclxtar.contents().getCritter().eat();
+                if (rclxtar.mutableContents().critter()) {
+                    rclxtar.mutableContents().getCritter().eat();
                 }
             }
         };
         critMenIts[5] = new CrLocAxn("attack") {
             @Override
             public void act() {
-                if (rclxtar.contents().critter()) {
-                    rclxtar.contents().getCritter().attack();
+                if (rclxtar.mutableContents().critter()) {
+                    rclxtar.mutableContents().getCritter().attack();
                 }
             }
         };
         critMenIts[6] = new CrLocAxn("grow") {
             @Override
             public void act() {
-                if (rclxtar.contents().critter()) {
-                    rclxtar.contents().getCritter().grow();
+                if (rclxtar.mutableContents().critter()) {
+                    rclxtar.mutableContents().getCritter().grow();
                 }
             }
         };
         critMenIts[7] = new CrLocAxn("remove") {
             @Override
             public void act() {
-                if (rclxtar.contents().critter()) {
-                    rclxtar.contents().removeCritter();
+                if (rclxtar.mutableContents().critter()) {
+                    rclxtar.mutableContents().removeCritter();
                 }
             }
         };
         critMenIts[8] = new CrLocAxn("bud") {
             @Override
             public void act() {
-                if (rclxtar.contents().critter()) {
-                    rclxtar.contents().getCritter().bud();
+                if (rclxtar.mutableContents().critter()) {
+                    rclxtar.mutableContents().getCritter().bud();
                 }
             }
         };
         critMenIts[9] = new CrLocAxn("mate") {
             @Override
             public void act() {
-                if (rclxtar.contents().critter()) {
-                    rclxtar.contents().getCritter().mate();
+                if (rclxtar.mutableContents().critter()) {
+                    rclxtar.mutableContents().getCritter().mate();
                 }
             }
         };
         critMenIts[10] = new LocAxn("tag") {
             @Override
             public void act() {
-                if (rclxtar.contents().critter()) {
+                if (rclxtar.mutableContents().critter()) {
                     men.setVisible(false);
                     do try {
-                            rclxtar.contents().getCritter()._tag(i=Integer.parseInt((msg=JOptionPane.showInputDialog(masterController.getView(), "New tag value:", "Tagging ahead critter", JOptionPane.QUESTION_MESSAGE))));
-                            rclxtar.contents().getCritter().recentAction = new Tag(new Constant(i));
+                            rclxtar.mutableContents().getCritter()._tag(i=Integer.parseInt((msg=JOptionPane.showInputDialog(masterController.getView(), "New tag value:", "Tagging ahead critter", JOptionPane.QUESTION_MESSAGE))));
+                            rclxtar.mutableContents().getCritter().recentAction = new Tag(new Constant(i));
                             return;
                         } catch (NumberFormatException nfe) { if(!"".equals(msg)) continue; }
                     while(false); //just give up...
@@ -191,10 +202,10 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
         critMenIts[11] = new LocAxn("view program") {
             @Override
             public void act() {
-                if (rclxtar.contents().critter()) {
+                if (rclxtar.mutableContents().critter()) {
                     men.setVisible(false);
                     JOptionPane.showMessageDialog(masterController.getView(),
-                        rclxtar.contents().getCritter().getProgram().toString(),"Critter Program",
+                        rclxtar.mutableContents().getCritter().getProgram().toString(),"Critter Program",
                         JOptionPane.PLAIN_MESSAGE);
                }
             }
@@ -225,19 +236,23 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
         }
         rclxtar = lookup(e);
         masterController.getView().display().setCurrentLocation(rclxtar);
-        if (rclxtar.contents() == null) {
-            rclxtar.setContents(new Tile(false, 0));
+        if (rclxtar.mutableContents() == null) {
+            try {
+                rclxtar.setContents(new Tile(false, 0));
+            } catch (RemoteException ex) {
+                JOptionPane.showMessageDialog(masterController.getView(), "Could not instantiate tile", "Export error", JOptionPane.ERROR_MESSAGE);
+            }
         }
         men = new JPopupMenu();
         men.addKeyListener(this);
-        if (rclxtar.contents().rock()) {
+        if (rclxtar.mutableContents().rock()) {
             men.add(unrock);
-        } else if (rclxtar.contents().critter()) {
+        } else if (rclxtar.mutableContents().critter()) {
             for (Action a : critMenIts) {
                 men.add(a);
             }
         } else {
-            if (rclxtar.contents().plant()) {
+            if (rclxtar.mutableContents().plant()) {
                 men.add(unplant);
             } else {
                 men.add(plant);
@@ -301,7 +316,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
         }
         @Override
         public void actionPerformed(ActionEvent e) {
-            Critter c = rclxtar.contents().getCritter();
+            Critter c = rclxtar.mutableContents().getCritter();
             c.recentAction = a;
             super.actionPerformed(e);
             if(c!=null)c.checkDeath();

@@ -53,7 +53,7 @@ public interface HexGrid<E> extends Iterable<HexGrid.Reference<E>> {
      */
     public static interface Reference<E> {
 
-        public E contents();
+        public E mutableContents();
 
         public void setContents(E e);
         
