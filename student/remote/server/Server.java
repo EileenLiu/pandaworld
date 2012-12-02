@@ -90,7 +90,7 @@ public interface Server extends Remote {
      */
     @RemoteVisibility(WORLD)
     public String getCritterProgram(int id) throws RemoteException;
-
+    //Critter.get(id).getProgram();
     /**
      * Returns the special-purpose entries (i.e., first several entries) of a
      * critter's memory.
@@ -102,7 +102,7 @@ public interface Server extends Remote {
      */
     @RemoteVisibility(WORLD)
     public int[] getCritterMemory(int id) throws RemoteException;
-
+    //Critter.get(id).getMemory();
     /**
      * Returns the pretty-print of the most recently executed rule of a critter.
      *
@@ -114,7 +114,7 @@ public interface Server extends Remote {
      */
     @RemoteVisibility(WORLD)
     public String getCritterCurrentRule(int id) throws RemoteException;
-
+    
     /**
      * Returns an action a critter should take, overriding regular behavior.
      *

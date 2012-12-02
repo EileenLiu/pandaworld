@@ -6,6 +6,7 @@ package student.grid;
 
 import java.awt.Color;
 import java.rmi.RemoteException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Random;
@@ -27,7 +28,11 @@ import student.world.World;
  */
 public final class Critter /*extends Entity*/ implements CritterState, RemoteCritter {
     private static AtomicInteger SERIAL = new AtomicInteger();
-    
+    private static HashMap<Integer,Critter> aliveCritters = new HashMap<Integer,Critter>();
+    private static final double[] sizeScaleFactors = new double[]{-0.5,-0.13763848,0.049648523,0.14644808,0.19647905,0.22233763,0.23570266
+,0.24261041,0.24618068,0.24802598,0.24897972};/**{-0.5, -0.36404806, -0.25274003, -0.1616087, -0.086996734, -0.025909603, 0.024104357,
+0.06505227, 0.09857762, 0.12602584, 0.14849854, 0.16689764, 0.18196154, 0.19429483,
+0.20439245, 0.2126597, 0.21942835, 0.22497004, 0.22950721, 0.23322192, 0.23626328};**///{-.50, -.45, -.40, -.35,-.30, -.25, -.20, -.15, -.10, -.05, 0.0, 0.05, 0.1, 0.15, 0.2, 0.25};
     private World wor;
     private int serial = SERIAL.getAndIncrement();
     private Reference<Tile> pos;
@@ -49,7 +54,7 @@ public final class Critter /*extends Entity*/ implements CritterState, RemoteCri
         dir = HexDir.dir(d);
     }
     private Critter(World _wor, Reference<Tile> _pos, Program _p, int []_mem) {
-        this(_wor, _pos, _p, _mem, new LinkedList(), false);
+        this(_wor, _pos, _p, _mem, new LinkedList<Integer>(), false);
     }
     private Critter(World _wor, Reference<Tile> _pos, Program _p, LinkedList<Integer> ancestors) {
                 this(_wor, _pos, _p, defaultMemory(), ancestors,false);
@@ -69,10 +74,13 @@ public final class Critter /*extends Entity*/ implements CritterState, RemoteCri
         species = Species.getInstance(new int[]{mem[0], mem[1], mem[2]}, prog, lineage);
         lineage = ancestors;
         lineage.add((Integer)species.hashCode());
-        System.err.println("\tMade critter: program is"+prog);
         name = "Critter"+hashCode();
+        aliveCritters.put(serial, this);
+        System.err.println("\tMade critter: program is "+prog);
     }
-
+    public static Critter get(int ID){
+        return aliveCritters.get(ID);
+    }
     private static final int []defaultMemory = {MIN_MEMORY, 1, 1, 1, INITIAL_ENERGY};
     private static int []defaultMemory(){
         int mem[] = new int[MIN_MEMORY];
@@ -173,6 +181,9 @@ public final class Critter /*extends Entity*/ implements CritterState, RemoteCri
     }
     public Color getColor(){
         return species.getColor();
+    }
+    public double getScaleFactor(){
+        return (size()>sizeScaleFactors.length)?sizeScaleFactors[sizeScaleFactors.length-1]:sizeScaleFactors[size()-1];
     }
     public Species getSpecies(){
         return species;
@@ -506,6 +517,7 @@ public final class Critter /*extends Entity*/ implements CritterState, RemoteCri
         {//die
             pos.mutableContents().addFood(Constants.FOOD_PER_SIZE * size());
             pos.mutableContents().removeCritter();
+            Critter.aliveCritters.remove(serial);
         }
     }
     /*/ //This is the *species's* hashCode
@@ -528,7 +540,7 @@ public final class Critter /*extends Entity*/ implements CritterState, RemoteCri
         if (getClass() != obj.getClass()) {
             return false;
         }
-        return (this.hashCode()== ((Critter)obj).hashCode());
+        return (this.hashCode()== obj.hashCode());
     }
 
     @Override
