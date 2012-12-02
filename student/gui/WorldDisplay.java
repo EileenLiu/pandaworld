@@ -127,7 +127,6 @@ public class WorldDisplay extends JPanel{
     }
     
     private final void updateAttributes() {
-        //state.setText()
         String s = "The currently selected\nlocation has ";
         if (currentLocation == null || currentLocation.contents() == null || currentLocation.contents().isEmpty())
             s = s+"\nnothing... ";
@@ -154,6 +153,7 @@ public class WorldDisplay extends JPanel{
     public void setCurrentLocation(HexGrid.Reference<Tile> r)
     {
         currentLocation = r;
+        gridpane.updateSelection(currentLocation.row(), currentLocation.col());
     }
     public void update() {
         gridpane.repaint();

@@ -23,71 +23,24 @@ import student.world.World;
 
 public class GridPanel extends JPanel implements Scrollable{
     private static final PNGImagePack defaultImgs;
-    private static final String[] imgnames = new String[]{"tile", "rock", "plnt", "food", "nn", "ne", "nw", "se", "sw", "ss"};
+    private static final String[] imgnames = new String[]{"tile", "rock", "plnt", "food", "nn", "ne", "nw", "se", "sw", "ss", "select"};
     //private static final Image TILE, ROCK, PLNT, FOOD, CNN, CNE, CNW, CSE, CSW, CSS;
     
     static {
         //try {
         
         defaultImgs = new PNGImagePack("data.zip", imgnames, null);
-        /*TILE = defaultImgs.get(imgnames[0]);
-        ROCK = defaultImgs.get(imgnames[1]);
-        PLNT = defaultImgs.get(imgnames[2]);
-        FOOD = defaultImgs.get(imgnames[3]);
-        CNN = defaultImgs.get(imgnames[4]);
-        CNE = defaultImgs.get(imgnames[5]);
-        CNW = defaultImgs.get(imgnames[6]);
-        CSE = defaultImgs.get(imgnames[7]);
-        CSW = defaultImgs.get(imgnames[8]);
-        CSS = defaultImgs.get(imgnames[9]);*/
         if (!defaultImgs.isValid()) {
             System.err.println("Could not load image data!");
             System.exit(254);
         }
 
-        /*ZipFile zf = new ZipFile("data.zip");
-         ZipEntry eti = zf.getEntry("tile.png"),
-         erk = zf.getEntry("rock.png"),
-         epl = zf.getEntry("plnt.png"),
-         efd = zf.getEntry("food.png"),
-         enn = zf.getEntry("nn.png"),
-         ene = zf.getEntry("ne.png"),
-         enw = zf.getEntry("nw.png"),
-         ese = zf.getEntry("se.png"),
-         esw = zf.getEntry("sw.png"),
-         ess = zf.getEntry("ss.png");
-         InputStream iti = zf.getInputStream(eti),
-         irk = zf.getInputStream(erk),
-         ipl = zf.getInputStream(epl),
-         ifd = zf.getInputStream(efd),
-         inn = zf.getInputStream(enn),
-         ine = zf.getInputStream(ene),
-         inw = zf.getInputStream(enw),
-         ise = zf.getInputStream(ese),
-         isw = zf.getInputStream(esw),
-         iss = zf.getInputStream(ess);
-         TILE = ImageIO.read(iti);
-         ROCK = ImageIO.read(irk);
-         PLNT = ImageIO.read(ipl);
-         FOOD = ImageIO.read(ifd);
-         CNN  = ImageIO.read(inn);
-         CNE  = ImageIO.read(ine);
-         CNW  = ImageIO.read(inw);
-         CSE  = ImageIO.read(ise);
-         CSW  = ImageIO.read(isw);
-         CSS  = ImageIO.read(iss);
-         } catch (IOException ex) {
-         System.err.println("Could not load image data!");
-         System.exit(254);
-         } catch (RuntimeException ex) {
-         System.err.println("Could not load image data!");
-         System.exit(253);
-         }*/
     }
     private HashMap<String, PNGImagePack> imagepackages;
     private Polygon hexen[][];
     //A MULTIPLE OF FOUR
     private int HEXSIZE = 140;
+    private int selectr = 0, selectc = 0;
     public World world; 
     public GridPanel(World world) {
         this.world = world;
@@ -108,6 +61,11 @@ public class GridPanel extends JPanel implements Scrollable{
         this.setFocusable(true);
         this.requestFocusInWindow();
     }
+        public void updateSelection(int r, int c)
+    {
+        selectr = r;
+        selectc = c;
+    }
     public int []hexAt(int x, int y) {
         x -= this.getX();
         y -= this.getY();
@@ -124,6 +82,7 @@ public class GridPanel extends JPanel implements Scrollable{
      *
      * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
      */
+    @Override
     public void paintComponent(Graphics g) {
      update(g);
     }
@@ -154,7 +113,7 @@ public class GridPanel extends JPanel implements Scrollable{
      * @param hexCoordinates the given coordinates
      * @param g graphics
      */
-    public void drawHexagon(int x, int y, int r, int c, int hexsize, Graphics g, Image i) {       
+    private void drawHexagon(int x, int y, int r, int c, int hexsize, Graphics g, Image i) {       
         g.drawImage(i, x, y, hexsize, hexsize, this);
     }
 
@@ -179,7 +138,7 @@ public class GridPanel extends JPanel implements Scrollable{
      * @param size the side length of square the hexagon will be contained in
      * @return
      */
-    public static Polygon makePoly(int startX, int startY, int size) {
+    private static Polygon makePoly(int startX, int startY, int size) {
         int xs[] = new int[6], ys[] = new int[6]; //[Xj, Yj] for j= 1,2,3,4,5,6
         xs[0] = size / 4 + startX;
             ys[0] = startY;
@@ -198,7 +157,7 @@ public class GridPanel extends JPanel implements Scrollable{
    /**
      * Draws the entire grid
      */
-    public void drawGrid(int hexsize, Graphics gp) {//HWHdrawGrid(int hxsz, Graphics gp) {
+    private void drawGrid(int hexsize, Graphics gp) {//HWHdrawGrid(int hxsz, Graphics gp) {
         for (int c = 0; c < world.width(); c++) {
             for (int r = 0; r < world.height(); r++) {
                 Polygon loc = hexen[r][c];
@@ -253,8 +212,18 @@ public class GridPanel extends JPanel implements Scrollable{
                 /*/
             }
         }
+        drawSelectionIndicator(hexsize, gp);
     }
-
+    /**
+     * Draws the indicator for the selected hex
+     * @param hexsize
+     * @param gp 
+     */
+    private void drawSelectionIndicator(int hexsize, Graphics gp) {
+        Polygon loc = hexen[selectr][selectc];
+        Rectangle bbx = loc.getBounds();
+        drawHexagon(bbx.x, bbx.y, selectr, selectc, hexsize, gp, defaultImgs.get(imgnames[imgnames.length-1]));
+    }
     @Override
     public Dimension getPreferredSize()
     {

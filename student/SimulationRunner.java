@@ -38,7 +38,8 @@ public class SimulationRunner {
             }
             System.out.println("Generate world from file");
         }
-        else model = new World(Constants.MAX_ROW,Constants.MAX_COLUMN);
+        else 
+            model = new World(Constants.MAX_ROW,Constants.MAX_COLUMN);
         WorldFrame view = new WorldFrame(model);
         InteractionHandler controller = new InteractionHandler(model, view);
     }

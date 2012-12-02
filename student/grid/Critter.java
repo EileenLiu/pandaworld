@@ -48,7 +48,7 @@ public final class Critter /*extends Entity*/ implements CritterState {
         dir = HexDir.dir(d);
     }
     private Critter(World _wor, Reference<Tile> _pos, Program _p, int []_mem) {
-        this(_wor, _pos, _p, _mem, new LinkedList(), false);
+        this(_wor, _pos, _p, _mem, new LinkedList<Integer>(), false);
     }
     private Critter(World _wor, Reference<Tile> _pos, Program _p, LinkedList<Integer> ancestors) {
                 this(_wor, _pos, _p, defaultMemory(), ancestors,false);
