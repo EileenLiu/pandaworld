@@ -3,6 +3,8 @@ package student;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.math.BigInteger;
+import java.net.MalformedURLException;
 import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -10,6 +12,8 @@ import student.config.Constants;
 import student.config.WorldFileParser;
 import student.gui.InteractionHandler;
 import student.gui.WorldFrame;
+import student.remote.login.LoginServer;
+import student.remote.server.AdminServerImpl;
 import student.world.World;
 
 /*
@@ -22,7 +26,7 @@ import student.world.World;
  */
 public class SimulationRunner {
 
-    public static void main(String[] args) throws RemoteException {
+    public static void main(String[] args) throws RemoteException, MalformedURLException {
         try {
             Constants.loadFromFile(new File("constants.txt"));
         } catch (IOException ex) {
@@ -41,7 +45,13 @@ public class SimulationRunner {
         }
         else 
             model = new World(Constants.MAX_ROW,Constants.MAX_COLUMN);
-        WorldFrame view = new WorldFrame(model);
-        InteractionHandler controller = new InteractionHandler(model, view);
+        
+        LoginServer ls = new LoginServer();
+        ls.addUser("admin", "password");
+        ls.register("Server");
+        
+        AdminServerImpl asi = new AdminServerImpl(ls);
+        
+        InteractionHandler controller = new InteractionHandler();
     }
 }   

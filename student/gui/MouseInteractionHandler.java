@@ -40,209 +40,143 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
 
     //private final WorldFrame view;
     private InteractionHandler masterController;
-    private Reference<Tile> lrclxtar = null;
-    private RReference<Tile> rrclxtar = null;
+    private RReference<Tile> rclxtar = null;
     private JPopupMenu men;
     private String msg;
     private Action rock, unrock,
             plant, unplant;
     private int i;
-    private Action crit, critMenIts[] = new Action[12];
+    private Action crit, critMenIts[];
     private boolean EXIT = false;
 
     public MouseInteractionHandler(final InteractionHandler _parent) {
-        try {
-            //final World _model, final WorldFrame _view) {
-            masterController = _parent;
+
+        //final World _model, final WorldFrame _view) {
+        masterController = _parent;
 //view = masterController.getView();
-            masterController.getView().worldDisplay.gridpane.addMouseListener(this);
-            masterController.getView().worldDisplay.gridpane.addKeyListener(this);
+        masterController.getView().worldDisplay.gridpane.addMouseListener(this);
+        masterController.getView().worldDisplay.gridpane.addKeyListener(this);
 
-            masterController.getView().worldDisplay.scrollpane.getHorizontalScrollBar().addAdjustmentListener(new AdjustmentListener() {
-                @Override
-                public void adjustmentValueChanged(AdjustmentEvent e) {
-                    masterController.getView().repaint();
-                }
-            });
-            masterController.getView().worldDisplay.scrollpane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
-                @Override
-                public void adjustmentValueChanged(AdjustmentEvent e) {
-                    masterController.getView().repaint();
-                }
-            });
-            masterController.getView().addWindowListener(new ExitHandler());
-
-            rock = new LocAxn("put rock") {
-                @Override
-                public void act() {
-                    try {
-                        lrclxtar.setContents(new Tile(true));
-                    } catch (RemoteException ex) {
-                        JOptionPane.showMessageDialog(masterController.getView(), "Could not instantiate rock", "Export error", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-            };
-            unrock = new LocAxn("derock") {
-                @Override
-                public void act() {
-                    try {
-                        lrclxtar.setContents(new Tile(false, 0));
-                    } catch (RemoteException ex) {
-                        JOptionPane.showMessageDialog(masterController.getView(), "Could not instantiate tile", "Export error", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-            };
-            plant = new LocAxn("plant") {
-                @Override
-                protected void act() {
-                    lrclxtar.mutableContents().putPlant();
-                }
-            };
-            unplant = new LocAxn("weed-x") {
-                @Override
-                protected void act() {
-                    lrclxtar.mutableContents().removePlant();
-                }
-            };
-            if (!masterController.isRemote()) {
-                crit = new LocAxn("add critter") {
-                    @Override
-                    protected void act() {
-                        lrclxtar.mutableContents().putCritter(new Critter(masterController.getRealModel(), lrclxtar, new Program()));
-                    }
-                };
-            } else if (masterController.getLogin().hasPermission(Permission.ADMIN)) {
-                crit = new LocAxn("add critter") {
-                    @Override
-                    protected void act() {
-                        try {
-                            RemoteCritter rc = masterController.getModel().makeCritter(rrclxtar, new Program());
-                            ((AdminServer)masterController.getServer()).putCritter(masterController.getLogin().getToken(), masterController.getLogin().getUser(), rc);
-                        } catch (RemoteException ex) {
-                            Client.connectionError(masterController.getView());
-                        }
-                    }  
-                };
-            } else {
-                crit = null;
+        masterController.getView().worldDisplay.scrollpane.getHorizontalScrollBar().addAdjustmentListener(new AdjustmentListener() {
+            @Override
+            public void adjustmentValueChanged(AdjustmentEvent e) {
+                masterController.getView().repaint();
             }
-            critMenIts[0] = new CrLocAxn("forward") {
-                @Override
-                public void act() {
-                    if (lrclxtar.mutableContents().critter()) {
-                        Critter rclxtarcri = lrclxtar.mutableContents().getCritter();
-                        rclxtarcri.forward();
-                        masterController.getView().display().setCurrentLocation(rclxtarcri.loc());
-                    }
+        });
+        masterController.getView().worldDisplay.scrollpane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
+            @Override
+            public void adjustmentValueChanged(AdjustmentEvent e) {
+                masterController.getView().repaint();
+            }
+        });
+        masterController.getView().addWindowListener(new ExitHandler());
+
+        boolean admin = masterController.getAdmin() != null;
+        final String uname = masterController.getLogin().getUser();
+
+        rock = admin? new LocAxn("put rock") {
+            @Override
+            public void act() {
+                try {
+                    masterController.getAdmin().putRock(masterController.getLogin().getToken(), uname, rclxtar);
+                } catch (RemoteException ex) {
+                    Client.connectionError(masterController.getView());
                 }
-            };
-            critMenIts[1] = new CrLocAxn("backward") {
-                @Override
-                public void act() {
-                    if (lrclxtar.mutableContents().critter()) {
-                        Critter rclxtarcri = lrclxtar.mutableContents().getCritter();
-                        rclxtarcri.backward();
-                        masterController.getView().display().setCurrentLocation(rclxtarcri.loc());
-                    }
+            }
+        } : new DisLocAxn("put rock");
+
+        unrock = admin? new LocAxn("derock") {
+            @Override
+            public void act() {
+                try {
+                    masterController.getAdmin().takeRock(masterController.getLogin().getToken(), uname, rclxtar);
+                } catch (RemoteException ex) {
+                    Client.connectionError(masterController.getView());
                 }
-            };
-            critMenIts[2] = new CrLocAxn("left") {
-                @Override
-                public void act() {
-                    if (lrclxtar.mutableContents().critter()) {
-                        lrclxtar.mutableContents().getCritter().left();
-                    }
+            }
+        } : new DisLocAxn("derock");
+
+        plant = admin? new LocAxn("plant") {
+            @Override
+            protected void act() {
+                try {
+                    masterController.getAdmin().putPlant(masterController.getLogin().getToken(), uname, rclxtar);
+                } catch (RemoteException ex) {
+                    Client.connectionError(masterController.getView());
                 }
-            };
-            critMenIts[3] = new CrLocAxn("right") {
-                @Override
-                public void act() {
-                    if (lrclxtar.mutableContents().critter()) {
-                        lrclxtar.mutableContents().getCritter().right();
-                    }
+            }
+        } : new DisLocAxn("plant");
+
+        unplant = admin? new LocAxn("weed-x") {
+            @Override
+            protected void act() {
+                try {
+                    masterController.getAdmin().takePlant(masterController.getLogin().getToken(), uname, rclxtar);
+                } catch (RemoteException ex) {
+                    Client.connectionError(masterController.getView());
                 }
-            };
-            critMenIts[4] = new CrLocAxn("eat") {
-                @Override
-                public void act() {
-                    if (lrclxtar.mutableContents().critter()) {
-                        lrclxtar.mutableContents().getCritter().eat();
-                    }
+            }
+        } : new DisLocAxn("weed-x");
+
+        crit = admin? new LocAxn("add critter") {
+            @Override
+            protected void act() {
+                try {
+                    masterController.getAdmin().putCritter(masterController.getLogin().getToken(), uname, masterController.getModel().makeCritter(rclxtar, null));
+                } catch (RemoteException ex) {
+                    Client.connectionError(masterController.getView());
                 }
-            };
-            critMenIts[5] = new CrLocAxn("attack") {
+            }
+        } : new DisLocAxn("add critter");
+        
+        critMenIts = admin? new Action[] {
+            new CrLocAxn("forward"),
+            new CrLocAxn("backward"),
+            new CrLocAxn("left"),
+            new CrLocAxn("right"),
+            new CrLocAxn("eat"),
+            new CrLocAxn("attack"),
+            new CrLocAxn("grow"),
+            new CrLocAxn("remove"),
+            new CrLocAxn("bud"),
+            new CrLocAxn("mate"),
+            new LocAxn("tag") {
                 @Override
                 public void act() {
-                    if (lrclxtar.mutableContents().critter()) {
-                        lrclxtar.mutableContents().getCritter().attack();
-                    }
-                }
-            };
-            critMenIts[6] = new CrLocAxn("grow") {
-                @Override
-                public void act() {
-                    if (lrclxtar.mutableContents().critter()) {
-                        lrclxtar.mutableContents().getCritter().grow();
-                    }
-                }
-            };
-            critMenIts[7] = new CrLocAxn("remove") {
-                @Override
-                public void act() {
-                    if (lrclxtar.mutableContents().critter()) {
-                        lrclxtar.mutableContents().removeCritter();
-                    }
-                }
-            };
-            critMenIts[8] = new CrLocAxn("bud") {
-                @Override
-                public void act() {
-                    if (lrclxtar.mutableContents().critter()) {
-                        lrclxtar.mutableContents().getCritter().bud();
-                    }
-                }
-            };
-            critMenIts[9] = new CrLocAxn("mate") {
-                @Override
-                public void act() {
-                    if (lrclxtar.mutableContents().critter()) {
-                        lrclxtar.mutableContents().getCritter().mate();
-                    }
-                }
-            };
-            critMenIts[10] = new LocAxn("tag") {
-                @Override
-                public void act() {
-                    if (lrclxtar.mutableContents().critter()) {
-                        men.setVisible(false);
-                        do {
-                            try {
-                                lrclxtar.mutableContents().getCritter()._tag(i = Integer.parseInt((msg = JOptionPane.showInputDialog(masterController.getView(), "New tag value:", "Tagging ahead critter", JOptionPane.QUESTION_MESSAGE))));
-                                lrclxtar.mutableContents().getCritter().recentAction = new Tag(new Constant(i));
+                    try {
+                        if (rclxtar.contents().critter()) {
+                            men.setVisible(false);
+                            do try {
+                                i = Integer.parseInt((msg = JOptionPane.showInputDialog(masterController.getView(), "New tag value:", "Tagging ahead critter", JOptionPane.QUESTION_MESSAGE)));
+                                rclxtar.contents().getCritter().act(new Tag(new Constant(i)));
                                 return;
                             } catch (NumberFormatException nfe) {
-                                if (!"".equals(msg)) {
+                                if (!"".equals(msg))
                                     continue;
-                                }
-                            }
-                        } while (false); //just give up...
+                            } while (false); //just give up...
+                        }
+                    } catch (RemoteException ex) {
+                        Client.connectionError(masterController.getView());
                     }
                 }
-            };
-            critMenIts[11] = new LocAxn("view program") {
+            },
+            new LocAxn("view program") {
                 @Override
                 public void act() {
-                    if (lrclxtar.mutableContents().critter()) {
-                        men.setVisible(false);
-                        JOptionPane.showMessageDialog(masterController.getView(),
-                                lrclxtar.mutableContents().getCritter().getProgram().toString(), "Critter Program",
-                                JOptionPane.PLAIN_MESSAGE);
+                    try {
+                        if (rclxtar.contents().critter()) {
+                            men.setVisible(false);
+                            JOptionPane.showMessageDialog(masterController.getView(),
+                                    masterController.getServer().getCritterProgram(rclxtar.contents().getCritter().hashCode()));
+                        }
+                    } catch (RemoteException ex) {
+                        Client.connectionError(masterController.getView());
                     }
                 }
-            };
-        } catch (RemoteException ex) {
-            Logger.getLogger(MouseInteractionHandler.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            }}
+        : new Action[] {
+            new DisLocAxn("cannot control critters")
+        };
     }
 
     @Override
@@ -258,13 +192,8 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
     }
 
     private void leftClick(MouseEvent e) {
-        if(masterController.isRemote()) {
-            RReference<Tile> at = rlookup(e);
-            masterController.getView().display().setCurrentLocation(at);
-        } else {
-            Reference<Tile> at = llookup(e);
-            masterController.getView().display().setCurrentLocation(at);
-        }
+        rclxtar = rlookup(e);
+        masterController.getView().display().setCurrentLocation(rclxtar);
         masterController.getView().repaint();
     }
 
@@ -272,53 +201,19 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
         if (men != null) {
             men.setVisible(false);
         }
-        if(masterController.isRemote()) {
-            try {
-                rrclxtar = rlookup(e);
-                masterController.getView().display().setCurrentLocation(rrclxtar);
-                men = new JPopupMenu();
-                men.addKeyListener(this);
-                if (rrclxtar.contents().rock()) {
-                    men.add(unrock);
-                } else if (rrclxtar.contents().critter()) {
-                    for (Action a : critMenIts) {
-                        men.add(a);
-                    }
-                } else {
-                    if (rrclxtar.contents().plant()) {
-                        men.add(unplant);
-                    } else {
-                        men.add(plant);
-                    }
-                    men.add(rock);
-                    men.add(crit);
-                }
-                men.setLocation(e.getLocationOnScreen());
-                men.setVisible(true);
-                masterController.getView().repaint();//display().update();//repaint();
-            } catch (RemoteException remoteException) {
-                Client.connectionError(masterController.getView());
-            }
-        } else {
-            lrclxtar = llookup(e);
-            masterController.getView().display().setCurrentLocation(lrclxtar);
-            if (lrclxtar.mutableContents() == null) {
-                try {
-                    lrclxtar.setContents(new Tile(false, 0));
-                } catch (RemoteException ex) {
-                    JOptionPane.showMessageDialog(masterController.getView(), "Could not instantiate tile", "Export error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
+        try {
+            rclxtar = rlookup(e);
+            masterController.getView().display().setCurrentLocation(rclxtar);
             men = new JPopupMenu();
             men.addKeyListener(this);
-            if (lrclxtar.mutableContents().rock()) {
+            if (rclxtar.contents().rock()) {
                 men.add(unrock);
-            } else if (lrclxtar.mutableContents().critter()) {
+            } else if (rclxtar.contents().critter()) {
                 for (Action a : critMenIts) {
                     men.add(a);
                 }
             } else {
-                if (lrclxtar.mutableContents().plant()) {
+                if (rclxtar.contents().plant()) {
                     men.add(unplant);
                 } else {
                     men.add(plant);
@@ -328,7 +223,9 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
             }
             men.setLocation(e.getLocationOnScreen());
             men.setVisible(true);
-            masterController.getView().repaint();
+            masterController.getView().repaint();//display().update();//repaint();
+        } catch (RemoteException remoteException) {
+            Client.connectionError(masterController.getView());
         }
     }
 
@@ -349,20 +246,6 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
             Client.connectionError(masterController.getView());
             return null;
         }
-    }
-    
-    private Reference<Tile> llookup(MouseEvent e) {
-        int x = e.getX();
-        int y = e.getY();
-        x -= masterController.getView().worldDisplay.scrollpane.getHorizontalScrollBar().getValue();
-        y -= masterController.getView().worldDisplay.scrollpane.getVerticalScrollBar().getValue();
-        int ret[] = masterController.getView().display().grid().hexAt(x, y);
-        if (ret == null) {
-            return null;
-        }
-        int r = ret[0];
-        int c = ret[1];
-        return masterController.getRealModel().lat(r, c);
     }
 
     @Override
@@ -387,7 +270,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
     private abstract class LocAxn extends AbstractAction {
 
         @Override
-        public void actionPerformed(ActionEvent e) {
+        public final void actionPerformed(ActionEvent e) {
             act();
             men.setVisible(false);
             masterController.getView().repaint();
@@ -399,8 +282,20 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
             super(s);
         }
     }
+    
+    private class DisLocAxn extends LocAxn {
+        @Override
+        protected void act() {
+            throw new RuntimeException("Invalid operation");
+        }
+        
+        public DisLocAxn(String s) {
+            super(s);
+            setEnabled(false);
+        }
+    }
 
-    private abstract class CrLocAxn extends LocAxn {
+    private class CrLocAxn extends LocAxn {
 
         private final student.parse.Action a;
 
@@ -410,12 +305,16 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
         }
 
         @Override
-        public void actionPerformed(ActionEvent e) {
-            Critter c = lrclxtar.mutableContents().getCritter();
-            c.recentAction = a;
-            super.actionPerformed(e);
-            if (c != null) {
-                c.checkDeath();
+        public void act() {
+            try {
+                if (rclxtar.contents().critter()) {
+                    RemoteCritter c = rclxtar.contents().getCritter();
+                    c.act(a);
+                    masterController.getView().display().setCurrentLocation(c.loc());
+                    c.checkDeath();
+                }
+            } catch (RemoteException remoteException) {
+                Client.connectionError(masterController.getView());
             }
         }
     }

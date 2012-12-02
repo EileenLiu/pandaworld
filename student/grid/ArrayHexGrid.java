@@ -203,6 +203,11 @@ public class ArrayHexGrid<E extends UnicastRemoteObject> implements HexGrid<E> {
         }
 
         @Override
+        public RReference<E> export() {
+            return this;
+        }
+        
+        @Override
         public boolean equals(Object obj) {
             if (obj == null) {
                 return false;

@@ -7,33 +7,32 @@ package student.gui;
 import java.awt.*;
 import java.rmi.RemoteException;
 import javax.swing.*;
+import student.remote.server.AdminServer;
+import student.remote.server.PlayerServer;
+import student.remote.server.Server;
 import student.remote.world.RWorld;
 import student.world.World;
 
 public class WorldFrame extends JFrame {
 
-    private World fworld;
+    //private World fworld;
     private RWorld world;
+    private Server server;
+    private PlayerServer ps;
+    private AdminServer as;
     public WorldDisplay worldDisplay; //- made up of two JPanels, one is the grid, one is the current attributes
 
-    public WorldFrame(RWorld w) throws RemoteException {
+    public WorldFrame(InteractionHandler ih) throws RemoteException {
+        server = ih.getServer();
+        ps = ih.getPlayer();
+        as = ih.getAdmin();
         setLayout(new BorderLayout());
-        loadWorld(w);
-        initMenubar();
-        this.setFullScreen();
-    }
-
-    public final void loadWorld(RWorld w) throws RemoteException {
-        world = w;
-        /*if(worldDisplay!=null)
-        {
-            this.remove(worldDisplay);
-            System.out.println("Attempted remove of worldDisplay");
-        }*/
-        worldDisplay = new WorldDisplay(world);
+        worldDisplay = new WorldDisplay(server);
         worldDisplay.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 0));
         this.add(worldDisplay, BorderLayout.CENTER);
         System.out.println("Loaded world");
+        initMenubar();
+        this.setFullScreen();
     }
 
     public void godControlsEnabled(boolean b) {
@@ -145,6 +144,7 @@ public class WorldFrame extends JFrame {
         return worldDisplay;
     }
 
+    @Override
     public void repaint() {
         worldDisplay.update();//repaint();
         super.repaint();

@@ -19,8 +19,8 @@ import javax.swing.JTextField;
 public class LoginInteractionHandler {
 
     private InteractionHandler masterController;
-    private String hostname, servername, password;
-    private JTextField hostfield, serverfield;
+    public final String hostname, servername, password, username;
+    private JTextField hostfield, userfield, serverfield;
     private JPasswordField passwordfield;
     
     public LoginInteractionHandler(final InteractionHandler _parent) {
@@ -34,27 +34,32 @@ public class LoginInteractionHandler {
                 JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
         hostname = hostfield.getText();
         servername = serverfield.getText();
+        username = userfield.getText();
         password = new String(passwordfield.getPassword());
     }
     private JPanel generateLabels(){
         JLabel label_hostname = new JLabel("Hostname: \t");
         JLabel label_servername = new JLabel("Servername: \t");
+        JLabel label_username = new JLabel("Username: \t");
         JLabel label_password = new JLabel("Password: \t");
         JPanel labelgroup = new JPanel();
         labelgroup.setLayout(new GridLayout(3, 1));
         labelgroup.add(label_hostname);
         labelgroup.add(label_servername);
+        labelgroup.add(label_username);
         labelgroup.add(label_password);
         return labelgroup;
     }
     private JPanel generateFields(){
-        hostfield = new JTextField(15);
-        serverfield = new JTextField(15);
-        passwordfield = new JPasswordField();
+        (hostfield = new JTextField(15)).setText("localhost");
+        (serverfield = new JTextField(15)).setText("Server");
+        (userfield = new JTextField(15)).setText("admin");
+        (passwordfield = new JPasswordField()).setText("password");
         JPanel fieldgroup = new JPanel();
         fieldgroup.setLayout(new GridLayout(3, 1));
         fieldgroup.add(hostfield);
         fieldgroup.add(serverfield);
+        fieldgroup.add(userfield);
         fieldgroup.add(passwordfield);
         return fieldgroup;
     }

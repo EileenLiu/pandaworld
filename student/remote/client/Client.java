@@ -12,7 +12,7 @@ import student.remote.server.AdminServer;
 import student.remote.server.PlayerServer;
 import student.remote.server.Server;
 
-public abstract class Client {
+public class Client {
 
     String HOST, SERV;
     Registry registry;

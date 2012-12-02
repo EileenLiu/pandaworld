@@ -4,11 +4,20 @@
  */
 package student.gui;
 
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import student.remote.login.LLoginClient;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import student.remote.client.Client;
+import student.remote.client.PlayerClient;
 import student.remote.login.LoginClient;
+import student.remote.login.LoginClient.LoginException;
 import student.remote.login.Permission;
 import student.remote.server.AdminServer;
+import student.remote.server.PlayerServer;
 import student.remote.server.Server;
 import student.remote.world.RWorld;
 import student.world.World;
@@ -19,37 +28,36 @@ import student.world.World;
  */
 public class InteractionHandler {
     private RWorld rmodel;
-    private World wmodel;
+    //private World wmodel;
     private WorldFrame view;
-    private LLoginClient login;
+    private LoginClient login;
     private Server server;
-    public InteractionHandler(final RWorld _model, final WorldFrame _view)
-    {
-        rmodel = _model;
-        wmodel = _model instanceof World ? (World)_model : null;
-        view = _view;
-        login = new LLoginClient() {
-            @Override public byte[] getToken() {
-                return null;
-            }
-            @Override public String getUser() {
-                return null;
-            }
-            @Override public boolean hasPermission(Permission p) throws RemoteException {
-                return false;
-            }
-        };
-        server = null;
-        load();
-    }
-    public InteractionHandler(RWorld _model, WorldFrame _view, LoginClient _client, Server _server)
-    {
-        rmodel = _model;
-        wmodel = null;
-        view = _view;
-        login = _client;
-        server = _server;
-        load();
+    private PlayerServer player;
+    private AdminServer admin;
+    public InteractionHandler() throws RemoteException {
+        try {
+            view = null;
+            LoginInteractionHandler lih = new LoginInteractionHandler(this);
+            login = new LoginClient(lih.hostname, lih.servername, lih.username, lih.password);
+            Registry reg = LocateRegistry.getRegistry(lih.hostname);
+            server = (Server) reg.lookup(lih.servername);
+            view = new WorldFrame(this);
+            player = login.hasPermission(Permission.USER)  ? server.getPlayerServer(login.getToken(), lih.username) : null;
+            admin  = login.hasPermission(Permission.ADMIN) ? server.getAdminServer(login.getToken(), lih.username) : null;
+            load();
+        } catch (NotBoundException ex) {
+            JOptionPane.showMessageDialog(view,
+                                          "Cannot find server!",
+                                          "NotBoundException", 
+                                          JOptionPane.ERROR_MESSAGE);
+            System.exit(1);
+        } catch (LoginException ex) {
+            JOptionPane.showMessageDialog(view,
+                                          "Login failed",
+                                          "LoginException",
+                                          JOptionPane.ERROR_MESSAGE);
+            System.exit(2);
+        }
     }
     private void load()
     {
@@ -65,36 +73,43 @@ public class InteractionHandler {
     {
         return rmodel;
     }
-    public World getRealModel() {
-        return wmodel;
-    }
+    //public World getRealModel() {
+      //  return wmodel;
+    //}
     public Server getServer()
     {
         return server;
     }
-    public LLoginClient getLogin()
+    public PlayerServer getPlayer() {
+        return player;
+    }
+    public AdminServer getAdmin() {
+        return admin;
+    }
+    public LoginClient getLogin()
     {
         return login;
     }
-    public void setModel(World newWorld) throws RemoteException
+    /*public void setModel(World newWorld) throws RemoteException
     {
-        if(isRemote())
-            throw new RuntimeException("Remote");
+        if(admin == null)
+            throw new RuntimeException("Insufficient Permissions"); //TODO: make nicer
         view.setVisible(false);
         view.dispose();
         rmodel = newWorld;
-        view = new WorldFrame(rmodel);
+        admin.add
+        view = new WorldFrame(this);
         load();
         //view.loadWorld(newWorld);
         //view.setVisible(true);
         view.repaint();
-    }
+    }*/
     public WorldFrame getView()
     {
         return view;
     }
 
-    boolean isRemote() {
-        return wmodel == null;
-    }
+    //boolean isRemote() {
+      //  return wmodel == null;
+    //}
 }

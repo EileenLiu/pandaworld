@@ -62,9 +62,8 @@ public class Tile extends UnicastRemoteObject implements RTile {
         plant = true;
     }
     
-    public void removePlant() {
-        if(rock) throw new IllegalStateException("It's a rock");
-        plant = false;
+    public boolean removePlant() {
+        return plant &&! (plant = false);
     }
     
     public void addFood(int dfood) {
@@ -105,5 +104,9 @@ public class Tile extends UnicastRemoteObject implements RTile {
         if(food() || plant())
             return -foodValue() + (plant()?-Constants.ENERGY_PER_PLANT:0);
         return 0;
+    }
+
+    public boolean removeRock() {
+        return rock &&! (rock = false);
     }
 }

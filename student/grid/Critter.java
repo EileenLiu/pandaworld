@@ -476,8 +476,9 @@ public final class Critter /*extends Entity*/ implements CritterState, RemoteCri
         return direction;
     }
 
-    public Reference<Tile> loc() {
-        return this.pos;
+    @Override
+    public RReference<Tile> loc() {
+        return this.pos.export();
     }
 
     @Override
@@ -574,5 +575,9 @@ public final class Critter /*extends Entity*/ implements CritterState, RemoteCri
     
     public Action recentAction() {
         return recentAction;
+    }
+
+    public Reference<Tile> lloc() {
+        return pos;
     }
 }

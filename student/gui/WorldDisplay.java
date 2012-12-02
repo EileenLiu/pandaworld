@@ -19,6 +19,7 @@ import student.grid.HexGrid;
 import student.grid.RReference;
 import student.grid.Tile;
 import student.remote.client.Client;
+import student.remote.server.Server;
 import student.remote.world.RWorld;
 
 public class WorldDisplay extends JPanel{
@@ -30,12 +31,13 @@ public class WorldDisplay extends JPanel{
     public ControlPanel controls;
     public JScrollPane scrollpane, scrollAttributes;
     public JLabel timestep, crittercount, plantcount, foodcount, rockcount;
-    
+    public Server SERVER;
     public RWorld WORLD;
     public int curX, curY;
     
-    public WorldDisplay(RWorld world) throws RemoteException {
-        WORLD = world;
+    public WorldDisplay(Server server) throws RemoteException {
+        WORLD = server.getWorld();
+        SERVER = server;
         curX = curY = 0;
         
         setLayout(new BorderLayout());
@@ -164,12 +166,6 @@ public class WorldDisplay extends JPanel{
      * Updates the current location with the given location reference
      * @param r the given location reference
      */
-    public void setCurrentLocation(HexGrid.Reference<Tile> r)
-    {
-        curX = r.row();
-        curY = r.col();
-        gridpane.scrollRectToVisible(gridpane.updateSelection(curX, curY));
-    }
     public void setCurrentLocation(RReference<Tile> r) {
         try {
             curX = r.row();

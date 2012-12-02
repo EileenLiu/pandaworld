@@ -28,6 +28,8 @@ import static student.config.Constants.*;
 import student.config.CritterFileParser;
 import student.config.WorldFileParser;
 import student.grid.Critter;
+import student.grid.RReference;
+import student.grid.Tile;
 import student.parse.Action;
 import student.remote.login.*;
 import student.remote.world.RWorld;
@@ -106,23 +108,28 @@ public class AdminServerImpl extends UnicastRemoteObject implements AdminServer,
     }
 
     public AdminServerImpl() throws RemoteException {
+        this(new LoginServer());
+    }
+
+    public AdminServerImpl(LoginServer _login) throws RemoteException {
         // Register the location of the codebase with your rmi registry
         System.setProperty("java.rmi.server.codebase",
                 AdminServerImpl.class.getProtectionDomain().getCodeSource().getLocation().toString());
+        login = _login;
+        System.out.println("Login server ready");
         try {
-            login = new LoginServer();
-            System.out.println("Login server ready");
-        } catch (RemoteException ex) {
-            System.err.println("Couldn't start login server:" +ex.getMessage());
-        }
-        try {
+            Registry registry = LocateRegistry.getRegistry();
+            registry.bind("Server", this);
+            System.err.println("Server ready");
             zaWarudo = new World(MAX_ROW, MAX_COLUMN);
             System.out.println("World exported");
         } catch (RemoteException ex) {
             System.err.println("Couldn't export world");
+        } catch (AlreadyBoundException abe) {
+            System.out.println("Already bound");
         }
     }
-
+    
     @Override
     public int maxColumn() throws RemoteException {
         return zaWarudo.width();
@@ -438,7 +445,7 @@ public class AdminServerImpl extends UnicastRemoteObject implements AdminServer,
         if(canUpload && login.verifyRequest(uname, token, Permission.USER)) {
             Critter c = CritterFileParser.generateCritter(critterFileContent, zaWarudo, null, 0);
             try {
-                zaWarudo.add(c, c.loc());
+                zaWarudo.add(c, c.lloc());
             } catch (InvalidWorldAdditionException ex) {
                 throw new RemoteException("while uploading critter: ", ex);
             }
@@ -514,5 +521,43 @@ public class AdminServerImpl extends UnicastRemoteObject implements AdminServer,
         } catch (InvalidWorldAdditionException ex) {
             throw new RemoteException("Invalid critter", ex);
         }
+    }
+
+    @Override
+    public RReference<Tile> putPlant(byte[] token, String user, RReference<Tile> randomLoc) throws RemoteException {
+        if(!login.verifyRequest(user, token, Permission.ADMIN))
+            throw new RemoteException("Login expired");
+        try {
+            zaWarudo.add("plant", randomLoc.row(), randomLoc.col());
+        } catch (InvalidWorldAdditionException ex) {
+            throw new RemoteException("Unreachable",ex);
+        }
+        return randomLoc;
+    }
+
+    @Override
+    public RReference<Tile> putRock(byte[] token, String user, RReference<Tile> randomLoc) throws RemoteException {
+        if(!login.verifyRequest(user, token, Permission.ADMIN))
+            throw new RemoteException("Login expired");
+        try {
+            zaWarudo.add("plant", randomLoc.row(), randomLoc.col());
+        } catch (InvalidWorldAdditionException ex) {
+            throw new RemoteException("Unreachable",ex);
+        }
+        return randomLoc;
+    }
+
+    @Override
+    public boolean takeRock(byte[] token, String uname, RReference<Tile> rrclxtar) throws RemoteException {
+        if(!login.verifyRequest(uname, token, Permission.ADMIN))
+            throw new RemoteException("Login expired");
+        return zaWarudo.at(rrclxtar.row(), rrclxtar.col()).contents().removeRock();
+    }
+
+    @Override
+    public boolean takePlant(byte[] token, String uname, RReference<Tile> rrclxtar) throws RemoteException {
+        if(!login.verifyRequest(uname, token, Permission.ADMIN))
+            throw new RemoteException("Login expired");
+        return zaWarudo.at(rrclxtar.row(), rrclxtar.col()).contents().removePlant();
     }
 }

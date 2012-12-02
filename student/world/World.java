@@ -285,7 +285,7 @@ public class World extends UnicastRemoteObject implements RWorld {
 
     public void reset() {
         for(Critter c : critters)
-            c.loc().mutableContents().removeCritter();
+            c.lloc().mutableContents().removeCritter();
         critters.clear();
         //species.clear();
     }

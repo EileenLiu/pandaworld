@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
+import student.remote.server.AdminServerImpl;
 
 
 
@@ -85,6 +86,8 @@ public class LoginServer extends UnicastRemoteObject implements LLogin, RLogin {
     }
     
     public void register(String name) throws RemoteException, MalformedURLException {
+        System.setProperty("java.rmi.server.codebase",
+                LoginServer.class.getProtectionDomain().getCodeSource().getLocation().toString());
         LocateRegistry.getRegistry().rebind(name + "__login",this);
     }
 

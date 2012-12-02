@@ -85,6 +85,8 @@ public interface HexGrid<E> extends Iterable<HexGrid.Reference<E>> {
          * that cell is past the edge of the grid.
          */
         public Reference<E> adj(HexDir dir);
+
+        public RReference<E> export();
     }
 
     public static enum HexDir {
