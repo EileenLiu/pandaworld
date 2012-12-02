@@ -35,6 +35,8 @@ public class GridPanel extends JPanel implements Scrollable{
     //A MULTIPLE OF FOUR
     private int HEXSIZE = 140;
     public RWorld world; 
+    private int selectr, selectc;
+    private Rectangle selectRect;
     public GridPanel(RWorld world) throws RemoteException {
         this.world = world;
         //this.setBorder(new LineBorder(Color.MAGENTA, 3));
@@ -55,6 +57,7 @@ public class GridPanel extends JPanel implements Scrollable{
                 }
             }
         }
+        updateSelection(0,0);
         this.setFocusable(true);
         this.requestFocusInWindow();
     }
@@ -70,6 +73,13 @@ public class GridPanel extends JPanel implements Scrollable{
             Client.connectionError(this);
         }
         return null;
+    }
+    public final Rectangle updateSelection(int r, int c){
+        selectr = r;
+        selectc = c;
+        Polygon loc = hexen[selectr][selectc];
+        selectRect = loc.getBounds();
+        return selectRect; 
     }
     
     /**
@@ -109,7 +119,7 @@ public class GridPanel extends JPanel implements Scrollable{
      * @param hexCoordinates the given coordinates
      * @param g graphics
      */
-    public void drawHexagon(int x, int y, int r, int c, int hexsize, Graphics g, Image i) {       
+    private void drawHexagon(int x, int y, int r, int c, int hexsize, Graphics g, Image i) {       
         g.drawImage(i, x, y, hexsize, hexsize, this);
     }
 
@@ -134,7 +144,7 @@ public class GridPanel extends JPanel implements Scrollable{
      * @param size the side length of square the hexagon will be contained in
      * @return
      */
-    public static Polygon makePoly(int startX, int startY, int size) {
+    private static Polygon makePoly(int startX, int startY, int size) {
         int xs[] = new int[6], ys[] = new int[6]; //[Xj, Yj] for j= 1,2,3,4,5,6
         xs[0] = size / 4 + startX;
             ys[0] = startY;
@@ -256,8 +266,16 @@ public class GridPanel extends JPanel implements Scrollable{
         } catch (RemoteException ex) {
             Client.connectionError(this);
         }
+        drawSelectionIndicator(hexsize, gp);
     }
-
+    /**
+     * Draws the indicator for the selected hex
+     * @param hexsize
+     * @param gp 
+     */
+    private void drawSelectionIndicator(int hexsize, Graphics gp) {
+        drawHexagon(selectRect.x, selectRect.y, selectr, selectc, hexsize, gp, defaultImgs.get(imgnames[imgnames.length-1]));
+    }
     @Override
     public Dimension getPreferredSize()
     {

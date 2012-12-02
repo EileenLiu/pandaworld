@@ -22,9 +22,10 @@ public final class Species implements RemoteSpecies {
     private Color color; //each unique species corresponds to a unique color
     private HashSet<Integer> lineage = new HashSet();
     private static HashMap<Integer, Species> instances = new HashMap();
-public static Species getInstance(int[] att, Program p, LinkedList<Integer> l)
+    public static Species getInstance(int[] att, Program p, LinkedList<Integer> l)
     {
         Species s = instances.get(hash(att,p));
+        System.out.println("s= "+s);
         if(s == null)
         {
             s = new Species(att, p, l);
@@ -56,11 +57,9 @@ public static Species getInstance(int[] att, Program p, LinkedList<Integer> l)
         int grn = (int) ((r >>= 8) & 0xff);
         int blu = (int) ((r >> 8) & 0xff);
         color = new Color(red, grn, blu);
-         if(l!=null){
-        for (Integer i : l) {
-            lineage.add(i);
-        }
-         }
+        if (l != null) 
+            for (Integer i : l) 
+                lineage.add(i);
     }
 
     @Override

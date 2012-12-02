@@ -47,7 +47,10 @@ public class WorldDisplay extends JPanel{
         updateWorldStatus();
         updateAttributes();
         scrollpane = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        scrollpane.getHorizontalScrollBar().setAutoscrolls(true);
+        scrollpane.getVerticalScrollBar().setAutoscrolls(true);
         scrollpane.setViewportView(gridpane);
+        scrollpane.getViewport().setScrollMode(JViewport.BLIT_SCROLL_MODE);
         add(scrollpane, BorderLayout.CENTER);
         add(infoDisplay, BorderLayout.EAST);
         gridpane.setVisible(true);
@@ -129,7 +132,6 @@ public class WorldDisplay extends JPanel{
     }
     
     private void updateAttributes() {
-        //state.setText()
         String s = "The currently selected\nlocation has ";
         if (currentLocation == null || currentLocation.mutableContents() == null || currentLocation.mutableContents().isEmpty())
             s = s+"\nnothing... ";
@@ -156,12 +158,12 @@ public class WorldDisplay extends JPanel{
     public void setCurrentLocation(HexGrid.Reference<Tile> r)
     {
         currentLocation = r;
-    }
+        gridpane.scrollRectToVisible(gridpane.updateSelection(currentLocation.row(), currentLocation.col()));
+   }
     public void update() {
         gridpane.repaint();
         updateWorldStatus();
         updateAttributes();
-        
     }
     
 }
