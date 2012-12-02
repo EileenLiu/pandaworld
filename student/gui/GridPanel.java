@@ -8,6 +8,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.image.FilteredImageSource;
@@ -40,7 +41,8 @@ public class GridPanel extends JPanel implements Scrollable{
     private Polygon hexen[][];
     //A MULTIPLE OF FOUR
     private int HEXSIZE = 140;
-    private int selectr = 0, selectc = 0;
+    private int selectr, selectc;
+    private Rectangle selectRect;
     public World world; 
     public GridPanel(World world) {
         this.world = world;
@@ -58,18 +60,22 @@ public class GridPanel extends JPanel implements Scrollable{
                     rt.setContents(new Tile(false, 0));
             }
         }
+        updateSelection(0,0);
         this.setFocusable(true);
         this.requestFocusInWindow();
     }
-        public void updateSelection(int r, int c)
-    {
+    public final Rectangle updateSelection(int r, int c){
         selectr = r;
         selectc = c;
+        Polygon loc = hexen[selectr][selectc];
+        selectRect = loc.getBounds();
+        return selectRect; 
     }
-    public int []hexAt(int x, int y) {
+
+    public int[] hexAt(int x, int y) {
         x -= this.getX();
         y -= this.getY();
-        for(int r = 0; r < world.height(); r++)
+        for (int r = 0; r < world.height(); r++)
             for(int c = 0; c < world.width(); c++)
                 if(hexen[r][c].contains(x, y))
                     return new int[]{r,c};
@@ -220,9 +226,7 @@ public class GridPanel extends JPanel implements Scrollable{
      * @param gp 
      */
     private void drawSelectionIndicator(int hexsize, Graphics gp) {
-        Polygon loc = hexen[selectr][selectc];
-        Rectangle bbx = loc.getBounds();
-        drawHexagon(bbx.x, bbx.y, selectr, selectc, hexsize, gp, defaultImgs.get(imgnames[imgnames.length-1]));
+        drawHexagon(selectRect.x, selectRect.y, selectr, selectc, hexsize, gp, defaultImgs.get(imgnames[imgnames.length-1]));
     }
     @Override
     public Dimension getPreferredSize()

@@ -10,6 +10,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Rectangle;
 import java.util.Set;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -49,7 +50,10 @@ public class WorldDisplay extends JPanel{
         updateWorldStatus();
         updateAttributes();
         scrollpane = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        scrollpane.getHorizontalScrollBar().setAutoscrolls(true);
+        scrollpane.getVerticalScrollBar().setAutoscrolls(true);
         scrollpane.setViewportView(gridpane);
+        scrollpane.getViewport().setScrollMode(JViewport.BLIT_SCROLL_MODE);
         add(scrollpane, BorderLayout.CENTER);
         add(infoDisplay, BorderLayout.EAST);
         gridpane.setVisible(true);
@@ -66,10 +70,10 @@ public class WorldDisplay extends JPanel{
         return textArea;
     }
     private final JScrollPane generateVerticalScroll(Component view){
-        JScrollPane scrollpane = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);     
-        scrollpane.setViewportView(view);
-        scrollpane.setBorder(null);
-        return scrollpane;
+        JScrollPane scrpane = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);     
+        scrpane.setViewportView(view);
+        scrpane.setBorder(null);
+        return scrpane;
     }
     private final GridPanel generateGridPanel(){
         GridPanel grid = new GridPanel(WORLD);
@@ -153,13 +157,12 @@ public class WorldDisplay extends JPanel{
     public void setCurrentLocation(HexGrid.Reference<Tile> r)
     {
         currentLocation = r;
-        gridpane.updateSelection(currentLocation.row(), currentLocation.col());
-    }
+        gridpane.scrollRectToVisible(gridpane.updateSelection(currentLocation.row(), currentLocation.col()));
+   }
     public void update() {
         gridpane.repaint();
         updateWorldStatus();
         updateAttributes();
-        
     }
     
 }
