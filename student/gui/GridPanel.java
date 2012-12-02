@@ -7,25 +7,18 @@ package student.gui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Polygon;
 import java.awt.Rectangle;
-import java.awt.image.FilteredImageSource;
-import java.awt.image.ImageFilter;
 import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.*;
 import student.grid.HexGrid.Reference;
 import student.grid.Tile;
 import student.gui.render.PNGImagePack;
-import student.gui.render.TintFilter;
 import student.remote.client.Client;
 import student.remote.world.RWorld;
-import student.world.World;
 
 public class GridPanel extends JPanel implements Scrollable{
     private static final PNGImagePack defaultImgs;
@@ -206,10 +199,11 @@ public class GridPanel extends JPanel implements Scrollable{
         xs[4] = size / 4 + startX;
             ys[4] = size+ startY;
         xs[5] = startX;
-            ys[5] = size / 2+ startY;
+            ys[5] = size / 2 + startY;
         return new Polygon(xs, ys, 6);
     }
-   /**
+
+    /**
      * Draws the entire grid
      */
     public void drawGrid(int hexsize, Graphics gp) {
@@ -219,7 +213,7 @@ public class GridPanel extends JPanel implements Scrollable{
                 for (int r = 0; r < world.height(); r++) {
                     Polygon loc = hexen[r][c];
                     Rectangle bbx = loc.getBounds();
-                    Tile t = world.at(r, c).mutableContents();
+                    Tile t = world.at(r, c).contents();
                     PNGImagePack imagepack = defaultImgs;
                     if (t != null && t.rock()) {
                         drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, imagepack.get(imgnames[1]));//ROCK);

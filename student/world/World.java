@@ -9,6 +9,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -34,7 +35,7 @@ import student.world.util.HashCodeAccessSet;
  */
 public class World extends UnicastRemoteObject implements RWorld {
 
-    private HexGrid<Tile> grid;
+    HexGrid<Tile> grid;
     private int timesteps = 0;
     private boolean WAIT = true; //if false, random action
     private HashCodeAccessSet<Critter> critters = new HashCodeAccessSet<Critter>();
@@ -210,13 +211,12 @@ public class World extends UnicastRemoteObject implements RWorld {
     }
     
     public int smell(Reference<Tile> pos, TilePredicate pred, int maxLev) {
-        SortedSet<PQEntry> gray = new TreeSet<PQEntry>();
+        PriorityQueue<PQEntry> gray = new PriorityQueue<PQEntry>();
         Set<PQEntry> black = new HashSet<PQEntry>();
         gray.add(new PQEntry(pos, 0, null, null));
         PQEntry res = null;
      out:while(!gray.isEmpty()) {
-            PQEntry v = gray.first();
-            gray.remove(v);
+            PQEntry v = gray.poll();
             black.add(v);
             System.out.printf("(%d,%d):\n",v.curr.col(),v.curr.row());
     working:for(HexDir d : HexDir.VALUES) {
@@ -239,10 +239,10 @@ public class World extends UnicastRemoteObject implements RWorld {
                 if(w == null) {
                     gray.add(w = new PQEntry(adj, v.distance + 1, v, v.direction == null ? d : v.direction));
                     System.out.println("null");
-                } /*else if(w.distance > 10) {
+                } else if(w.distance > Constants.MAX_SMELL_DISTANCE) {
                     System.out.println("done");
                     return 1000000;
-                } */else if(w.distance > v.distance + 1) {
+                } else if(w.distance > v.distance + 1) {
                     gray.remove(w);
                     w.distance = v.distance + 1;
                     w.direction = v.direction == null ? d : v.direction;

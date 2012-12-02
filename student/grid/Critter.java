@@ -5,8 +5,10 @@
 package student.grid;
 
 import java.awt.Color;
+import java.rmi.RemoteException;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import student.config.Constants;
 import static student.config.Constants.*;
@@ -47,12 +49,12 @@ public final class Critter /*extends Entity*/ implements CritterState, RemoteCri
         dir = HexDir.dir(d);
     }
     private Critter(World _wor, Reference<Tile> _pos, Program _p, int []_mem) {
-        this(_wor, _pos, _p, _mem, new LinkedList());
+        this(_wor, _pos, _p, _mem, new LinkedList(), false);
     }
     private Critter(World _wor, Reference<Tile> _pos, Program _p, LinkedList<Integer> ancestors) {
-                this(_wor, _pos, _p, defaultMemory(), ancestors);
+                this(_wor, _pos, _p, defaultMemory(), ancestors,false);
     }
-    private Critter(World _wor, Reference<Tile> _pos, Program _p, int []_mem, LinkedList<Integer> ancestors) {
+    private Critter(World _wor, Reference<Tile> _pos, Program _p, int []_mem, LinkedList<Integer> ancestors, boolean mutate) {
         wor = _wor;
         if(_pos!=null)
             pos = _pos;
@@ -63,7 +65,8 @@ public final class Critter /*extends Entity*/ implements CritterState, RemoteCri
         if(_p==null)
             _p = new Program();
         prog = _p;
-        species = new Species(new int[]{mem[0], mem[1], mem[2]}, prog);
+        if(mutate) mutateCritter(this);
+        species = Species.getInstance(new int[]{mem[0], mem[1], mem[2]}, prog, lineage);
         lineage = ancestors;
         lineage.add((Integer)species.hashCode());
         System.err.println("\tMade critter: program is"+prog);
@@ -324,15 +327,16 @@ public final class Critter /*extends Entity*/ implements CritterState, RemoteCri
         Reference<Tile> np = pos.lin(-1, dir);
         if(np == null || np.mutableContents().rock() || np.mutableContents().critter())
             return; //we're in a corner, can't put a critter there.
-        Critter baby = new Critter(wor, np, prog.mutate(), lineage);
-        baby.mem = new int[mem.length];
-        System.arraycopy(mem, 0, baby.mem, 0, MIN_MEMORY);
+        int newmem[] = new int[mem.length];
+        System.arraycopy(mem, 0, newmem, 0, MIN_MEMORY);
+        Critter baby = new Critter(wor, np, prog, newmem, lineage, true);
         baby.mem[3] = 1;
         baby.mem[4] = Constants.INITIAL_ENERGY;
         baby.mem[7] = 0;
         baby.mem[8] = 1;
         np.mutableContents().putCritter(baby);
         mem[4] -= complexity() * Constants.BUD_COST;
+        mutateCritter(baby);
         acted = true;
     }
     
@@ -342,28 +346,32 @@ public final class Critter /*extends Entity*/ implements CritterState, RemoteCri
             return;
         Tile t = rt.mutableContents();
         if(t.critter() && t.getCritter().amorous) {
-            Critter c = t.getCritter();
-            int nrules = ch(this,c).prog.numChildren(), 
-                    tr = prog.numChildren(), 
-                    cr = c.prog.numChildren();
-            Rule r[] = new Rule[nrules];
-            for(int i = 0; i < nrules; i++) 
-                r[i] = (i<tr?i<cr?Math.random()>.5?c:this:this:c).prog.rules().get(i);
-            int msiz = ch(this,c).mem[0];
-            int []bmem = new int[msiz];
-            bmem[0] = msiz;
-            bmem[1] = ch(this,c).mem[1];
-            bmem[2] = ch(this,c).mem[2];
-            bmem[3] = 1;
-            bmem[4] = Constants.INITIAL_ENERGY;
-            bmem[8] = 1;
-            Critter cpos = ch(this,c);
-            Reference<Tile> np = cpos.pos.lin(-1, cpos.dir);
-            if(np==null || np.mutableContents().rock()||np.mutableContents().critter()) np = (cpos==this?c:this).pos.lin(-1, (cpos!=this?this:c).dir);
-            Critter baby = new Critter(wor, np, prog, bmem, lineage);
-            np.mutableContents().putCritter(baby);
-            mem[4] -= Constants.MATE_COST * complexity();
-            c.mem[4] -= Constants.MATE_COST * c.complexity();
+            try {
+                Critter c = t.getCritter();
+                int nrules = ch(this,c).prog.numChildren(), 
+                        tr = prog.numChildren(), 
+                        cr = c.prog.numChildren();
+                Rule r[] = new Rule[nrules];
+                for(int i = 0; i < nrules; i++) 
+                    r[i] = (i<tr?i<cr?Math.random()>.5?c:this:this:c).prog.rules().get(i);
+                int msiz = ch(this,c).mem[0];
+                int []bmem = new int[msiz];
+                bmem[0] = msiz;
+                bmem[1] = ch(this,c).mem[1];
+                bmem[2] = ch(this,c).mem[2];
+                bmem[3] = 1;
+                bmem[4] = Constants.INITIAL_ENERGY;
+                bmem[8] = 1;
+                Critter cpos = ch(this,c);
+                Reference<Tile> np = cpos.pos.lin(-1, cpos.dir);
+                if(np==null || np.contents().rock()||np.contents().critter()) np = (cpos==this?c:this).pos.lin(-1, (cpos!=this?this:c).dir);
+                Critter baby = new Critter(wor, np, prog, bmem, lineage, true);
+                np.contents().putCritter(baby);
+                mem[4] -= Constants.MATE_COST * complexity();
+                c.mem[4] -= Constants.MATE_COST * c.complexity();
+            } catch (RemoteException ex) {
+                System.err.println("Failed to connect for mate");
+            }
         }
         else amorous = true;
         acted = true;
@@ -411,10 +419,9 @@ public final class Critter /*extends Entity*/ implements CritterState, RemoteCri
      * @return the lineage as a string
      */
     public String lineage() {
-        String l = "";
-        if (lineage.size() <= 1) {
-            l = "first generation";
-        } else {
+        String l = "Generation " + lineage.size();
+        if(lineage.size()>1){
+            l = l+"\n\t(From earliest to previous)";
             Iterator<Integer> iter = lineage.iterator();
             iter.next();
             while (iter.hasNext()) {
@@ -535,6 +542,21 @@ public final class Critter /*extends Entity*/ implements CritterState, RemoteCri
 
     public String name() {
         return name;
+    }    
+    private static Random mutRand = new Random();
+    private static void mutateCritter(Critter c) {
+        while(mutRand.nextInt(4) == 0) {
+            if(mutRand.nextBoolean())
+                c.prog = c.prog.mutate();
+            else {
+                int i = mutRand.nextInt(3);
+                c.mem[i] += mutRand.nextBoolean() ? -1 : 1;
+                if(i == 0 && c.mem[0] < 9)
+                    c.mem[0] = 9;
+                else if (c.mem[i] < 1)
+                    c.mem[i] = 1;
+            }
+        }
     }
 
     @Override

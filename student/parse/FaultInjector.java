@@ -13,6 +13,8 @@ public class FaultInjector {
      * @return the resultant AST
      */
     public static Node injectFault(Node n, Program root) {
+        if(n == null||!root.hasChildren())
+            return n;
         LinkedList<Integer> faultType = new LinkedList();
         faultType.addAll(Arrays.asList(1, 2, 3, 4, 5));
         int i;

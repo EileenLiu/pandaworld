@@ -6,6 +6,7 @@ package student.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -23,7 +24,7 @@ public class WorldDisplay extends JPanel{
     public JPanel worldStatusPanel;
     public JTextArea attributes;
     public ControlPanel controls;
-    public JScrollPane scrollpane;
+    public JScrollPane scrollpane, scrollAttributes;
     public JLabel timestep, crittercount, plantcount, foodcount, rockcount;
     
     public RWorld WORLD;
@@ -38,6 +39,7 @@ public class WorldDisplay extends JPanel{
         controls = new ControlPanel();
         controls.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));//createBevelBorder(0, 10, 0, 10));
         attributes = generateAttributes();
+        scrollAttributes = generateVerticalScroll(attributes);
         gridpane = generateGridPanel();
         worldStatusPanel = generateWorldStatusPanel();
         infoDisplay = generateInfoPanel();
@@ -46,14 +48,13 @@ public class WorldDisplay extends JPanel{
         updateAttributes();
         scrollpane = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         scrollpane.setViewportView(gridpane);
-             
         add(scrollpane, BorderLayout.CENTER);
         add(infoDisplay, BorderLayout.EAST);
         gridpane.setVisible(true);
         infoDisplay.setVisible(true);
         attributes.setVisible(true);
     }
-    private final JTextArea generateAttributes(){
+    private JTextArea generateAttributes(){
         JTextArea textArea = new JTextArea();
         textArea.setEditable(false);
         //textArea.setLineWrap(true);
@@ -62,13 +63,19 @@ public class WorldDisplay extends JPanel{
         textArea.setBackground(new Color(164, 173, 210));
         return textArea;
     }
-    private final GridPanel generateGridPanel() throws RemoteException {
+    private JScrollPane generateVerticalScroll(Component view){
+        JScrollPane scrollpane = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);     
+        scrollpane.setViewportView(view);
+        scrollpane.setBorder(null);
+        return scrollpane;
+    }
+    private GridPanel generateGridPanel() throws RemoteException {
         GridPanel grid = new GridPanel(WORLD);
         grid.setMinimumSize(new Dimension(WORLD.width(), WORLD.height()));
         grid.setSize(WORLD.width()*100, WORLD.height()*100);
         return grid;
     }
-    private final JPanel generateWorldStatusPanel(){
+    private JPanel generateWorldStatusPanel(){
         JPanel wst = new JPanel();
         wst.setLayout(new GridLayout(8,1));
         JLabel worldstatus = new JLabel("[ World Status ]\n\n", JLabel.CENTER);
@@ -95,7 +102,7 @@ public class WorldDisplay extends JPanel{
         //wst.setBackground(new Color(68, 82, 138));
         return wst;
     }
-    private final void updateWorldStatus(){
+    private void updateWorldStatus(){
         try {
             int[] population = WORLD.population();
             timestep.setText("Timestep: "+WORLD.getTimesteps());
@@ -107,11 +114,11 @@ public class WorldDisplay extends JPanel{
             JOptionPane.showMessageDialog(this, "Connection to server failed", "Connection error", JOptionPane.ERROR_MESSAGE);
         }
     }
-    private final JPanel generateInfoPanel(){
+    private JPanel generateInfoPanel(){
         JPanel infoDisp = new JPanel();
         infoDisp.setLayout(new BorderLayout());
         infoDisp.add(worldStatusPanel, BorderLayout.NORTH);
-        infoDisp.add(attributes, BorderLayout.CENTER);
+        infoDisp.add(scrollAttributes, BorderLayout.CENTER);
         infoDisp.add(controls, BorderLayout.SOUTH);
         infoDisp.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
         //textDisp.setBackground(new Color(68, 82, 138));
@@ -121,7 +128,7 @@ public class WorldDisplay extends JPanel{
         return gridpane;
     }
     
-    private final void updateAttributes() {
+    private void updateAttributes() {
         //state.setText()
         String s = "The currently selected\nlocation has ";
         if (currentLocation == null || currentLocation.mutableContents() == null || currentLocation.mutableContents().isEmpty())

@@ -1,20 +1,13 @@
 package student.remote.client;
 
 import java.awt.Component;
-import java.awt.HeadlessException;
-import java.net.MalformedURLException;
-import java.nio.channels.IllegalBlockingModeException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import student.remote.login.LoginClient;
 import student.remote.login.LoginClient.LoginException;
-import student.remote.login.LoginServer;
-
 import student.remote.server.AdminServer;
 import student.remote.server.PlayerServer;
 import student.remote.server.Server;
