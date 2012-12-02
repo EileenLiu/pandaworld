@@ -5,7 +5,9 @@
 package student.gui;
 
 import java.rmi.RemoteException;
+import student.remote.login.LLoginClient;
 import student.remote.login.LoginClient;
+import student.remote.login.Permission;
 import student.remote.server.AdminServer;
 import student.remote.server.Server;
 import student.remote.world.RWorld;
@@ -19,14 +21,24 @@ public class InteractionHandler {
     private RWorld rmodel;
     private World wmodel;
     private WorldFrame view;
-    private LoginClient login;
+    private LLoginClient login;
     private Server server;
     public InteractionHandler(final RWorld _model, final WorldFrame _view)
     {
         rmodel = _model;
         wmodel = _model instanceof World ? (World)_model : null;
         view = _view;
-        login = null;
+        login = new LLoginClient() {
+            @Override public byte[] getToken() {
+                return null;
+            }
+            @Override public String getUser() {
+                return null;
+            }
+            @Override public boolean hasPermission(Permission p) throws RemoteException {
+                return false;
+            }
+        };
         server = null;
         load();
     }
@@ -59,7 +71,7 @@ public class InteractionHandler {
     {
         return server;
     }
-    public LoginClient getLogin()
+    public LLoginClient getLogin()
     {
         return login;
     }
@@ -82,6 +94,6 @@ public class InteractionHandler {
     }
 
     boolean isRemote() {
-        return wmodel != null;
+        return wmodel == null;
     }
 }

@@ -64,7 +64,7 @@ public final class Critter /*extends Entity*/ implements CritterState, RemoteCri
         if(_pos!=null)
             pos = _pos;
         else
-            pos =_wor.randomLoc();
+            pos =_wor.lrandomLoc();
         mem = _mem;
         dir = HexDir.N;
         if(_p==null)
@@ -357,32 +357,28 @@ public final class Critter /*extends Entity*/ implements CritterState, RemoteCri
             return;
         Tile t = rt.mutableContents();
         if(t.critter() && t.getCritter().amorous) {
-            try {
-                Critter c = t.getCritter();
-                int nrules = ch(this,c).prog.numChildren(), 
-                        tr = prog.numChildren(), 
-                        cr = c.prog.numChildren();
-                Rule r[] = new Rule[nrules];
-                for(int i = 0; i < nrules; i++) 
-                    r[i] = (i<tr?i<cr?Math.random()>.5?c:this:this:c).prog.rules().get(i);
-                int msiz = ch(this,c).mem[0];
-                int []bmem = new int[msiz];
-                bmem[0] = msiz;
-                bmem[1] = ch(this,c).mem[1];
-                bmem[2] = ch(this,c).mem[2];
-                bmem[3] = 1;
-                bmem[4] = Constants.INITIAL_ENERGY;
-                bmem[8] = 1;
-                Critter cpos = ch(this,c);
-                Reference<Tile> np = cpos.pos.lin(-1, cpos.dir);
-                if(np==null || np.contents().rock()||np.contents().critter()) np = (cpos==this?c:this).pos.lin(-1, (cpos!=this?this:c).dir);
-                Critter baby = new Critter(wor, np, prog, bmem, lineage, true);
-                np.contents().putCritter(baby);
-                mem[4] -= Constants.MATE_COST * complexity();
-                c.mem[4] -= Constants.MATE_COST * c.complexity();
-            } catch (RemoteException ex) {
-                System.err.println("Failed to connect for mate");
-            }
+            Critter c = t.getCritter();
+            int nrules = ch(this,c).prog.numChildren(), 
+                    tr = prog.numChildren(), 
+                    cr = c.prog.numChildren();
+            Rule r[] = new Rule[nrules];
+            for(int i = 0; i < nrules; i++) 
+                r[i] = (i<tr?i<cr?Math.random()>.5?c:this:this:c).prog.rules().get(i);
+            int msiz = ch(this,c).mem[0];
+            int []bmem = new int[msiz];
+            bmem[0] = msiz;
+            bmem[1] = ch(this,c).mem[1];
+            bmem[2] = ch(this,c).mem[2];
+            bmem[3] = 1;
+            bmem[4] = Constants.INITIAL_ENERGY;
+            bmem[8] = 1;
+            Critter cpos = ch(this,c);
+            Reference<Tile> np = cpos.pos.lin(-1, cpos.dir);
+            if(np==null || np.mutableContents().rock()||np.mutableContents().critter()) np = (cpos==this?c:this).pos.lin(-1, (cpos!=this?this:c).dir);
+            Critter baby = new Critter(wor, np, prog, bmem, lineage, true);
+            np.mutableContents().putCritter(baby);
+            mem[4] -= Constants.MATE_COST * complexity();
+            c.mem[4] -= Constants.MATE_COST * c.complexity();
         }
         else amorous = true;
         acted = true;

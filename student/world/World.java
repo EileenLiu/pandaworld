@@ -46,6 +46,9 @@ public class World extends UnicastRemoteObject implements RWorld {
 
     public World(int _r, int _c) throws RemoteException {
         grid = new ArrayHexGrid<Tile>(_r, _c);
+        for(int r = 0; r < _r; r++)
+            for(int c = 0; c < _c; c++)
+                grid.set(c, r, new Tile(false));
     }
 
     @Override
@@ -115,7 +118,11 @@ public class World extends UnicastRemoteObject implements RWorld {
     }
     
     @Override
-    public Reference<Tile> at(int r, int c) {
+    public RReference<Tile> at(int r, int c) {
+        return grid.rat(c, r);
+    }
+    
+    public Reference<Tile> lat(int r, int c) {
         return grid.ref(c, r);
     }
     /**
@@ -144,7 +151,7 @@ public class World extends UnicastRemoteObject implements RWorld {
      */
     public HexGrid.Reference<Tile> add(Object what, HexGrid.Reference<Tile> loc) throws InvalidWorldAdditionException, RemoteException{
             if (loc==null){
-                loc = this.randomLoc();
+                loc = (Reference<Tile>) this.randomLoc();
             }
             if (loc.mutableContents() == null) {
                 loc.setContents(new Tile(false, 0));
@@ -178,9 +185,13 @@ public class World extends UnicastRemoteObject implements RWorld {
     public HexGrid.Reference<Tile> defaultLoc() {
         return grid.ref(0, 0);
     }
+    
     @Override
-    public HexGrid.Reference<Tile> randomLoc() {
-        return grid.ref((int)(Math.random()*height()), (int)(Math.random()*height()));
+    public RReference<Tile> randomLoc() {
+        return grid.rat((int)(Math.random()*height()), (int)(Math.random()*width()));
+    }
+    public Reference<Tile> lrandomLoc() {
+        return grid.ref((int)(Math.random()*height()), (int)(Math.random()*width()));
     }
     /** 
      * MUST BE USED FOR CHANGES

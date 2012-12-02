@@ -13,7 +13,7 @@ import java.util.Iterator;
 import static student.grid.HexGrid.HexDir.*;
 
 
-public class ArrayHexGrid<E extends Remote> implements HexGrid<E> {
+public class ArrayHexGrid<E extends UnicastRemoteObject> implements HexGrid<E> {
     private int rs, cs;
     private Ref data[][];
     
@@ -55,6 +55,13 @@ public class ArrayHexGrid<E extends Remote> implements HexGrid<E> {
 
     @Override
     public Reference<E> ref(int c, int r) {
+        if(r < 0 || c < 0 || r >= rs || c >= cs)
+            return null;
+        return data[r][c];
+    }
+    
+    @Override
+    public RReference<E> rat(int c, int r) {
         if(r < 0 || c < 0 || r >= rs || c >= cs)
             return null;
         return data[r][c];

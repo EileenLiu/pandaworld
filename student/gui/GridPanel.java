@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import javax.swing.*;
 import student.grid.HexGrid.Reference;
+import student.grid.RReference;
 import student.grid.Tile;
 import student.gui.render.PNGImagePack;
 import student.remote.client.Client;
@@ -22,7 +23,7 @@ import student.remote.world.RWorld;
 
 public class GridPanel extends JPanel implements Scrollable{
     private static final PNGImagePack defaultImgs;
-    private static final String[] imgnames = new String[]{"tile", "rock", "plnt", "food", "nn", "ne", "nw", "se", "sw", "ss"};
+    private static final String[] imgnames = new String[]{"tile", "rock", "plnt", "food", "nn", "ne", "nw", "se", "sw", "ss", "select"};
     static {
         defaultImgs = new PNGImagePack("data.zip", imgnames, null, 0.0);
         if (!defaultImgs.isValid()) {
@@ -30,7 +31,8 @@ public class GridPanel extends JPanel implements Scrollable{
             System.exit(254);
         }
     }
-    private HashMap<String, PNGImagePack> imagepackages;
+    private HashMap<String, PNGImagePack> imagepackages
+            = new HashMap<String, PNGImagePack>();
     private Polygon hexen[][];
     //A MULTIPLE OF FOUR
     private int HEXSIZE = 140;
@@ -49,9 +51,7 @@ public class GridPanel extends JPanel implements Scrollable{
                     //System.out.println(""+x+","+y);
                     //gp.fillOval(x, y, 10, 10);
                     hexen[r][c] = makePoly(x,y,HEXSIZE);
-                    Reference<Tile> rt = world.at(r, c);
-                    if(rt.mutableContents() == null)
-                        rt.setContents(new Tile(false, 0));
+                    RReference<Tile> rt = world.at(r, c);
                 } catch (RemoteException ex) {
                     System.err.println("Could not instantiate tile");
                 }
@@ -172,7 +172,9 @@ public class GridPanel extends JPanel implements Scrollable{
                     Rectangle bbx = loc.getBounds();
                     Tile t = world.at(r, c).contents();
                     PNGImagePack imagepack = defaultImgs;
-                    if (t != null && t.rock()) {
+                    if (t == null) {
+                        System.err.println("Null tile");
+                    } else if(t.rock()) {
                         drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, imagepack.get(imgnames[1]));//ROCK);
                     } else {
                         drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, imagepack.get(imgnames[0]));//TILE); 
@@ -191,9 +193,6 @@ public class GridPanel extends JPanel implements Scrollable{
                             if (s == null) {
                                 s = "data.zip";
                             }
-                            if (t.plant()) {
-                                drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, imagepack.get(imgnames[2]));
-                            }
                             if (imagepackages.containsKey(s + color + scaleFactor)) {
                                 imagepack = imagepackages.get(s + color + scaleFactor);
                             } else {
@@ -203,28 +202,6 @@ public class GridPanel extends JPanel implements Scrollable{
                                 } else {
                                     imagepack = defaultImgs;
                                 }
-                                switch (t.getCritter().direction()) {
-                                    case N:
-                                        i = imagepack.get(imgnames[4]);
-                                        break;//CNN; break;
-                                    case NE:
-                                        i = imagepack.get(imgnames[5]);
-                                        break;//CNE; break;
-                                    case NW:
-                                        i = imagepack.get(imgnames[6]);
-                                        break;//CNW; break;
-                                    case S:
-                                        i = imagepack.get(imgnames[9]);
-                                        break;//CSS; break;
-                                    case SW:
-                                        i = imagepack.get(imgnames[8]);
-                                        break;//CSW; break;
-                                    case SE:
-                                        i = imagepack.get(imgnames[7]);
-                                        break;//CSE; break;
-                                }
-
-                                drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, i);
                             }
                             switch (t.getCritter().direction()) {
                                 case N:
@@ -274,7 +251,7 @@ public class GridPanel extends JPanel implements Scrollable{
      * @param gp 
      */
     private void drawSelectionIndicator(int hexsize, Graphics gp) {
-        drawHexagon(selectRect.x, selectRect.y, selectr, selectc, hexsize, gp, defaultImgs.get(imgnames[imgnames.length-1]));
+        drawHexagon(selectRect.x, selectRect.y, selectr, selectc, hexsize, gp, defaultImgs.get(imgnames[10]));
     }
     @Override
     public Dimension getPreferredSize()

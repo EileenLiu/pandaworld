@@ -61,6 +61,7 @@ public class PNGImagePack {
     }
 
     public Image get(String key) {
+    //    System.out.println("log");
         return pack.get(key);
     }
 

@@ -43,6 +43,7 @@ public interface HexGrid<E> extends Iterable<HexGrid.Reference<E>> {
      * @return a reference to that cell.
      */
     public Reference<E> ref(int c, int r);
+    public RReference<E> rat(int c, int r);
 
     /**
      * Represents an immutable reference to a position in a HexGrid.
@@ -51,17 +52,16 @@ public interface HexGrid<E> extends Iterable<HexGrid.Reference<E>> {
      * same cell. The contents of the cell may be manipulated freely unless
      * other restrictions are placed.
      */
-    public static interface Reference<E> extends RReference<E> {
+    public static interface Reference<E>  {
 
         public E mutableContents();
 
         public void setContents(E e);
         
-        @Override
         public int row();
-        @Override
+
         public int col();
-        @Override
+        
         public int slice();
         /**
          * Returns the Reference to the position {@code dist} units in the given
@@ -72,7 +72,6 @@ public interface HexGrid<E> extends Iterable<HexGrid.Reference<E>> {
          * @return A Reference to the cell in that direction, or {@code null} if
          * that cell is past the edge of the grid.
          */
-        @Override
         public Reference<E> lin(int dist, HexDir dir);
 
         /**

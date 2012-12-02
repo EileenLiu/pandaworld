@@ -11,10 +11,14 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import student.grid.HexGrid;
+import student.grid.RReference;
 import student.grid.Tile;
+import student.remote.client.Client;
 import student.remote.world.RWorld;
 
 public class WorldDisplay extends JPanel{
@@ -28,11 +32,11 @@ public class WorldDisplay extends JPanel{
     public JLabel timestep, crittercount, plantcount, foodcount, rockcount;
     
     public RWorld WORLD;
-    public HexGrid.Reference<Tile> currentLocation;
+    public int curX, curY;
     
     public WorldDisplay(RWorld world) throws RemoteException {
         WORLD = world;
-        currentLocation = WORLD.at(0,0);
+        curX = curY = 0;
         
         setLayout(new BorderLayout());
         
@@ -132,24 +136,29 @@ public class WorldDisplay extends JPanel{
     }
     
     private void updateAttributes() {
-        String s = "The currently selected\nlocation has ";
-        if (currentLocation == null || currentLocation.mutableContents() == null || currentLocation.mutableContents().isEmpty())
-            s = s+"\nnothing... ";
-        else
-        {
-        if (currentLocation.mutableContents().rock())
-            s = s + "\na rock... ";
-        if (currentLocation.mutableContents().food())
-            s = s + "\nfood worth " + currentLocation.mutableContents().foodValue() + " units of energy...";
-        if (currentLocation.mutableContents().plant())
-            s = s + "\na plant... ";
-        if (currentLocation.mutableContents().critter()) {
-            s = s + "\na critter with ";
-            s = s + currentLocation.mutableContents().getCritter().state()+"\n";
- //           s = s + "\nwhich sees food: "+WORLD.smell(currentLocation, World.TilePredicate.isFood, 10);
+        try {
+            String s = "The currently selected\nlocation has ";
+            RReference<Tile> currentLocation = WORLD.at(curX, curX);
+            if (currentLocation == null || currentLocation.contents() == null || currentLocation.contents().isEmpty())
+                s = s+"\nnothing... ";
+            else
+            {
+            if (currentLocation.contents().rock())
+                s = s + "\na rock... ";
+            if (currentLocation.contents().food())
+                s = s + "\nfood worth " + currentLocation.contents().foodValue() + " units of energy...";
+            if (currentLocation.contents().plant())
+                s = s + "\na plant... ";
+            if (currentLocation.contents().critter()) {
+                s = s + "\na critter with ";
+                s = s + currentLocation.contents().getCritter().state()+"\n";
+     //           s = s + "\nwhich sees food: "+WORLD.smell(currentLocation, World.TilePredicate.isFood, 10);
+            }
+            }
+            attributes.setText(s);
+        } catch (RemoteException ex) {
+            Client.connectionError(this);
         }
-        }
-        attributes.setText(s);
     }
     /**
      * Updates the current location with the given location reference
@@ -157,9 +166,20 @@ public class WorldDisplay extends JPanel{
      */
     public void setCurrentLocation(HexGrid.Reference<Tile> r)
     {
-        currentLocation = r;
-        gridpane.scrollRectToVisible(gridpane.updateSelection(currentLocation.row(), currentLocation.col()));
-   }
+        curX = r.row();
+        curY = r.col();
+        gridpane.scrollRectToVisible(gridpane.updateSelection(curX, curY));
+    }
+    public void setCurrentLocation(RReference<Tile> r) {
+        try {
+            curX = r.row();
+            curY = r.col();
+            gridpane.scrollRectToVisible(gridpane.updateSelection(curX, curY));
+        } catch (RemoteException ex) {
+            Client.connectionError(this);
+        }
+
+    }
     public void update() {
         gridpane.repaint();
         updateWorldStatus();

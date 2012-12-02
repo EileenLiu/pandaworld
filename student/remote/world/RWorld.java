@@ -19,7 +19,7 @@ import student.remote.server.RemoteCritter;
  */
 public interface RWorld extends java.rmi.Remote {
 
-    Reference<Tile> at(int r, int c)
+    RReference<Tile> at(int r, int c)
             throws RemoteException;
 
     RemoteCritter critterForID(int id)

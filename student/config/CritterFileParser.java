@@ -65,7 +65,7 @@ public class CritterFileParser {
             }
             Program program = ParserFactory.getParser().parse(inStreamReader);
             if (pos == null) {
-                pos = world.randomLoc();
+                pos = world.lrandomLoc();
             }
             if (!(direction > 0 && direction < 6)) {
                 c = new Critter(world, pos, program);

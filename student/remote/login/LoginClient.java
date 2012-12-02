@@ -10,7 +10,7 @@ import java.security.SecureRandom;
  *
  * @author haro
  */
-public class LoginClient {
+public class LoginClient implements LLoginClient {
     private RLogin remote;
     private SecureRandom sync;
     private String uname;
@@ -33,16 +33,19 @@ public class LoginClient {
         sync.setSeed(gab.toByteArray());
     }
     
+    @Override
     public byte []getToken() {
         byte bytes[] = new byte[32];
         sync.nextBytes(bytes);
         return bytes;
     }
     
+    @Override
     public String getUser() {
         return uname;
     }
     
+    @Override
     public boolean hasPermission(Permission p) throws RemoteException {
         return remote.hasPermission(uname, p);
     }
