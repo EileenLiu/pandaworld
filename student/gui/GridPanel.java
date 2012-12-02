@@ -24,65 +24,12 @@ import student.world.World;
 public class GridPanel extends JPanel implements Scrollable{
     private static final PNGImagePack defaultImgs;
     private static final String[] imgnames = new String[]{"tile", "rock", "plnt", "food", "nn", "ne", "nw", "se", "sw", "ss"};
-    //private static final Image TILE, ROCK, PLNT, FOOD, CNN, CNE, CNW, CSE, CSW, CSS;
-    
     static {
-        //try {
-        
-        defaultImgs = new PNGImagePack("data.zip", imgnames, null);
-        /*TILE = defaultImgs.get(imgnames[0]);
-        ROCK = defaultImgs.get(imgnames[1]);
-        PLNT = defaultImgs.get(imgnames[2]);
-        FOOD = defaultImgs.get(imgnames[3]);
-        CNN = defaultImgs.get(imgnames[4]);
-        CNE = defaultImgs.get(imgnames[5]);
-        CNW = defaultImgs.get(imgnames[6]);
-        CSE = defaultImgs.get(imgnames[7]);
-        CSW = defaultImgs.get(imgnames[8]);
-        CSS = defaultImgs.get(imgnames[9]);*/
+        defaultImgs = new PNGImagePack("data.zip", imgnames, null, 0.0);
         if (!defaultImgs.isValid()) {
             System.err.println("Could not load image data!");
             System.exit(254);
         }
-
-        /*ZipFile zf = new ZipFile("data.zip");
-         ZipEntry eti = zf.getEntry("tile.png"),
-         erk = zf.getEntry("rock.png"),
-         epl = zf.getEntry("plnt.png"),
-         efd = zf.getEntry("food.png"),
-         enn = zf.getEntry("nn.png"),
-         ene = zf.getEntry("ne.png"),
-         enw = zf.getEntry("nw.png"),
-         ese = zf.getEntry("se.png"),
-         esw = zf.getEntry("sw.png"),
-         ess = zf.getEntry("ss.png");
-         InputStream iti = zf.getInputStream(eti),
-         irk = zf.getInputStream(erk),
-         ipl = zf.getInputStream(epl),
-         ifd = zf.getInputStream(efd),
-         inn = zf.getInputStream(enn),
-         ine = zf.getInputStream(ene),
-         inw = zf.getInputStream(enw),
-         ise = zf.getInputStream(ese),
-         isw = zf.getInputStream(esw),
-         iss = zf.getInputStream(ess);
-         TILE = ImageIO.read(iti);
-         ROCK = ImageIO.read(irk);
-         PLNT = ImageIO.read(ipl);
-         FOOD = ImageIO.read(ifd);
-         CNN  = ImageIO.read(inn);
-         CNE  = ImageIO.read(ine);
-         CNW  = ImageIO.read(inw);
-         CSE  = ImageIO.read(ise);
-         CSW  = ImageIO.read(isw);
-         CSS  = ImageIO.read(iss);
-         } catch (IOException ex) {
-         System.err.println("Could not load image data!");
-         System.exit(254);
-         } catch (RuntimeException ex) {
-         System.err.println("Could not load image data!");
-         System.exit(253);
-         }*/
     }
     private HashMap<String, PNGImagePack> imagepackages;
     private Polygon hexen[][];
@@ -217,6 +164,7 @@ public class GridPanel extends JPanel implements Scrollable{
                         Image i = null;
                         String s = t.getCritter().getAppearance();
                         Color color = t.getCritter().getColor();
+                        Double scaleFactor = t.getCritter().getScaleFactor();
                         //System.out.println(s + color);
                         if (s == null) {
                             s = "data.zip";
@@ -224,12 +172,12 @@ public class GridPanel extends JPanel implements Scrollable{
                         if (imagepackages == null) {
                             imagepackages = new HashMap<String, PNGImagePack>();
                         }
-                        if (imagepackages.containsKey(s + color)) {
-                            imagepack = imagepackages.get(s + color);
+                        if (imagepackages.containsKey(s + color + scaleFactor)) {
+                            imagepack = imagepackages.get(s + color + scaleFactor);
                         } else {
-                            imagepack = new PNGImagePack(s, Arrays.copyOfRange(imgnames, 4, imgnames.length), color);
+                            imagepack = new PNGImagePack(s, Arrays.copyOfRange(imgnames, 4, imgnames.length), color, scaleFactor);
                             if (imagepack.isValid()) {
-                                imagepackages.put(s + color, imagepack);
+                                imagepackages.put(s + color + scaleFactor, imagepack);
                             } else {
                                 imagepack = defaultImgs;
                             }
@@ -244,13 +192,14 @@ public class GridPanel extends JPanel implements Scrollable{
                             } 
                         
                         drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, i);
+                        //gp.drawRect(bbx.x, bbx.y, hexsize, hexsize);
                     }
                 }
-                /*/
+                /*
                 gp.setColor(Color.RED);
                 String s = "("+r+","+c+")";
                 gp.drawChars(s.toCharArray(), 0, s.length(), bbx.x+20, bbx.y+20);
-                /*/
+                */
             }
         }
     }
