@@ -29,10 +29,8 @@ import student.world.World;
 public final class Critter /*extends Entity*/ implements CritterState, RemoteCritter {
     private static AtomicInteger SERIAL = new AtomicInteger();
     private static HashMap<Integer,Critter> aliveCritters = new HashMap<Integer,Critter>();
-    private static final double[] sizeScaleFactors = new double[]{-0.5,-0.13763848,0.049648523,0.14644808,0.19647905,0.22233763,0.23570266
-,0.24261041,0.24618068,0.24802598,0.24897972};/**{-0.5, -0.36404806, -0.25274003, -0.1616087, -0.086996734, -0.025909603, 0.024104357,
-0.06505227, 0.09857762, 0.12602584, 0.14849854, 0.16689764, 0.18196154, 0.19429483,
-0.20439245, 0.2126597, 0.21942835, 0.22497004, 0.22950721, 0.23322192, 0.23626328};**///{-.50, -.45, -.40, -.35,-.30, -.25, -.20, -.15, -.10, -.05, 0.0, 0.05, 0.1, 0.15, 0.2, 0.25};
+    private static final double[] sizeScaleFactors = new double[]{-0.5,-0.13763848,0.049648523,
+        0.14644808,0.19647905,0.22233763,0.23570266,0.24261041,0.24618068,0.24802598,0.24897972};
     private World wor;
     private int serial = SERIAL.getAndIncrement();
     private Reference<Tile> pos;

@@ -357,8 +357,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
         x -= masterController.getView().worldDisplay.scrollpane.getHorizontalScrollBar().getValue();
         y -= masterController.getView().worldDisplay.scrollpane.getVerticalScrollBar().getValue();
         int ret[] = masterController.getView().display().grid().hexAt(x, y);
-        if (ret == null) {
-            return null;
+        if (ret == null) {           return null;
         }
         int r = ret[0];
         int c = ret[1];

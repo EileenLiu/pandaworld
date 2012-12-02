@@ -106,4 +106,7 @@ public class Tile extends UnicastRemoteObject implements RTile {
             return -foodValue() + (plant()?-Constants.ENERGY_PER_PLANT:0);
         return 0;
     }
+    public String toString(){
+        return "Tile: "+((plant())?"Plant, ":"")+((food())?"Food, ":"")+((rock())?"Rock, ":"")+((critter())?("Critter: "+getCritter().toString()):"");
+    }
 }

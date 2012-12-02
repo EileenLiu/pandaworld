@@ -139,6 +139,7 @@ public class WorldDisplay extends JPanel{
         try {
             String s = "The currently selected\nlocation has ";
             RReference<Tile> currentLocation = WORLD.at(curX, curX);
+            System.out.println("Update Attributes, Current Location (R Ref): "+currentLocation);//currentLocation.contents().toString());
             if (currentLocation == null || currentLocation.contents() == null || currentLocation.contents().isEmpty())
                 s = s+"\nnothing... ";
             else
@@ -168,13 +169,17 @@ public class WorldDisplay extends JPanel{
     {
         curX = r.row();
         curY = r.col();
+        updateAttributes();
         gridpane.scrollRectToVisible(gridpane.updateSelection(curX, curY));
+        System.out.println("Current Location (Ref): "+r.mutableContents().toString());
     }
     public void setCurrentLocation(RReference<Tile> r) {
         try {
             curX = r.row();
             curY = r.col();
+            updateAttributes();
             gridpane.scrollRectToVisible(gridpane.updateSelection(curX, curY));
+            System.out.println("Current Location (R Ref): "+r.contents().toString());
         } catch (RemoteException ex) {
             Client.connectionError(this);
         }

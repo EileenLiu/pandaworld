@@ -119,10 +119,12 @@ public class World extends UnicastRemoteObject implements RWorld {
     
     @Override
     public RReference<Tile> at(int r, int c) {
+        //System.out.println("World: RReference<Tile> at("+r+","+c+")");
         return grid.rat(c, r);
     }
     
     public Reference<Tile> lat(int r, int c) {
+        //System.out.println("World: Reference<Tile> lat("+r+","+c+")");        
         return grid.ref(c, r);
     }
     /**
