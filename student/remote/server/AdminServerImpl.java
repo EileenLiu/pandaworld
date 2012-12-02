@@ -29,6 +29,7 @@ import student.config.CritterFileParser;
 import student.config.WorldFileParser;
 import student.grid.Critter;
 import student.grid.RReference;
+import student.grid.RTile;
 import student.grid.Tile;
 import student.parse.Action;
 import student.remote.login.*;
@@ -119,15 +120,13 @@ public class AdminServerImpl extends UnicastRemoteObject implements AdminServer,
         System.out.println("Login server ready");
         try {
             Registry registry = LocateRegistry.getRegistry();
-            registry.bind("Server", this);
+            registry.rebind("Server", this);
             System.err.println("Server ready");
             zaWarudo = new World(MAX_ROW, MAX_COLUMN);
             System.out.println("World exported");
         } catch (RemoteException ex) {
             System.err.println("Couldn't export world");
-        } catch (AlreadyBoundException abe) {
-            System.out.println("Already bound");
-        }
+        } 
     }
     
     @Override
@@ -524,7 +523,7 @@ public class AdminServerImpl extends UnicastRemoteObject implements AdminServer,
     }
 
     @Override
-    public RReference<Tile> putPlant(byte[] token, String user, RReference<Tile> randomLoc) throws RemoteException {
+    public RReference<RTile> putPlant(byte[] token, String user, RReference<RTile> randomLoc) throws RemoteException {
         if(!login.verifyRequest(user, token, Permission.ADMIN))
             throw new RemoteException("Login expired");
         try {
@@ -536,7 +535,7 @@ public class AdminServerImpl extends UnicastRemoteObject implements AdminServer,
     }
 
     @Override
-    public RReference<Tile> putRock(byte[] token, String user, RReference<Tile> randomLoc) throws RemoteException {
+    public RReference<RTile> putRock(byte[] token, String user, RReference<RTile> randomLoc) throws RemoteException {
         if(!login.verifyRequest(user, token, Permission.ADMIN))
             throw new RemoteException("Login expired");
         try {
@@ -548,16 +547,16 @@ public class AdminServerImpl extends UnicastRemoteObject implements AdminServer,
     }
 
     @Override
-    public boolean takeRock(byte[] token, String uname, RReference<Tile> rrclxtar) throws RemoteException {
+    public boolean takeRock(byte[] token, String uname, RReference<RTile> rrclxtar) throws RemoteException {
         if(!login.verifyRequest(uname, token, Permission.ADMIN))
             throw new RemoteException("Login expired");
-        return zaWarudo.at(rrclxtar.row(), rrclxtar.col()).contents().removeRock();
+        return zaWarudo.lat(rrclxtar.row(), rrclxtar.col()).mutableContents().removeRock();
     }
 
     @Override
-    public boolean takePlant(byte[] token, String uname, RReference<Tile> rrclxtar) throws RemoteException {
+    public boolean takePlant(byte[] token, String uname, RReference<RTile> rrclxtar) throws RemoteException {
         if(!login.verifyRequest(uname, token, Permission.ADMIN))
             throw new RemoteException("Login expired");
-        return zaWarudo.at(rrclxtar.row(), rrclxtar.col()).contents().removePlant();
+        return zaWarudo.lat(rrclxtar.row(), rrclxtar.col()).mutableContents().removePlant();
     }
 }

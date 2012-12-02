@@ -4,14 +4,14 @@
  */
 package student.grid;
 
-import java.util.Iterator;
-import student.config.Constants;
+import java.rmi.Remote;
+import java.rmi.server.UnicastRemoteObject;
 
 /**
  *
  * @author haro
  */
-public interface HexGrid<E> extends Iterable<HexGrid.Reference<E>> {
+public interface HexGrid<E extends Remote> extends Iterable<HexGrid.Reference<E>> {
     
     /**
      * Returns the item at the given location, given as column and row.
@@ -52,7 +52,7 @@ public interface HexGrid<E> extends Iterable<HexGrid.Reference<E>> {
      * same cell. The contents of the cell may be manipulated freely unless
      * other restrictions are placed.
      */
-    public static interface Reference<E>  {
+    public static interface Reference<E extends Remote>  {
 
         public E mutableContents();
 

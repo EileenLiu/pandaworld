@@ -477,8 +477,8 @@ public final class Critter /*extends Entity*/ implements CritterState, RemoteCri
     }
 
     @Override
-    public RReference<Tile> loc() {
-        return this.pos.export();
+    public RReference<RTile> loc() {
+        return(RReference) this.pos.export();
     }
 
     @Override

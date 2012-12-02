@@ -4,7 +4,9 @@
  */
 package student.grid;
 
+import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import student.grid.HexGrid.HexDir;
 import student.grid.HexGrid.Reference;
 
@@ -12,7 +14,7 @@ import student.grid.HexGrid.Reference;
  *
  * @author haro
  */
-public interface RReference<E> extends java.rmi.Remote {
+public interface RReference<E extends /*UnicastRemoteObject*/Remote> extends java.rmi.Remote {
 
     RReference<E> adj(HexDir dir) throws RemoteException;
 

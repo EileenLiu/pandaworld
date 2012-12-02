@@ -9,6 +9,7 @@ import student.grid.Critter;
 import student.grid.HexGrid;
 import student.grid.HexGrid.Reference;
 import student.grid.RReference;
+import student.grid.RTile;
 import student.grid.Tile;
 import student.parse.Program;
 import student.remote.server.RemoteCritter;
@@ -19,7 +20,7 @@ import student.remote.server.RemoteCritter;
  */
 public interface RWorld extends java.rmi.Remote {
 
-    RReference<Tile> at(int r, int c)
+    RReference<RTile> at(int r, int c)
             throws RemoteException;
 
     RemoteCritter critterForID(int id)
@@ -37,14 +38,14 @@ public interface RWorld extends java.rmi.Remote {
     int[] population()
             throws RemoteException;
 
-    RReference<Tile> randomLoc()
+    RReference<RTile> randomLoc()
             throws RemoteException;
 
     int width()
             throws RemoteException;
     
-    RemoteCritter makeCritter(RReference<Tile> loc, Program p)
+    RemoteCritter makeCritter(RReference<RTile> loc, Program p)
             throws RemoteException;
-    RemoteCritter makeCritter(RReference<Tile> loc, Program p, int direction)
+    RemoteCritter makeCritter(RReference<RTile> loc, Program p, int direction)
             throws RemoteException;
 }

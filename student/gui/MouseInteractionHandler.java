@@ -23,6 +23,7 @@ import javax.swing.JPopupMenu;
 import student.grid.Critter;
 import student.grid.HexGrid.Reference;
 import student.grid.RReference;
+import student.grid.RTile;
 import student.grid.Tile;
 import student.parse.Constant;
 import student.parse.Program;
@@ -40,7 +41,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
 
     //private final WorldFrame view;
     private InteractionHandler masterController;
-    private RReference<Tile> rclxtar = null;
+    private RReference<RTile> rclxtar = null;
     private JPopupMenu men;
     private String msg;
     private Action rock, unrock,
@@ -192,7 +193,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
     }
 
     private void leftClick(MouseEvent e) {
-        rclxtar = rlookup(e);
+        rclxtar = lookup(e);
         masterController.getView().display().setCurrentLocation(rclxtar);
         masterController.getView().repaint();
     }
@@ -202,7 +203,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
             men.setVisible(false);
         }
         try {
-            rclxtar = rlookup(e);
+            rclxtar = lookup(e);
             masterController.getView().display().setCurrentLocation(rclxtar);
             men = new JPopupMenu();
             men.addKeyListener(this);
@@ -229,7 +230,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
         }
     }
 
-    private RReference<Tile> rlookup(MouseEvent e) {
+    private RReference<RTile> lookup(MouseEvent e) {
         try {
             int x = e.getX();
             int y = e.getY();
@@ -237,7 +238,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
             y -= masterController.getView().worldDisplay.scrollpane.getVerticalScrollBar().getValue();
             int ret[] = masterController.getView().display().grid().hexAt(x, y);
             if (ret == null) {
-                return null;
+                throw new RemoteException();
             }
             int r = ret[0];
             int c = ret[1];

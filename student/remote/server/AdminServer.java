@@ -2,6 +2,7 @@ package student.remote.server;
 
 import java.rmi.RemoteException;
 import student.grid.RReference;
+import student.grid.RTile;
 import student.grid.Tile;
 import student.parse.Action;
 import static student.remote.login.Permission.ADMIN;
@@ -201,15 +202,15 @@ public interface AdminServer extends PlayerServer {
 
     public void putCritter(byte []token, String uname, RemoteCritter rc) throws RemoteException;
 
-    public RReference<Tile> putPlant(byte[] token, String user, RReference<Tile> randomLoc)
+    public RReference<RTile> putPlant(byte[] token, String user, RReference<RTile> randomLoc)
             throws RemoteException;
     
-    public RReference<Tile> putRock(byte[] token, String user, RReference<Tile> randomLoc)
+    public RReference<RTile> putRock(byte[] token, String user, RReference<RTile> randomLoc)
             throws RemoteException;
 
-    public boolean takeRock(byte[] token, String uname, RReference<Tile> rrclxtar)
+    public boolean takeRock(byte[] token, String uname, RReference<RTile> rrclxtar)
             throws RemoteException;
 
-    public boolean takePlant(byte[] token, String uname, RReference<Tile> rrclxtar)
+    public boolean takePlant(byte[] token, String uname, RReference<RTile> rrclxtar)
             throws RemoteException;
 }

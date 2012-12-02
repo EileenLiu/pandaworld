@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import student.grid.RReference;
+import student.grid.RTile;
 import student.grid.Tile;
 
 public interface RemoteCritter extends Remote {
@@ -16,7 +17,7 @@ public interface RemoteCritter extends Remote {
     public void act(student.parse.Action action)
             throws RemoteException;
     
-    public RReference<Tile> loc()
+    public RReference<RTile> loc()
             throws RemoteException;
 
     public void checkDeath()

@@ -45,6 +45,7 @@ public class InteractionHandler {
             player = login.hasPermission(Permission.USER)  ? server.getPlayerServer(login.getToken(), lih.username) : null;
             admin  = login.hasPermission(Permission.ADMIN) ? server.getAdminServer(login.getToken(), lih.username) : null;
             load();
+            rmodel = server.getWorld();
         } catch (NotBoundException ex) {
             JOptionPane.showMessageDialog(view,
                                           "Cannot find server!",
@@ -64,7 +65,6 @@ public class InteractionHandler {
         MouseInteractionHandler controller = new MouseInteractionHandler(this);
         ControlPanelInteractionHandler cpih = new ControlPanelInteractionHandler(this);
         MenuInteractionHandler mih = new MenuInteractionHandler(this);
-        LoginInteractionHandler lih = new LoginInteractionHandler(this);
         view.setVisible(true);
         view.repaint();
         view.setDefaultCloseOperation(WorldFrame.EXIT_ON_CLOSE);

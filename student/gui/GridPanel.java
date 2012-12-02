@@ -16,6 +16,7 @@ import java.util.HashMap;
 import javax.swing.*;
 import student.grid.HexGrid.Reference;
 import student.grid.RReference;
+import student.grid.RTile;
 import student.grid.Tile;
 import student.gui.render.PNGImagePack;
 import student.remote.client.Client;
@@ -51,7 +52,7 @@ public class GridPanel extends JPanel implements Scrollable{
                     //System.out.println(""+x+","+y);
                     //gp.fillOval(x, y, 10, 10);
                     hexen[r][c] = makePoly(x,y,HEXSIZE);
-                    RReference<Tile> rt = world.at(r, c);
+                    RReference<RTile> rt = world.at(r, c);
                 } catch (RemoteException ex) {
                     System.err.println("Could not instantiate tile");
                 }
@@ -170,7 +171,7 @@ public class GridPanel extends JPanel implements Scrollable{
                 for (int r = 0; r < world.height(); r++) {
                     Polygon loc = hexen[r][c];
                     Rectangle bbx = loc.getBounds();
-                    Tile t = world.at(r, c).contents();
+                    RTile t = world.at(r, c).contents();
                     PNGImagePack imagepack = defaultImgs;
                     if (t == null) {
                         System.err.println("Null tile");

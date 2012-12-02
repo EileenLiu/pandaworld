@@ -22,6 +22,7 @@ import student.grid.HexGrid;
 import student.grid.HexGrid.HexDir;
 import student.grid.HexGrid.Reference;
 import student.grid.RReference;
+import student.grid.RTile;
 import student.grid.Species;
 import student.grid.Tile;
 import student.parse.Program;
@@ -118,8 +119,8 @@ public class World extends UnicastRemoteObject implements RWorld {
     }
     
     @Override
-    public RReference<Tile> at(int r, int c) {
-        return grid.rat(c, r);
+    public RReference<RTile> at(int r, int c) {
+        return(RReference) grid.rat(c, r);
     }
     
     public Reference<Tile> lat(int r, int c) {
@@ -187,8 +188,8 @@ public class World extends UnicastRemoteObject implements RWorld {
     }
     
     @Override
-    public RReference<Tile> randomLoc() {
-        return grid.rat((int)(Math.random()*height()), (int)(Math.random()*width()));
+    public RReference<RTile> randomLoc() {
+        return(RReference) grid.rat((int)(Math.random()*height()), (int)(Math.random()*width()));
     }
     public Reference<Tile> lrandomLoc() {
         return grid.ref((int)(Math.random()*height()), (int)(Math.random()*width()));
@@ -302,12 +303,12 @@ public class World extends UnicastRemoteObject implements RWorld {
     }
 
     @Override
-    public RemoteCritter makeCritter(RReference<Tile> loc, Program p) throws RemoteException {
+    public RemoteCritter makeCritter(RReference<RTile> loc, Program p) throws RemoteException {
         return new Critter(this, null, p);
     }
 
     @Override
-    public RemoteCritter makeCritter(RReference<Tile> loc, Program p, int direction) throws RemoteException {
+    public RemoteCritter makeCritter(RReference<RTile> loc, Program p, int direction) throws RemoteException {
         return new Critter(this, null, p, direction);
     }
     

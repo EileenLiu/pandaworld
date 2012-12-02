@@ -17,6 +17,7 @@ import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import student.grid.HexGrid;
 import student.grid.RReference;
+import student.grid.RTile;
 import student.grid.Tile;
 import student.remote.client.Client;
 import student.remote.server.Server;
@@ -140,7 +141,7 @@ public class WorldDisplay extends JPanel{
     private void updateAttributes() {
         try {
             String s = "The currently selected\nlocation has ";
-            RReference<Tile> currentLocation = WORLD.at(curX, curX);
+            RReference<RTile> currentLocation = WORLD.at(curX, curX);
             if (currentLocation == null || currentLocation.contents() == null || currentLocation.contents().isEmpty())
                 s = s+"\nnothing... ";
             else
@@ -166,7 +167,7 @@ public class WorldDisplay extends JPanel{
      * Updates the current location with the given location reference
      * @param r the given location reference
      */
-    public void setCurrentLocation(RReference<Tile> r) {
+    public void setCurrentLocation(RReference<RTile> r) {
         try {
             curX = r.row();
             curY = r.col();

@@ -26,5 +26,4 @@ public interface RTile extends Remote {
     boolean plant() throws RemoteException;
 
     boolean rock() throws RemoteException;
-    
 }
