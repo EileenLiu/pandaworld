@@ -117,13 +117,14 @@ public class World extends UnicastRemoteObject implements RWorld {
     public int width() {
         return grid.nCols();
     }
-    
+
     @Override
     public RTile tileAt(int r, int c) throws RemoteException {
         return grid.rat(c, r).contents();
     }
     
     public Reference<Tile> lat(int r, int c) {
+        //System.out.println("World: Reference<Tile> lat("+r+","+c+")");        
         return grid.ref(c, r);
     }
     /**

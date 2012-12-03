@@ -109,4 +109,9 @@ public class Tile extends UnicastRemoteObject implements RTile {
     public boolean removeRock() {
         return rock &&! (rock = false);
     }
+    
+    public String toString(){
+        return "Tile: "+((plant())?"Plant, ":"")+((food())?"Food, ":"")+((rock())?"Rock, ":"")+((critter())?("Critter: "+getCritter().toString()):"");
+
+    }
 }

@@ -55,16 +55,22 @@ public class ArrayHexGrid<E extends UnicastRemoteObject> implements HexGrid<E> {
 
     @Override
     public Reference<E> ref(int c, int r) {
-        if(r < 0 || c < 0 || r >= rs || c >= cs)
+        if(r < 0 || c < 0 || r >= rs || c >= cs){
+            //System.out.println("ArrayHexGrid: Reference<E> ref("+r+","+c+") returns null");
             return null;
+        }
+        //System.out.println("ArrayHexGrid: Reference<E> ref("+r+","+c+") returns data["+r+"]"+"["+c+"]:"+data[r][c]);
         return data[r][c];
     }
     
     @Override
     public RReference<E> rat(int c, int r) {
-        if(r < 0 || c < 0 || r >= rs || c >= cs)
+        if(r < 0 || c < 0 || r >= rs || c >= cs){
+            //System.out.println("ArrayHexGrid: RReference<E> rat("+r+","+c+") returns null");
             return null;
-        return data[r][c];
+        }
+        //System.out.println("ArrayHexGrid: RReference<E> rat("+r+","+c+") returns data["+r+"]"+"["+c+"]:"+data[r][c]);
+        return ((RReference<E>)data[r][c]);
     }
 
     @Override
@@ -232,10 +238,6 @@ public class ArrayHexGrid<E extends UnicastRemoteObject> implements HexGrid<E> {
             return ArrayHexGrid.this;
         }
         
-        @Override
-        public String toString() {
-            return String.format("(%d,%d)", r, c);
-        }
         /*
         @Override
         protected void finalize() throws Throwable {
@@ -247,5 +249,9 @@ public class ArrayHexGrid<E extends UnicastRemoteObject> implements HexGrid<E> {
             super.finalize();
         }
         */
+        @Override
+        public String toString(){
+            return ("Ref:  row "+row()+" col "+col()+" slice "+slice()+" with contents: "+((contents()!=null)?(contents().toString()):""));
+        }
     }
 }

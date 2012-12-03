@@ -172,7 +172,9 @@ public class WorldDisplay extends JPanel{
         try {
             curX = r.row();
             curY = r.col();
+            updateAttributes();
             gridpane.scrollRectToVisible(gridpane.updateSelection(curX, curY));
+            System.out.println("Current Location (R Ref): "+r.contents().toString());
         } catch (RemoteException ex) {
             Client.connectionError(this, ex);
         }
