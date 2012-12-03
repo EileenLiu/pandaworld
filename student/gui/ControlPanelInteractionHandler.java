@@ -112,7 +112,7 @@ public class ControlPanelInteractionHandler {
                 if (masterController.getAdmin() != null) 
                     masterController.getAdmin().simStep(masterController.getLogin().getToken(), masterController.getLogin().getUser());
             } catch (RemoteException ex) {
-                Client.connectionError(masterController.getView());
+                Client.connectionError(masterController.getView(), ex);
             }
             masterController.getView().repaint();
             //}

@@ -6,6 +6,7 @@ package student.grid;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import student.remote.server.RemoteCritter;
 
 /**
  *
@@ -19,7 +20,7 @@ public interface RTile extends Remote {
 
     int foodValue() throws RemoteException;
 
-    Critter getCritter() throws RemoteException;
+    RemoteCritter getCritter() throws RemoteException;
 
     boolean isEmpty() throws RemoteException;
 

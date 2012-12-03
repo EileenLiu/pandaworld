@@ -233,6 +233,11 @@ public class ArrayHexGrid<E extends UnicastRemoteObject> implements HexGrid<E> {
         }
         
         @Override
+        public String toString() {
+            return String.format("(%d,%d)", r, c);
+        }
+        /*
+        @Override
         protected void finalize() throws Throwable {
             try {
                 unexportObject(this, true);
@@ -241,5 +246,6 @@ public class ArrayHexGrid<E extends UnicastRemoteObject> implements HexGrid<E> {
             }
             super.finalize();
         }
+        */
     }
 }

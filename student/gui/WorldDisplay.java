@@ -141,26 +141,26 @@ public class WorldDisplay extends JPanel{
     private void updateAttributes() {
         try {
             String s = "The currently selected\nlocation has ";
-            RReference<RTile> currentLocation = WORLD.at(curX, curX);
-            if (currentLocation == null || currentLocation.contents() == null || currentLocation.contents().isEmpty())
+            RTile currentTile = WORLD.tileAt(curX, curX);
+            if (currentTile == null || currentTile.isEmpty())
                 s = s+"\nnothing... ";
             else
             {
-            if (currentLocation.contents().rock())
+            if (currentTile.rock())
                 s = s + "\na rock... ";
-            if (currentLocation.contents().food())
-                s = s + "\nfood worth " + currentLocation.contents().foodValue() + " units of energy...";
-            if (currentLocation.contents().plant())
+            if (currentTile.food())
+                s = s + "\nfood worth " + currentTile.foodValue() + " units of energy...";
+            if (currentTile.plant())
                 s = s + "\na plant... ";
-            if (currentLocation.contents().critter()) {
+            if (currentTile.critter()) {
                 s = s + "\na critter with ";
-                s = s + currentLocation.contents().getCritter().state()+"\n";
+                s = s + currentTile.getCritter().state()+"\n";
      //           s = s + "\nwhich sees food: "+WORLD.smell(currentLocation, World.TilePredicate.isFood, 10);
             }
             }
             attributes.setText(s);
         } catch (RemoteException ex) {
-            Client.connectionError(this);
+            Client.connectionError(this, ex);
         }
     }
     /**
@@ -168,12 +168,13 @@ public class WorldDisplay extends JPanel{
      * @param r the given location reference
      */
     public void setCurrentLocation(RReference<RTile> r) {
+        if(r == null) return;
         try {
             curX = r.row();
             curY = r.col();
             gridpane.scrollRectToVisible(gridpane.updateSelection(curX, curY));
         } catch (RemoteException ex) {
-            Client.connectionError(this);
+            Client.connectionError(this, ex);
         }
 
     }

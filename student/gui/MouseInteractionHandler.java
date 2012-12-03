@@ -81,7 +81,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
                 try {
                     masterController.getAdmin().putRock(masterController.getLogin().getToken(), uname, rclxtar);
                 } catch (RemoteException ex) {
-                    Client.connectionError(masterController.getView());
+                    Client.connectionError(masterController.getView(), ex);
                 }
             }
         } : new DisLocAxn("put rock");
@@ -92,7 +92,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
                 try {
                     masterController.getAdmin().takeRock(masterController.getLogin().getToken(), uname, rclxtar);
                 } catch (RemoteException ex) {
-                    Client.connectionError(masterController.getView());
+                    Client.connectionError(masterController.getView(), ex);
                 }
             }
         } : new DisLocAxn("derock");
@@ -103,7 +103,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
                 try {
                     masterController.getAdmin().putPlant(masterController.getLogin().getToken(), uname, rclxtar);
                 } catch (RemoteException ex) {
-                    Client.connectionError(masterController.getView());
+                    Client.connectionError(masterController.getView(), ex);
                 }
             }
         } : new DisLocAxn("plant");
@@ -114,7 +114,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
                 try {
                     masterController.getAdmin().takePlant(masterController.getLogin().getToken(), uname, rclxtar);
                 } catch (RemoteException ex) {
-                    Client.connectionError(masterController.getView());
+                    Client.connectionError(masterController.getView(), ex);
                 }
             }
         } : new DisLocAxn("weed-x");
@@ -123,9 +123,10 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
             @Override
             protected void act() {
                 try {
-                    masterController.getAdmin().putCritter(masterController.getLogin().getToken(), uname, masterController.getModel().makeCritter(rclxtar, null));
+                    System.out.printf("\tAdding critter: (%d,%d)\n", rclxtar.row(), rclxtar.col());
+                    masterController.getAdmin().makeAndPutCritter(masterController.getLogin().getToken(), uname, rclxtar, null);
                 } catch (RemoteException ex) {
-                    Client.connectionError(masterController.getView());
+                    Client.connectionError(masterController.getView(), ex);
                 }
             }
         } : new DisLocAxn("add critter");
@@ -149,7 +150,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
                             men.setVisible(false);
                             do try {
                                 i = Integer.parseInt((msg = JOptionPane.showInputDialog(masterController.getView(), "New tag value:", "Tagging ahead critter", JOptionPane.QUESTION_MESSAGE)));
-                                rclxtar.contents().getCritter().act(new Tag(new Constant(i)));
+                                rclxtar.contents().getCritter().doTag(i);
                                 return;
                             } catch (NumberFormatException nfe) {
                                 if (!"".equals(msg))
@@ -157,7 +158,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
                             } while (false); //just give up...
                         }
                     } catch (RemoteException ex) {
-                        Client.connectionError(masterController.getView());
+                        Client.connectionError(masterController.getView(), ex);
                     }
                 }
             },
@@ -171,7 +172,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
                                     masterController.getServer().getCritterProgram(rclxtar.contents().getCritter().hashCode()));
                         }
                     } catch (RemoteException ex) {
-                        Client.connectionError(masterController.getView());
+                        Client.connectionError(masterController.getView(), ex);
                     }
                 }
             }}
@@ -226,7 +227,7 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
             men.setVisible(true);
             masterController.getView().repaint();//display().update();//repaint();
         } catch (RemoteException remoteException) {
-            Client.connectionError(masterController.getView());
+            Client.connectionError(masterController.getView(), remoteException);
         }
     }
 
@@ -237,14 +238,12 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
             x -= masterController.getView().worldDisplay.scrollpane.getHorizontalScrollBar().getValue();
             y -= masterController.getView().worldDisplay.scrollpane.getVerticalScrollBar().getValue();
             int ret[] = masterController.getView().display().grid().hexAt(x, y);
-            if (ret == null) {
-                throw new RemoteException();
-            }
+            if (ret == null) return null;
             int r = ret[0];
             int c = ret[1];
-            return masterController.getModel().at(r, c);
+            return masterController.getModel().refAt(r, c);
         } catch (RemoteException remoteException) {
-            Client.connectionError(masterController.getView());
+            Client.connectionError(masterController.getView(), remoteException);
             return null;
         }
     }
@@ -310,12 +309,12 @@ public class MouseInteractionHandler extends MouseAdapter implements java.awt.ev
             try {
                 if (rclxtar.contents().critter()) {
                     RemoteCritter c = rclxtar.contents().getCritter();
-                    c.act(a);
+                    c.act(a.action());
                     masterController.getView().display().setCurrentLocation(c.loc());
                     c.checkDeath();
                 }
             } catch (RemoteException remoteException) {
-                Client.connectionError(masterController.getView());
+                Client.connectionError(masterController.getView(), remoteException);
             }
         }
     }

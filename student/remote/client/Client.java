@@ -104,7 +104,8 @@ public class Client {
         return login.getToken();
     }
     
-    public static void connectionError(Component p) {
+    public static void connectionError(Component p, Throwable e) {
         JOptionPane.showMessageDialog(p, "Connection to server failed", "Connection error", JOptionPane.ERROR_MESSAGE);
+        e.printStackTrace();
     }
 }

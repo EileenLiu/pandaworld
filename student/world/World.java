@@ -119,8 +119,8 @@ public class World extends UnicastRemoteObject implements RWorld {
     }
     
     @Override
-    public RReference<RTile> at(int r, int c) {
-        return(RReference) grid.rat(c, r);
+    public RTile tileAt(int r, int c) throws RemoteException {
+        return grid.rat(c, r).contents();
     }
     
     public Reference<Tile> lat(int r, int c) {
@@ -290,10 +290,11 @@ public class World extends UnicastRemoteObject implements RWorld {
         critters.clear();
         //species.clear();
     }
-    
+    /*
     //We don't need to clutter up port space
     @Override
     protected void finalize() throws Throwable {
+        System.err.println("Unexporting world");
         try {
             unexportObject(this, true);
         } catch (NoSuchObjectException ex) {
@@ -301,7 +302,7 @@ public class World extends UnicastRemoteObject implements RWorld {
         }
         super.finalize();
     }
-
+    */
     @Override
     public RemoteCritter makeCritter(RReference<RTile> loc, Program p) throws RemoteException {
         return new Critter(this, null, p);
@@ -310,6 +311,11 @@ public class World extends UnicastRemoteObject implements RWorld {
     @Override
     public RemoteCritter makeCritter(RReference<RTile> loc, Program p, int direction) throws RemoteException {
         return new Critter(this, null, p, direction);
+    }
+
+    @Override
+    public RReference refAt(int r, int c) throws RemoteException {
+        return grid.rat(c, r);
     }
     
     public static class PQEntry implements Comparable<PQEntry> {

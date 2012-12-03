@@ -5,12 +5,16 @@
 package student.grid;
 
 import java.awt.Color;
+import java.io.Serializable;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import student.config.Constants;
 import static student.config.Constants.*;
 import student.grid.HexGrid.HexDir;
@@ -26,7 +30,7 @@ import student.world.World;
  *
  * @author haro
  */
-public final class Critter /*extends Entity*/ implements CritterState, RemoteCritter {
+public final class Critter extends UnicastRemoteObject implements CritterState, RemoteCritter {
     private static AtomicInteger SERIAL = new AtomicInteger();
     private static HashMap<Integer,Critter> aliveCritters = new HashMap<Integer,Critter>();
     private static final double[] sizeScaleFactors = new double[]{-0.5,-0.13763848,0.049648523,0.14644808,0.19647905,0.22233763,0.23570266
@@ -46,20 +50,20 @@ public final class Critter /*extends Entity*/ implements CritterState, RemoteCri
     public Action recentAction = new Action("wait");
     private String name;
     
-    public Critter(World _wor, Reference<Tile> _pos, Program _p) {
+    public Critter(World _wor, Reference<Tile> _pos, Program _p) throws RemoteException {
         this(_wor, _pos, _p, defaultMemory());
     }
-    public Critter(World _wor, Reference<Tile> _pos, Program p, int d) {
+    public Critter(World _wor, Reference<Tile> _pos, Program p, int d) throws RemoteException {
         this(_wor, _pos, p);
         dir = HexDir.dir(d);
     }
-    private Critter(World _wor, Reference<Tile> _pos, Program _p, int []_mem) {
+    private Critter(World _wor, Reference<Tile> _pos, Program _p, int []_mem) throws RemoteException {
         this(_wor, _pos, _p, _mem, new LinkedList<Integer>(), false);
     }
-    private Critter(World _wor, Reference<Tile> _pos, Program _p, LinkedList<Integer> ancestors) {
-                this(_wor, _pos, _p, defaultMemory(), ancestors,false);
+    private Critter(World _wor, Reference<Tile> _pos, Program _p, LinkedList<Integer> ancestors) throws RemoteException{
+        this(_wor, _pos, _p, defaultMemory(), ancestors,false);
     }
-    private Critter(World _wor, Reference<Tile> _pos, Program _p, int []_mem, LinkedList<Integer> ancestors, boolean mutate) {
+    private Critter(World _wor, Reference<Tile> _pos, Program _p, int []_mem, LinkedList<Integer> ancestors, boolean mutate) throws RemoteException {
         wor = _wor;
         if(_pos!=null)
             pos = _pos;
@@ -333,22 +337,26 @@ public final class Critter /*extends Entity*/ implements CritterState, RemoteCri
     }
     
     public void bud() {
-        if(pos==null)
-            System.out.println("pos == null");
-        Reference<Tile> np = pos.lin(-1, dir);
-        if(np == null || np.mutableContents().rock() || np.mutableContents().critter())
-            return; //we're in a corner, can't put a critter there.
-        int newmem[] = new int[mem.length];
-        System.arraycopy(mem, 0, newmem, 0, MIN_MEMORY);
-        Critter baby = new Critter(wor, np, prog, newmem, lineage, true);
-        baby.mem[3] = 1;
-        baby.mem[4] = Constants.INITIAL_ENERGY;
-        baby.mem[7] = 0;
-        baby.mem[8] = 1;
-        np.mutableContents().putCritter(baby);
-        mem[4] -= complexity() * Constants.BUD_COST;
-        mutateCritter(baby);
-        acted = true;
+        try {
+            if(pos==null)
+                System.out.println("pos == null");
+            Reference<Tile> np = pos.lin(-1, dir);
+            if(np == null || np.mutableContents().rock() || np.mutableContents().critter())
+                return; //we're in a corner, can't put a critter there.
+            int newmem[] = new int[mem.length];
+            System.arraycopy(mem, 0, newmem, 0, MIN_MEMORY);
+            Critter baby = new Critter(wor, np, prog, newmem, lineage, true);
+            baby.mem[3] = 1;
+            baby.mem[4] = Constants.INITIAL_ENERGY;
+            baby.mem[7] = 0;
+            baby.mem[8] = 1;
+            np.mutableContents().putCritter(baby);
+            mem[4] -= complexity() * Constants.BUD_COST;
+            mutateCritter(baby);
+            acted = true;
+        } catch (RemoteException ex) {
+            throw new RuntimeException("Could not export new critter", ex);
+        }
     }
     
     public void mate() {
@@ -357,34 +365,38 @@ public final class Critter /*extends Entity*/ implements CritterState, RemoteCri
             return;
         Tile t = rt.mutableContents();
         if(t.critter() && t.getCritter().amorous) {
-            Critter c = t.getCritter();
-            int nrules = ch(this,c).prog.numChildren(), 
-                    tr = prog.numChildren(), 
-                    cr = c.prog.numChildren();
-            Rule r[] = new Rule[nrules];
-            for(int i = 0; i < nrules; i++) 
-                r[i] = (i<tr?i<cr?Math.random()>.5?c:this:this:c).prog.rules().get(i);
-            int msiz = ch(this,c).mem[0];
-            int []bmem = new int[msiz];
-            bmem[0] = msiz;
-            bmem[1] = ch(this,c).mem[1];
-            bmem[2] = ch(this,c).mem[2];
-            bmem[3] = 1;
-            bmem[4] = Constants.INITIAL_ENERGY;
-            bmem[8] = 1;
-            Critter cpos = ch(this,c);
-            Reference<Tile> np = cpos.pos.lin(-1, cpos.dir);
-            if(np==null || np.mutableContents().rock()||np.mutableContents().critter()) np = (cpos==this?c:this).pos.lin(-1, (cpos!=this?this:c).dir);
-            Critter baby = new Critter(wor, np, prog, bmem, lineage, true);
-            np.mutableContents().putCritter(baby);
-            mem[4] -= Constants.MATE_COST * complexity();
-            c.mem[4] -= Constants.MATE_COST * c.complexity();
+            try {
+                Critter c = t.getCritter();
+                int nrules = ch(this,c).prog.numChildren(), 
+                        tr = prog.numChildren(), 
+                        cr = c.prog.numChildren();
+                Rule r[] = new Rule[nrules];
+                for(int i = 0; i < nrules; i++) 
+                    r[i] = (i<tr?i<cr?Math.random()>.5?c:this:this:c).prog.rules().get(i);
+                int msiz = ch(this,c).mem[0];
+                int []bmem = new int[msiz];
+                bmem[0] = msiz;
+                bmem[1] = ch(this,c).mem[1];
+                bmem[2] = ch(this,c).mem[2];
+                bmem[3] = 1;
+                bmem[4] = Constants.INITIAL_ENERGY;
+                bmem[8] = 1;
+                Critter cpos = ch(this,c);
+                Reference<Tile> np = cpos.pos.lin(-1, cpos.dir);
+                if(np==null || np.mutableContents().rock()||np.mutableContents().critter()) np = (cpos==this?c:this).pos.lin(-1, (cpos!=this?this:c).dir);
+                Critter baby = new Critter(wor, np, prog, bmem, lineage, true);
+                np.mutableContents().putCritter(baby);
+                mem[4] -= Constants.MATE_COST * complexity();
+                c.mem[4] -= Constants.MATE_COST * c.complexity();
+            } catch (RemoteException ex) {
+                throw new RuntimeException("Could not export new critter", ex);
+            }
         }
         else amorous = true;
         acted = true;
     }
 
-    public void _tag(int i) {
+    public void doTag(int i) {
         Critter c = pos.adj(dir).mutableContents().getCritter();
         if(c != null)
             c.mem[7] = i;
@@ -569,8 +581,11 @@ public final class Critter /*extends Entity*/ implements CritterState, RemoteCri
     }
 
     @Override
-    public void act(Action action) {
-        (recentAction = action).execute(this);
+    public void act(Action.Act action) {
+        System.out.println("Server: Critter.act()");
+        System.out.println("Server: old pos: "+pos);
+        (recentAction = new Action(action)).execute(this); //yugh.
+        System.out.println("Server: new pos: "+pos);
     }
     
     public Action recentAction() {
@@ -579,5 +594,29 @@ public final class Critter /*extends Entity*/ implements CritterState, RemoteCri
 
     public Reference<Tile> lloc() {
         return pos;
+    }
+    
+    private static interface JavaSucks extends CritterState, Serializable {}
+    @Override
+    public CritterState copyState() throws RemoteException {
+        final int cmem[] = new int[9];
+        System.arraycopy(mem, 0, cmem, 0, 9);
+        return new JavaSucks() {
+            @Override public int getMem(int i) {
+                return cmem[i];
+            }
+            @Override
+            public void setMem(int i, int v) {
+                throw new UnsupportedOperationException("Immutable state");
+            }
+            @Override
+            public int ahead(int i) {
+                throw new UnsupportedOperationException("Memory only");
+            }
+            @Override
+            public int nearby(int i) {
+                throw new UnsupportedOperationException("Memory onle");
+            }
+        };
     }
 }

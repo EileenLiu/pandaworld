@@ -20,7 +20,7 @@ import student.remote.server.RemoteCritter;
  */
 public interface RWorld extends java.rmi.Remote {
 
-    RReference<RTile> at(int r, int c)
+    RTile tileAt(int r, int c)
             throws RemoteException;
 
     RemoteCritter critterForID(int id)
@@ -47,5 +47,8 @@ public interface RWorld extends java.rmi.Remote {
     RemoteCritter makeCritter(RReference<RTile> loc, Program p)
             throws RemoteException;
     RemoteCritter makeCritter(RReference<RTile> loc, Program p, int direction)
+            throws RemoteException;
+
+    public RReference refAt(int r, int c)
             throws RemoteException;
 }

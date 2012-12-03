@@ -205,7 +205,7 @@ public class MenuInteractionHandler {
                             masterController.getView().display().setCurrentLocation(masterController.getAdmin().putPlant(masterController.getLogin().getToken(), masterController.getLogin().getUser(), masterController.getModel().randomLoc()));
                             masterController.getView().repaint();
                         } catch (RemoteException ex) {
-                            Client.connectionError(masterController.getView());
+                            Client.connectionError(masterController.getView(), ex);
                         }
                     }
                 }

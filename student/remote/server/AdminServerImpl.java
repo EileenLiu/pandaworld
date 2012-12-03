@@ -32,6 +32,8 @@ import student.grid.RReference;
 import student.grid.RTile;
 import student.grid.Tile;
 import student.parse.Action;
+import student.parse.Program;
+import student.parse.Tag;
 import student.remote.login.*;
 import student.remote.world.RWorld;
 import student.world.World;
@@ -293,13 +295,7 @@ public class AdminServerImpl extends UnicastRemoteObject implements AdminServer,
         if(login.verifyRequest(uname, token, Permission.ADMIN))
             zaWarudo.critterForID(id).setEnergy(-1);
     }
-
-    @Override
-    public void control(byte[] token, String uname, RemoteCritter critter, Action a) throws RemoteException {
-        if(login.verifyRequest(uname, token, Permission.ADMIN))
-            critter.act(a);
-    }
-
+    
     @Override
     public boolean uploadsOn(byte[] token, String uname) throws RemoteException {
         boolean t = canUpload;
@@ -513,10 +509,10 @@ public class AdminServerImpl extends UnicastRemoteObject implements AdminServer,
     }
 
     @Override
-    public void putCritter(byte []token, String uname, RemoteCritter rc) throws RemoteException {
+    public void makeAndPutCritter(byte []token, String uname, RReference<RTile> loc, Program p) throws RemoteException {
         try {
             if(login.verifyRequest(uname, token, Permission.ADMIN))
-                zaWarudo.add(rc, zaWarudo.randomLoc().row(), zaWarudo.randomLoc().col());
+                zaWarudo.add(new Critter(zaWarudo, zaWarudo.lat(loc.row(), loc.col()), p), zaWarudo.randomLoc().row(), zaWarudo.randomLoc().col());
         } catch (InvalidWorldAdditionException ex) {
             throw new RemoteException("Invalid critter", ex);
         }
@@ -539,7 +535,7 @@ public class AdminServerImpl extends UnicastRemoteObject implements AdminServer,
         if(!login.verifyRequest(user, token, Permission.ADMIN))
             throw new RemoteException("Login expired");
         try {
-            zaWarudo.add("plant", randomLoc.row(), randomLoc.col());
+            zaWarudo.add("rock", randomLoc.row(), randomLoc.col());
         } catch (InvalidWorldAdditionException ex) {
             throw new RemoteException("Unreachable",ex);
         }

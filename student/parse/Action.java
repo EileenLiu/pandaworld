@@ -1,5 +1,6 @@
 package student.parse;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.LinkedList;
 import student.grid.Critter;
@@ -11,7 +12,7 @@ import static student.parse.util.Functions.forName;
  * Represents an action a critter can take.
  * @author haro
  */
-public class Action extends Node<Expression<?>> {
+public class Action extends Node<Expression<?>> /*implements Serializable*/ {
     Act act;
     
     public static Action parse(LinkedList<HistObj> hist) throws SyntaxError {
@@ -29,6 +30,10 @@ public class Action extends Node<Expression<?>> {
     public Action(String type) {
         super(Collections.EMPTY_LIST);
         this.act = forName(Act.class,type);
+    }
+    
+    public Action(Act a) {
+        act = a;
     }
     
     protected Action() {
@@ -56,6 +61,10 @@ public class Action extends Node<Expression<?>> {
     public boolean randomize() {
         act = Functions.randEnum(Act.class);
         return true;
+    }
+
+    public Act action() {
+        return act;
     }
 
     public static enum Act {

@@ -5,6 +5,7 @@ import student.grid.RReference;
 import student.grid.RTile;
 import student.grid.Tile;
 import student.parse.Action;
+import student.parse.Program;
 import static student.remote.login.Permission.ADMIN;
 
 /**
@@ -88,8 +89,8 @@ public interface AdminServer extends PlayerServer {
      * resume its regular behavior.
      * @throws RemoteException
      */
-    @RemoteVisibility(ADMIN)
-    public void control(byte []token, String uname, RemoteCritter critter, Action a) throws RemoteException;
+    //@RemoteVisibility(ADMIN)
+    //public void control(byte []token, String uname, RemoteCritter critter, Action a) throws RemoteException;
 
     //Uploads
     @RemoteVisibility(ADMIN)
@@ -200,7 +201,7 @@ public interface AdminServer extends PlayerServer {
     @RemoteVisibility(ADMIN)
     public void removeAdmin(byte []token, String uname, String name) throws RemoteException;
 
-    public void putCritter(byte []token, String uname, RemoteCritter rc) throws RemoteException;
+    public void makeAndPutCritter(byte []token, String uname, RReference<RTile> loc, Program p) throws RemoteException;
 
     public RReference<RTile> putPlant(byte[] token, String user, RReference<RTile> randomLoc)
             throws RemoteException;

@@ -21,7 +21,7 @@ public class Tag extends Action {
 
     @Override
     public void execute(Critter c) {
-        c._tag(ind().eval(c));
+        c.doTag(ind().eval(c));
     }
 
     @Override

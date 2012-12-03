@@ -13,6 +13,7 @@ import student.config.WorldFileParser;
 import student.gui.InteractionHandler;
 import student.gui.WorldFrame;
 import student.remote.login.LoginServer;
+import student.remote.login.Permission;
 import student.remote.server.AdminServerImpl;
 import student.world.World;
 
@@ -48,6 +49,7 @@ public class SimulationRunner {
         
         LoginServer ls = new LoginServer();
         ls.addUser("admin", "password");
+        ls.grantPermission("admin", Permission.USER, Permission.ADMIN);
         ls.register("Server");
         
         AdminServerImpl asi = new AdminServerImpl(ls);

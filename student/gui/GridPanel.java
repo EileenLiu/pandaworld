@@ -47,15 +47,10 @@ public class GridPanel extends JPanel implements Scrollable{
         for (int c = 0; c < this.world.width(); c++) {
             int x = pnX(0, c);
             for (int r = 0; r < this.world.height(); r++) {
-                try {
-                    int y = pnY(r, c);
-                    //System.out.println(""+x+","+y);
-                    //gp.fillOval(x, y, 10, 10);
-                    hexen[r][c] = makePoly(x,y,HEXSIZE);
-                    RReference<RTile> rt = world.at(r, c);
-                } catch (RemoteException ex) {
-                    System.err.println("Could not instantiate tile");
-                }
+                int y = pnY(r, c);
+                //System.out.println(""+x+","+y);
+                //gp.fillOval(x, y, 10, 10);
+                hexen[r][c] = makePoly(x,y,HEXSIZE);
             }
         }
         updateSelection(0,0);
@@ -71,7 +66,7 @@ public class GridPanel extends JPanel implements Scrollable{
                     if(hexen[r][c].contains(x, y))
                         return new int[]{r,c};
         } catch (RemoteException ex) {
-            Client.connectionError(this);
+            Client.connectionError(this, ex);
         }
         return null;
     }
@@ -171,7 +166,7 @@ public class GridPanel extends JPanel implements Scrollable{
                 for (int r = 0; r < world.height(); r++) {
                     Polygon loc = hexen[r][c];
                     Rectangle bbx = loc.getBounds();
-                    RTile t = world.at(r, c).contents();
+                    RTile t = world.tileAt(r, c);
                     PNGImagePack imagepack = defaultImgs;
                     if (t == null) {
                         System.err.println("Null tile");
@@ -186,10 +181,12 @@ public class GridPanel extends JPanel implements Scrollable{
                             drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, imagepack.get(imgnames[2]));
                         }
                         if (t.critter()) {
+                            System.out.printf("Client: about to blt critter at (%d,%d) [(%d,%d)]\n",r,c,t.getCritter().loc().row(),t.getCritter().loc().col());
+                            int _r = t.getCritter().loc().row(), _c = t.getCritter().loc().col();
                             Image i = null;
                             String s = t.getCritter().getAppearance();
                             Color color = t.getCritter().getColor();
-                            Double scaleFactor = t.getCritter().getScaleFactor();
+                            double scaleFactor = t.getCritter().getScaleFactor();
                             //System.out.println(s + color);
                             if (s == null) {
                                 s = "data.zip";
@@ -225,14 +222,14 @@ public class GridPanel extends JPanel implements Scrollable{
                                     break;//CSE; break;
                             }
 
-                            drawHexagon(bbx.x, bbx.y, r, c, hexsize, gp, i);
+                            drawHexagon(bbx.x, bbx.y, _r, _c, hexsize, gp, i);//hack alert
                             //gp.drawRect(bbx.x, bbx.y, hexsize, hexsize);
                         }
-                        /*/
-                         gp.setColor(Color.RED);
-                         String s = "("+r+","+c+")";
-                         gp.drawChars(s.toCharArray(), 0, s.length(), bbx.x+20, bbx.y+20);
-                         /*/
+                        ///*
+                        gp.setColor(Color.RED);
+                        String s = "(" + r + "," + c + ")";
+                        gp.drawChars(s.toCharArray(), 0, s.length(), bbx.x + 20, bbx.y + 20);
+                        //*/
                     }
                     /*
                      gp.setColor(Color.RED);
@@ -242,7 +239,7 @@ public class GridPanel extends JPanel implements Scrollable{
                 }
             }
         } catch (RemoteException ex) {
-            Client.connectionError(this);
+            Client.connectionError(this, ex);
         }
         drawSelectionIndicator(hexsize, gp);
     }
@@ -260,7 +257,7 @@ public class GridPanel extends JPanel implements Scrollable{
         try {
             return new Dimension(world.width()*HEXSIZE - (world.width() - 1)*HEXSIZE/4, (world.height()+1)*HEXSIZE);
         } catch (RemoteException ex) {
-            Client.connectionError(this);
+            Client.connectionError(this, ex);
             return null;
         }
     }
