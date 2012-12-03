@@ -13,24 +13,13 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.rmi.RemoteException;
-import java.rmi.server.ServerRef;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
-import student.grid.Critter;
-import student.grid.HexGrid.Reference;
 import student.grid.RReference;
 import student.grid.RTile;
-import student.grid.Tile;
-import student.parse.Constant;
-import student.parse.Program;
-import student.parse.Tag;
 import student.remote.client.Client;
-import student.remote.login.Permission;
-import student.remote.server.AdminServer;
 import student.remote.server.RemoteCritter;
 
 /**

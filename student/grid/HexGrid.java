@@ -5,7 +5,6 @@
 package student.grid;
 
 import java.rmi.Remote;
-import java.rmi.server.UnicastRemoteObject;
 
 /**
  *

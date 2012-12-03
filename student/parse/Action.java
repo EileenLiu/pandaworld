@@ -1,6 +1,5 @@
 package student.parse;
 
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.LinkedList;
 import student.grid.Critter;

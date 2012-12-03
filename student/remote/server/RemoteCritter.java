@@ -3,14 +3,10 @@ package student.remote.server;
 import java.awt.Color;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import student.grid.CritterState;
 import student.grid.HexGrid;
 import student.grid.RReference;
 import student.grid.RTile;
-import student.grid.Tile;
 
 public interface RemoteCritter extends Remote {
 

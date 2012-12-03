@@ -4,26 +4,20 @@
  */
 package student.world;
 
-import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.PriorityQueue;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import student.grid.ArrayHexGrid;
 import student.config.Constants;
+import student.grid.ArrayHexGrid;
 import student.grid.Critter;
 import student.grid.HexGrid;
 import student.grid.HexGrid.HexDir;
 import student.grid.HexGrid.Reference;
 import student.grid.RReference;
 import student.grid.RTile;
-import student.grid.Species;
 import student.grid.Tile;
 import student.parse.Program;
 import student.remote.server.RemoteCritter;

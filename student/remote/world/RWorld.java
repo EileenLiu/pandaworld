@@ -5,12 +5,8 @@
 package student.remote.world;
 
 import java.rmi.RemoteException;
-import student.grid.Critter;
-import student.grid.HexGrid;
-import student.grid.HexGrid.Reference;
 import student.grid.RReference;
 import student.grid.RTile;
-import student.grid.Tile;
 import student.parse.Program;
 import student.remote.server.RemoteCritter;
 

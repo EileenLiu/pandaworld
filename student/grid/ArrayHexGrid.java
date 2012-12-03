@@ -6,7 +6,6 @@ package student.grid;
 
 import java.lang.reflect.Array;
 import java.rmi.NoSuchObjectException;
-import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Iterator;

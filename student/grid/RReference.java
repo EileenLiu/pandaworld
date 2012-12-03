@@ -6,9 +6,7 @@ package student.grid;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import student.grid.HexGrid.HexDir;
-import student.grid.HexGrid.Reference;
 
 /**
  *

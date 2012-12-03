@@ -11,7 +11,6 @@ import student.remote.server.AdminServer;
 import student.remote.server.PlayerServer;
 import student.remote.server.Server;
 import student.remote.world.RWorld;
-import student.world.World;
 
 public class WorldFrame extends JFrame {
 
