@@ -595,6 +595,11 @@ public final class Critter extends UnicastRemoteObject implements CritterState, 
     public Reference<Tile> lloc() {
         return pos;
     }
+
+    @Override
+    public int food() {
+        return wor.smell(pos, World.TilePredicate.isFood, Constants.MAX_SMELL_DISTANCE);
+    }
     
     private static interface JavaSucks extends CritterState, Serializable {}
     @Override
@@ -615,7 +620,11 @@ public final class Critter extends UnicastRemoteObject implements CritterState, 
             }
             @Override
             public int nearby(int i) {
-                throw new UnsupportedOperationException("Memory onle");
+                throw new UnsupportedOperationException("Memory only");
+            }
+            @Override
+            public int food() {
+                throw new UnsupportedOperationException("Memory only");
             }
         };
     }

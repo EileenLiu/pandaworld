@@ -49,6 +49,8 @@ public abstract class Expression<SubNodeType extends Expression<?>> extends Node
                 int i = num(self.production[0]);
                 hist.pop(); //take care of the token;
                 return new Constant(i);
+            } else if(self.production[0].equals("food")) {
+                return new Food();
             } else {
                 return Access.parse(hist);
             }

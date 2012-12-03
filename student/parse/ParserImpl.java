@@ -179,6 +179,9 @@ public class ParserImpl implements Parser {
                 stack.push("[");
                 stack.push(fst);
                 return new HistObj("Atom",fst,"[","Expression","]");
+            } else if("food".equals(fst)) {
+                t.next();
+                return new HistObj("Atom","food");
             }
         } else
             throw new SyntaxError(t.line(),"Unknown token");
@@ -229,8 +232,9 @@ public class ParserImpl implements Parser {
         sen.add("mem");
         fiSensor = Collections.unmodifiableSet(sen);
         
-        Set<String> exp = new HashSet<String>(5,1);
+        Set<String> exp = new HashSet<String>(5,2);
         exp.add("(");
+        exp.add("food");
         exp.addAll(fiSensor);
         fiExpr = Collections.unmodifiableSet(exp);
         

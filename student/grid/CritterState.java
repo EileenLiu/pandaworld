@@ -13,4 +13,5 @@ public interface CritterState {
     public void setMem(int i, int v);
     public int ahead(int i);
     public int nearby(int i);
+    public int food();
 }
